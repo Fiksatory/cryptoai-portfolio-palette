@@ -70,6 +70,39 @@ export const ChatAssistant = () => {
     }
   };
 
+  const renderMessage = (message: Message) => {
+    const content = message.content.split('\n').map((line, i) => {
+      if (line.startsWith('🌐 Website:') || 
+          line.startsWith('🐦 Twitter:') || 
+          line.startsWith('📱 Telegram:') || 
+          line.startsWith('💬 Discord:')) {
+        const url = line.split(': ')[1];
+        return (
+          <a 
+            key={i}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:text-blue-700 underline block"
+          >
+            {line}
+          </a>
+        );
+      }
+      return <div key={i}>{line}</div>;
+    });
+
+    return (
+      <div className={`max-w-[80%] rounded-lg p-3 ${
+        message.type === 'user'
+          ? 'bg-primary text-primary-foreground ml-4'
+          : 'bg-muted text-foreground mr-4'
+      }`}>
+        {content}
+      </div>
+    );
+  };
+
   return (
     <Card className="flex flex-col h-[calc(100vh-2rem)] w-96 bg-card/80 backdrop-blur-sm">
       <div className="p-4 border-b">
@@ -84,15 +117,7 @@ export const ChatAssistant = () => {
               key={index}
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  message.type === 'user'
-                    ? 'bg-primary text-primary-foreground ml-4'
-                    : 'bg-muted text-foreground mr-4'
-                }`}
-              >
-                <p className="whitespace-pre-wrap">{message.content}</p>
-              </div>
+              {renderMessage(message)}
             </div>
           ))}
         </div>
