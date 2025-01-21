@@ -16,7 +16,7 @@ export const ChatAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       type: 'assistant',
-      content: "Hi! I'm Laby AI. I can help you analyze Solana tokens. Try asking about a token like 'BONK' or 'MYRO'!"
+      content: "Hi! I'm Laby AI. I analyze Solana memecoins and provide market insights. Try asking about tokens like 'BONK', 'MYRO', or 'WIF'!"
     }
   ]);
   const [input, setInput] = useState('');
@@ -36,15 +36,14 @@ export const ChatAssistant = () => {
       const data = await searchTokens(userMessage);
       const analysis = analyzePairData(data);
       
-      const response = `Analysis for ${userMessage}:\n\n${analysis.message}\n\nKey Metrics:\n` +
-        `• Price Change (24h): ${analysis.metrics.priceChange24h.toFixed(2)}%\n` +
+      const response = `${analysis.marketContext}\n\nAnalysis for ${userMessage}:\n` +
+        `${analysis.summary}\n\nKey Metrics:\n` +
         `• Market Cap: $${analysis.metrics.marketCap.toLocaleString()}\n` +
-        `• Volume (24h): $${analysis.metrics.volume24h.toLocaleString()}\n` +
-        `• Liquidity: $${analysis.metrics.liquidity.toLocaleString()}\n` +
-        `• Buy/Sell Ratio: ${analysis.metrics.buySellRatio.toFixed(2)}\n` +
-        `• Total Transactions: ${analysis.metrics.totalTransactions.toLocaleString()}\n` +
-        `• Market Health Score: ${analysis.metrics.healthScore}/100\n\n` +
-        `Overall Sentiment: ${analysis.sentiment.toUpperCase()}`;
+        `• 24h Volume/MCap: ${((analysis.metrics.volume24h / analysis.metrics.marketCap) * 100).toFixed(2)}%\n` +
+        `• Buy Pressure: ${analysis.metrics.buySellRatio > 1.2 ? "High" : analysis.metrics.buySellRatio < 0.8 ? "Low" : "Neutral"}\n` +
+        `• Market Health: ${analysis.metrics.healthScore}/100\n\n` +
+        `Market Status: ${analysis.marketStatus}\n` +
+        `Risk Level: ${analysis.riskLevel}`;
       
       setMessages(prev => [...prev, { type: 'assistant', content: response }]);
     } catch (error) {
@@ -62,7 +61,7 @@ export const ChatAssistant = () => {
     <Card className="flex flex-col h-[calc(100vh-2rem)] w-96 bg-card/80 backdrop-blur-sm">
       <div className="p-4 border-b">
         <h2 className="text-lg font-semibold">Laby AI Assistant</h2>
-        <p className="text-sm text-muted-foreground">Your personal token analyst</p>
+        <p className="text-sm text-muted-foreground">Solana Memecoin Market Analyst</p>
       </div>
       
       <ScrollArea className="flex-1 p-4">
@@ -91,7 +90,7 @@ export const ChatAssistant = () => {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about a token..."
+            placeholder="Ask about a memecoin..."
             disabled={isLoading}
           />
           <Button type="submit" disabled={isLoading}>
