@@ -53,7 +53,6 @@ const AiDashboard = () => {
       case "ai":
         return (
           <div className="space-y-6">
-            {/* Contract Analysis Input */}
             <Card className="bg-black/40 border-white/10 p-4">
               <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
                 <Sparkles className="w-4 h-4" />
@@ -76,130 +75,123 @@ const AiDashboard = () => {
               </div>
             </Card>
 
-            {/* Market Pulse & Manipulation Radar */}
             <div className="grid grid-cols-2 gap-6">
-          <Card className="bg-black/40 border-white/10 p-4">
-            <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-              <Sparkles className="w-4 h-4" />
-              AI Market Pulse
-            </h3>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Market State:</span>
-                <Badge variant="secondary">
-                  {tokenData?.marketStatus || "WAITING FOR ANALYSIS"}
-                </Badge>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">AI Confidence:</span>
-                <div className="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-green-500" 
-                    style={{ 
-                      width: `${tokenData?.metrics?.healthScore || 0}%` 
-                    }} 
-                  />
+              <Card className="bg-black/40 border-white/10 p-4">
+                <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
+                  <Sparkles className="w-4 h-4" />
+                  AI Market Pulse
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-400">Market State:</span>
+                    <Badge variant="secondary">
+                      {tokenData?.marketStatus || "WAITING FOR ANALYSIS"}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-400">AI Confidence:</span>
+                    <div className="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-green-500" 
+                        style={{ width: `${tokenData?.metrics?.healthScore || 0}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </Card>
+              </Card>
 
-          <Card className="bg-black/40 border-white/10 p-4">
-            <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-              <Radio className="w-4 h-4" />
-              Manipulation Radar
-            </h3>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Risk Level:</span>
-                <Badge className="bg-indigo-500/20 text-indigo-300">
-                  {tokenData?.riskLevel || "UNKNOWN"}
-                </Badge>
-              </div>
-              <div className="flex gap-2">
-                {tokenData?.metrics?.buySellRatio > 1.2 && (
-                  <Badge className="bg-blue-500/20 text-blue-300">High Buy Pressure</Badge>
-                )}
-                {tokenData?.metrics?.buySellRatio < 0.8 && (
-                  <Badge className="bg-red-500/20 text-red-300">High Sell Pressure</Badge>
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
+              <Card className="bg-black/40 border-white/10 p-4">
+                <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
+                  <Radio className="w-4 h-4" />
+                  Manipulation Radar
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-400">Risk Level:</span>
+                    <Badge className="bg-indigo-500/20 text-indigo-300">
+                      {tokenData?.riskLevel || "UNKNOWN"}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-2">
+                    {tokenData?.metrics?.buySellRatio > 1.2 && (
+                      <Badge className="bg-blue-500/20 text-blue-300">High Buy Pressure</Badge>
+                    )}
+                    {tokenData?.metrics?.buySellRatio < 0.8 && (
+                      <Badge className="bg-red-500/20 text-red-300">High Sell Pressure</Badge>
+                    )}
+                  </div>
+                </div>
+              </Card>
             </div>
 
-            {/* Stealth Movement & Whale Psychology */}
             <div className="grid grid-cols-2 gap-6">
-          <Card className="bg-black/40 border-white/10 p-4">
-            <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-              <LineChart className="w-4 h-4" />
-              Market Activity
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">24h Volume:</span>
-                <span className="text-green-400">
-                  ${tokenData?.metrics?.volume24h?.toLocaleString() || "0"}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                {tokenData?.metrics?.marketCap > 0 && (
-                  <Badge className="bg-orange-500">
-                    MCap: ${tokenData.metrics.marketCap.toLocaleString()}
-                  </Badge>
-                )}
-              </div>
-            </div>
-          </Card>
+              <Card className="bg-black/40 border-white/10 p-4">
+                <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
+                  <LineChart className="w-4 h-4" />
+                  Market Activity
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-400">24h Volume:</span>
+                    <span className="text-green-400">
+                      ${tokenData?.metrics?.volume24h?.toLocaleString() || "0"}
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    {tokenData?.metrics?.marketCap > 0 && (
+                      <Badge className="bg-orange-500">
+                        MCap: ${tokenData.metrics.marketCap.toLocaleString()}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </Card>
 
-          <Card className="bg-black/40 border-white/10 p-4">
-            <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-              <Brain className="w-4 h-4" />
-              Market Context
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">Context:</span>
-                <span>{tokenData?.marketContext || "Waiting for analysis..."}</span>
-              </div>
-              {tokenData && (
-                <div className="flex gap-2">
-                  <Badge className="bg-indigo-500/20 text-indigo-300">
-                    {tokenData.summary}
-                  </Badge>
+              <Card className="bg-black/40 border-white/10 p-4">
+                <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
+                  <Brain className="w-4 h-4" />
+                  Market Context
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-400">Context:</span>
+                    <span>{tokenData?.marketContext || "Waiting for analysis..."}</span>
+                  </div>
+                  {tokenData && (
+                    <div className="flex gap-2">
+                      <Badge className="bg-indigo-500/20 text-indigo-300">
+                        {tokenData.summary}
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            </div>
+
+            <Card className="bg-black/40 border-white/10 p-4">
+              {isLoading ? (
+                <div className="text-center text-gray-400">Analyzing contract...</div>
+              ) : !tokenData ? (
+                <div className="text-center text-gray-400">
+                  Enter a contract address to see AI insights
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {tokenData.socialLinks && Object.entries(tokenData.socialLinks).map(([platform, url]) => (
+                    <div key={platform} className="flex items-center gap-4">
+                      <Badge className="bg-purple-500 capitalize">{platform}</Badge>
+                      <a 
+                        href={url as string} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-400 hover:underline"
+                      >
+                        {url as string}
+                      </a>
+                    </div>
+                  ))}
                 </div>
               )}
-            </div>
-          </Card>
-        </div>
-            </div>
-
-            {/* Real-time AI Insights */}
-            <Card className="bg-black/40 border-white/10 p-4">
-          {isLoading ? (
-            <div className="text-center text-gray-400">Analyzing contract...</div>
-          ) : !tokenData ? (
-            <div className="text-center text-gray-400">
-              Enter a contract address to see AI insights
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {tokenData.socialLinks && Object.entries(tokenData.socialLinks).map(([platform, url]) => (
-                <div key={platform} className="flex items-center gap-4">
-                  <Badge className="bg-purple-500 capitalize">{platform}</Badge>
-                  <a 
-                    href={url as string} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-400 hover:underline"
-                  >
-                    {url as string}
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
             </Card>
           </div>
         );
@@ -211,7 +203,6 @@ const AiDashboard = () => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-[240px_1fr] gap-6 p-4 bg-black/90 text-white rounded-xl">
-        {/* Sidebar */}
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-4">
             <div className="w-10 h-10 bg-solana-primary rounded-xl flex items-center justify-center">
@@ -245,7 +236,6 @@ const AiDashboard = () => {
           </nav>
         </div>
 
-        {/* Main Content */}
         <div className="space-y-6">
           {renderContent()}
         </div>
