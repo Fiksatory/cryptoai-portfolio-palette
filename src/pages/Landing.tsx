@@ -9,11 +9,11 @@ const Landing = () => {
     <div className="min-h-screen bg-gradient-to-b from-solana-dark to-black flex flex-col items-center justify-center p-4">
       <div className="text-center space-y-8 max-w-4xl">
         <h1 className="text-6xl font-bold bg-gradient-to-r from-solana-primary to-solana-secondary bg-clip-text text-transparent">
-          Solana Memecoin Tracker
+          Laby AI
         </h1>
         
         <p className="text-xl text-solana-light/80">
-          Track your favorite Solana memecoins in real-time.
+          Your AI-powered trading companion for Solana tokens. Get real-time insights, pattern analysis, and market context.
         </p>
 
         <div className="flex flex-col items-center space-y-4">
