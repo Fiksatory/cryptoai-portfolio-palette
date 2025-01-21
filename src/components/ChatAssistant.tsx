@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { searchTokens, analyzePairData } from "@/services/dexscreener";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Globe, Twitter, MessageCircle, MessagesSquare } from "lucide-react";
 
 interface Message {
   type: 'user' | 'assistant';
@@ -22,6 +22,18 @@ export const ChatAssistant = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const formatSocialLinks = (links: any) => {
+    if (!links || Object.keys(links).length === 0) return "";
+    
+    const formattedLinks = [];
+    if (links.website) formattedLinks.push(`🌐 Website: ${links.website}`);
+    if (links.twitter) formattedLinks.push(`🐦 Twitter: ${links.twitter}`);
+    if (links.telegram) formattedLinks.push(`📱 Telegram: ${links.telegram}`);
+    if (links.discord) formattedLinks.push(`💬 Discord: ${links.discord}`);
+    
+    return formattedLinks.length > 0 ? "\n\nSocial Links:\n" + formattedLinks.join("\n") : "";
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +55,8 @@ export const ChatAssistant = () => {
         `• Buy Pressure: ${analysis.metrics.buySellRatio > 1.2 ? "High" : analysis.metrics.buySellRatio < 0.8 ? "Low" : "Neutral"}\n` +
         `• Market Health: ${analysis.metrics.healthScore}/100\n\n` +
         `Market Status: ${analysis.marketStatus}\n` +
-        `Risk Level: ${analysis.riskLevel}`;
+        `Risk Level: ${analysis.riskLevel}` +
+        formatSocialLinks(analysis.socialLinks);
       
       setMessages(prev => [...prev, { type: 'assistant', content: response }]);
     } catch (error) {

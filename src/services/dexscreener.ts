@@ -45,6 +45,12 @@ export interface DexScreenerToken {
       usd: number;
     };
     fdv?: number;
+    links?: {
+      website?: string;
+      twitter?: string;
+      telegram?: string;
+      discord?: string;
+    };
   }[];
 }
 
@@ -69,11 +75,12 @@ export const analyzePairData = (data: DexScreenerToken) => {
         volume24h: 0,
         buySellRatio: 0,
         healthScore: 0
-      }
+      },
+      socialLinks: {}
     };
   }
 
-  // Filter for Solana pairs and sort by volume to get the most active pair
+  // Filter for Solana pairs and sort by volume
   const solanaPairs = data.pairs
     .filter(pair => pair.chainId === "solana")
     .sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0));
@@ -90,7 +97,8 @@ export const analyzePairData = (data: DexScreenerToken) => {
         volume24h: 0,
         buySellRatio: 0,
         healthScore: 0
-      }
+      },
+      socialLinks: {}
     };
   }
 
@@ -173,7 +181,8 @@ export const analyzePairData = (data: DexScreenerToken) => {
       volume24h,
       buySellRatio,
       healthScore
-    }
+    },
+    socialLinks: mainPair.links || {}
   };
 };
 
