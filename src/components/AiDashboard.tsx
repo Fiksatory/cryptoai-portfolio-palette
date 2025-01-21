@@ -74,43 +74,51 @@ const AiDashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-[240px_1fr] gap-6 p-4 bg-black/90 text-white rounded-xl">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 p-4">
-            <div className="w-10 h-10 bg-solana-primary rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6" />
+    <div className="space-y-6 animate-fade-in">
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-neon-pink/5 via-neon-violet/5 to-neon-purple/5 rounded-3xl blur-3xl -z-10" />
+        <div className="grid grid-cols-[240px_1fr] gap-6 p-4 glass-card rounded-xl relative overflow-hidden">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 p-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-neon-pink to-neon-violet rounded-xl flex items-center justify-center shadow-lg shadow-neon-pink/20">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-xl font-bold neon-glow">Laby</h2>
             </div>
-            <h2 className="text-xl font-bold">Laby</h2>
+
+            <nav className="space-y-2">
+              {[
+                { icon: AlertTriangle, label: "Alerts", active: false },
+                { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
+                { icon: Brain, label: "AI Intel", active: activeSection === "ai" },
+                { icon: Radio, label: "Signals", active: false },
+                { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
+                { icon: Settings, label: "Settings", active: false },
+                { icon: Home, label: "Home", active: false },
+              ].map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => setActiveSection(item.label.toLowerCase())}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border",
+                    item.active 
+                      ? "bg-gradient-to-r from-neon-pink/20 to-neon-violet/20 text-white shadow-lg shadow-neon-pink/10" 
+                      : "hover:bg-white/5"
+                  )}
+                >
+                  <item.icon className={cn(
+                    "w-5 h-5",
+                    item.active ? "text-neon-pink" : "text-gray-400"
+                  )} />
+                  <span>{item.label}</span>
+                </button>
+              ))}
+            </nav>
           </div>
 
-          <nav className="space-y-2">
-            {[
-              { icon: AlertTriangle, label: "Alerts", active: false },
-              { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
-              { icon: Brain, label: "AI Intel", active: activeSection === "ai" },
-              { icon: Radio, label: "Signals", active: false },
-              { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
-              { icon: Settings, label: "Settings", active: false },
-              { icon: Home, label: "Home", active: false },
-            ].map((item) => (
-              <button
-                key={item.label}
-                onClick={() => setActiveSection(item.label.toLowerCase())}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
-                  item.active ? "bg-solana-primary/20 text-solana-primary" : "hover:bg-white/5"
-                )}
-              >
-                <item.icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        <div className="space-y-6">
-          {renderContent()}
+          <div className="space-y-6">
+            {renderContent()}
+          </div>
         </div>
       </div>
     </div>
