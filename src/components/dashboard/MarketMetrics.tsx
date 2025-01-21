@@ -1,12 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Radio } from "lucide-react";
+import { useGmgnData } from "@/services/gmgn";
 
 interface MarketMetricsProps {
   tokenData: any;
 }
 
 export const MarketMetrics = ({ tokenData }: MarketMetricsProps) => {
+  const { data: gmgnData, isLoading } = useGmgnData();
+
   return (
     <div className="grid grid-cols-2 gap-6">
       <Card className="bg-black/40 border-white/10 p-4">
@@ -30,6 +33,14 @@ export const MarketMetrics = ({ tokenData }: MarketMetricsProps) => {
               />
             </div>
           </div>
+          {gmgnData && (
+            <div className="flex justify-between items-center mt-4">
+              <span className="text-sm text-gray-400">GMGN Price:</span>
+              <Badge className="bg-neon-pink/20 text-neon-pink">
+                ${gmgnData.price.toFixed(4)}
+              </Badge>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -53,6 +64,27 @@ export const MarketMetrics = ({ tokenData }: MarketMetricsProps) => {
               <Badge className="bg-red-500/20 text-red-300">High Sell Pressure</Badge>
             )}
           </div>
+          {gmgnData && (
+            <div className="mt-4 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-400">24h Volume:</span>
+                <Badge className="bg-violet-500/20 text-violet-300">
+                  ${gmgnData.volume24h.toLocaleString()}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-400">24h Change:</span>
+                <Badge 
+                  className={gmgnData.change24h >= 0 ? 
+                    "bg-green-500/20 text-green-300" : 
+                    "bg-red-500/20 text-red-300"
+                  }
+                >
+                  {gmgnData.change24h.toFixed(2)}%
+                </Badge>
+              </div>
+            </div>
+          )}
         </div>
       </Card>
     </div>
