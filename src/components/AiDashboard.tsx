@@ -10,6 +10,7 @@ import { ContractAnalysis } from "./dashboard/ContractAnalysis";
 import { MarketMetrics } from "./dashboard/MarketMetrics";
 import { MarketContext } from "./dashboard/MarketContext";
 import { SocialLinks } from "./dashboard/SocialLinks";
+import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
@@ -51,6 +52,8 @@ const AiDashboard = () => {
     switch (activeSection) {
       case "portfolio":
         return <PortfolioTracker />;
+      case "patterns":
+        return <PatternAnalysis />;
       case "ai":
         return (
           <div className="space-y-6">
@@ -84,7 +87,7 @@ const AiDashboard = () => {
           <nav className="space-y-2">
             {[
               { icon: AlertTriangle, label: "Alerts", active: false },
-              { icon: LineChart, label: "Patterns", active: false },
+              { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
               { icon: Brain, label: "AI Intel", active: activeSection === "ai" },
               { icon: Radio, label: "Signals", active: false },
               { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
