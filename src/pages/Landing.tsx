@@ -1,12 +1,13 @@
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
+import { Play } from 'lucide-react';
 
 const Landing = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-solana-dark to-black flex flex-col items-center justify-center p-4">
-      <div className="text-center space-y-8 max-w-3xl">
+      <div className="text-center space-y-8 max-w-4xl">
         <h1 className="text-6xl font-bold bg-gradient-to-r from-solana-primary to-solana-secondary bg-clip-text text-transparent">
           Solana Memecoin Tracker
         </h1>
@@ -26,6 +27,28 @@ const Landing = () => {
           <p className="text-sm text-solana-light/60">
             No wallet connection required for demo
           </p>
+        </div>
+
+        {/* Video Demo Section */}
+        <div className="mt-12 relative rounded-xl overflow-hidden border-2 border-solana-primary/20">
+          <video 
+            className="w-full aspect-video object-cover rounded-xl"
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+          >
+            <source src="/demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 rounded-full bg-solana-primary/20 flex items-center justify-center mx-auto">
+                <Play className="w-8 h-8 text-solana-primary" />
+              </div>
+              <p className="text-lg font-medium text-white">Watch Demo</p>
+            </div>
+          </div>
         </div>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
