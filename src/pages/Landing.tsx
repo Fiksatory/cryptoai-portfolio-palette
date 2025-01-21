@@ -18,7 +18,7 @@ const Landing = () => {
 
       <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
         <div className="text-center space-y-8 max-w-4xl">
-          <h1 className="text-7xl font-bold neon-glow animate-fade-in">
+          <h1 className="text-7xl font-black font-orbitron tracking-wider neon-glow animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-neon-pink via-neon-violet to-neon-purple">
             Laby AI
           </h1>
           
