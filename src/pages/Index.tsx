@@ -1,8 +1,20 @@
 import { PerformanceMetrics } from "@/components/PerformanceMetrics";
 import { PortfolioChart } from "@/components/PortfolioChart";
 import { AssetAllocation } from "@/components/AssetAllocation";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Index = () => {
+  const { connected } = useWallet();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!connected) {
+      navigate('/landing');
+    }
+  }, [connected, navigate]);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 text-center">
