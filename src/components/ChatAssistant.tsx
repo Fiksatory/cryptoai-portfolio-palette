@@ -36,7 +36,14 @@ export const ChatAssistant = () => {
       const data = await searchTokens(userMessage);
       const analysis = analyzePairData(data);
       
-      const response = `Analysis for ${userMessage}:\n${analysis.message}\n\nSentiment: ${analysis.sentiment}\n\nMetrics:\n- Price Change (24h): ${analysis.metrics.priceChange24h}%\n- Volume (24h): $${analysis.metrics.volume24h.toLocaleString()}\n- Liquidity: $${analysis.metrics.liquidity.toLocaleString()}\n- Buy/Sell Ratio: ${analysis.metrics.buySellRatio.toFixed(2)}`;
+      const response = `Analysis for ${userMessage}:\n\n${analysis.message}\n\nKey Metrics:\n` +
+        `• Price Change (24h): ${analysis.metrics.priceChange24h.toFixed(2)}%\n` +
+        `• Volume (24h): $${analysis.metrics.volume24h.toLocaleString()}\n` +
+        `• Liquidity: $${analysis.metrics.liquidity.toLocaleString()}\n` +
+        `• Buy/Sell Ratio: ${analysis.metrics.buySellRatio.toFixed(2)}\n` +
+        `• Total Transactions: ${analysis.metrics.totalTransactions.toLocaleString()}\n` +
+        `• Market Health Score: ${analysis.metrics.healthScore}/100\n\n` +
+        `Overall Sentiment: ${analysis.sentiment.toUpperCase()}`;
       
       setMessages(prev => [...prev, { type: 'assistant', content: response }]);
     } catch (error) {
