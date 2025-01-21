@@ -53,16 +53,16 @@ const Landing = () => {
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           <FeatureCard
-            title="Real-time Tracking"
-            description="Monitor your memecoin portfolio with live price updates and performance metrics"
+            title="AI Contract Analysis"
+            description="Get instant insights on any Solana token contract. Our AI analyzes tokenomics, liquidity patterns, and potential risks in real-time."
           />
           <FeatureCard
-            title="Portfolio Analytics"
-            description="Visualize your investments with detailed charts and asset allocation insights"
+            title="Pattern Recognition"
+            description="Advanced pattern detection system identifies market trends, breakouts, and volume surges across trending Solana pairs."
           />
           <FeatureCard
-            title="AI Assistant"
-            description="Get real-time insights and analysis for any Solana token"
+            title="Market Context"
+            description="Comprehensive market metrics including volume analysis, manipulation detection, and real-time social sentiment tracking."
           />
         </div>
       </div>
