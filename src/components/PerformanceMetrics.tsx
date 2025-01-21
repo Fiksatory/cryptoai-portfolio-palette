@@ -3,23 +3,23 @@ import { TrendingUp, TrendingDown, Activity } from "lucide-react";
 
 const metrics = [
   {
-    label: "Total Value",
-    value: "$45,230.89",
-    change: "+12.5%",
+    label: "Total SOL Value",
+    value: "245.89 SOL",
+    change: "+22.5%",
     isPositive: true,
     icon: Activity
   },
   {
-    label: "24h Change",
-    value: "$1,230.45",
-    change: "+2.3%",
+    label: "BONK/SOL",
+    value: "0.000001234",
+    change: "+15.3%",
     isPositive: true,
     icon: TrendingUp
   },
   {
-    label: "7d Change",
-    value: "-$450.12",
-    change: "-1.2%",
+    label: "MYRO/SOL",
+    value: "0.000002345",
+    change: "-5.2%",
     isPositive: false,
     icon: TrendingDown
   }

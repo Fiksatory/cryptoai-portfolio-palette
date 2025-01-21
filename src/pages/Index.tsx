@@ -6,8 +6,8 @@ const Index = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Portfolio Dashboard</h1>
-        <p className="text-muted-foreground">Track your crypto assets in real-time</p>
+        <h1 className="text-4xl font-bold mb-2">Solana Memecoin Tracker</h1>
+        <p className="text-muted-foreground">Track your Solana memecoin portfolio in real-time</p>
       </div>
       
       <div className="space-y-8">

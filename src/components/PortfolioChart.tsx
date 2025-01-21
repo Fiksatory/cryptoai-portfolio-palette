@@ -2,19 +2,19 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { Card } from "@/components/ui/card";
 
 const data = [
-  { date: "Jan", value: 30000 },
-  { date: "Feb", value: 35000 },
-  { date: "Mar", value: 32000 },
-  { date: "Apr", value: 40000 },
-  { date: "May", value: 38000 },
-  { date: "Jun", value: 45000 }
+  { date: "Jan", value: 150 },
+  { date: "Feb", value: 180 },
+  { date: "Mar", value: 220 },
+  { date: "Apr", value: 190 },
+  { date: "May", value: 235 },
+  { date: "Jun", value: 245 }
 ];
 
 export const PortfolioChart = () => {
   return (
     <Card className="p-6 h-[400px]">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold">Portfolio Value</h3>
+        <h3 className="text-lg font-semibold">Portfolio Value (SOL)</h3>
         <p className="text-sm text-muted-foreground">Last 6 months</p>
       </div>
       <ResponsiveContainer width="100%" height={300}>
