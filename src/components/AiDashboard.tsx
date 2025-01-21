@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Brain, Home, LineChart, Radio, Settings, Sparkles } from "lucide-react";
+import { AlertTriangle, Brain, Home, LineChart, Radio, Settings, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
@@ -50,6 +50,8 @@ const AiDashboard = () => {
 
   const renderContent = () => {
     switch (activeSection) {
+      case "trending":
+        return <PatternAnalysis />;
       case "portfolio":
         return <PortfolioTracker />;
       case "patterns":
@@ -88,6 +90,7 @@ const AiDashboard = () => {
 
             <nav className="space-y-2">
               {[
+                { icon: TrendingUp, label: "Trending", active: activeSection === "trending" },
                 { icon: AlertTriangle, label: "Alerts", active: false },
                 { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
                 { icon: Brain, label: "AI Intel", active: activeSection === "ai" },

@@ -8,7 +8,7 @@ interface GmgnResponse {
 }
 
 export const fetchGmgnData = async (): Promise<GmgnResponse> => {
-  const response = await fetch('https://api.gmgn.ai/v1/market-data');
+  const response = await fetch('https://gmgn.ai/?chain=sol&ref=SeZYWE3ct');
   if (!response.ok) {
     throw new Error('Failed to fetch GMGN data');
   }
