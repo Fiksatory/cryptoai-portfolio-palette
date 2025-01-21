@@ -1,8 +1,5 @@
-import { PerformanceMetrics } from "@/components/PerformanceMetrics";
-import { PortfolioChart } from "@/components/PortfolioChart";
-import { AssetAllocation } from "@/components/AssetAllocation";
-import { ChatAssistant } from "@/components/ChatAssistant";
 import AiDashboard from "@/components/AiDashboard";
+import { ChatAssistant } from "@/components/ChatAssistant";
 
 const Index = () => {
   return (
@@ -17,20 +14,10 @@ const Index = () => {
       </div>
 
       <div className="space-y-8">
-        <AiDashboard />
-        
         <div className="flex gap-8">
           <div className="flex-1">
-            <div className="space-y-8">
-              <PerformanceMetrics />
-              
-              <div className="grid gap-8 md:grid-cols-2">
-                <PortfolioChart />
-                <AssetAllocation />
-              </div>
-            </div>
+            <AiDashboard />
           </div>
-
           <ChatAssistant />
         </div>
       </div>
