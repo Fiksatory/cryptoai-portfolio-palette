@@ -60,7 +60,10 @@ export const analyzePairData = (data: DexScreenerToken) => {
         priceChange24h: 0,
         volume24h: 0,
         liquidity: 0,
-        buySellRatio: 0
+        buySellRatio: 0,
+        totalTransactions: 0,
+        healthScore: 0,
+        marketCap: 0
       }
     };
   }
@@ -74,7 +77,10 @@ export const analyzePairData = (data: DexScreenerToken) => {
         priceChange24h: 0,
         volume24h: 0,
         liquidity: 0,
-        buySellRatio: 0
+        buySellRatio: 0,
+        totalTransactions: 0,
+        healthScore: 0,
+        marketCap: 0
       }
     };
   }
@@ -83,6 +89,7 @@ export const analyzePairData = (data: DexScreenerToken) => {
   const priceChange24h = mainPair.priceChange?.h24 || 0;
   const volume24h = mainPair.volume?.h24 || 0;
   const liquidity = mainPair.liquidity?.usd || 0;
+  const marketCap = mainPair.fdv || 0;
   const buySellRatio = mainPair.txns?.h24 ? 
     mainPair.txns.h24.buys / (mainPair.txns.h24.sells || 1) : 0;
   const totalTxs = mainPair.txns?.h24 ? 
@@ -108,6 +115,24 @@ export const analyzePairData = (data: DexScreenerToken) => {
     sentiment = "bearish";
   } else {
     analysis.push("Price movement is relatively stable");
+  }
+
+  // Market Cap Analysis
+  if (marketCap > 100000000) {
+    analysis.push("Large market cap indicates established market presence");
+    marketStatus.push("Large-cap token");
+    riskLevel = "low";
+  } else if (marketCap > 10000000) {
+    analysis.push("Mid-sized market cap suggests growing adoption");
+    marketStatus.push("Mid-cap token");
+  } else if (marketCap > 1000000) {
+    analysis.push("Small market cap indicates potential for growth but higher risk");
+    marketStatus.push("Small-cap token");
+    riskLevel = "high";
+  } else {
+    analysis.push("Micro market cap suggests very early stage or high-risk token");
+    marketStatus.push("Micro-cap token");
+    riskLevel = "very high";
   }
 
   // Volume Analysis
@@ -157,7 +182,7 @@ export const analyzePairData = (data: DexScreenerToken) => {
   }
 
   // Market Health Score (0-100)
-  const healthScore = calculateHealthScore(volume24h, liquidity, buySellRatio, totalTxs);
+  const healthScore = calculateHealthScore(volume24h, liquidity, buySellRatio, totalTxs, marketCap);
 
   return {
     message: analysis.join(". ") + ".\n\nMarket Status: " + marketStatus.join(", ") + ".\nRisk Level: " + riskLevel + "\nMarket Health Score: " + healthScore + "/100",
@@ -168,7 +193,8 @@ export const analyzePairData = (data: DexScreenerToken) => {
       liquidity,
       buySellRatio,
       healthScore,
-      totalTransactions: totalTxs
+      totalTransactions: totalTxs,
+      marketCap
     }
   };
 };
@@ -178,7 +204,8 @@ const calculateHealthScore = (
   volume24h: number,
   liquidity: number,
   buySellRatio: number,
-  totalTxs: number
+  totalTxs: number,
+  marketCap: number
 ): number => {
   let score = 50; // Base score
 
@@ -191,6 +218,11 @@ const calculateHealthScore = (
   if (liquidity > 1000000) score += 25;
   else if (liquidity > 100000) score += 15;
   else if (liquidity > 10000) score += 5;
+
+  // Market Cap score (max 25 points)
+  if (marketCap > 100000000) score += 25;
+  else if (marketCap > 10000000) score += 15;
+  else if (marketCap > 1000000) score += 5;
 
   // Buy/Sell ratio score (max 25 points)
   if (buySellRatio > 1.5 || buySellRatio < 0.67) score -= 10; // Extreme ratios might indicate manipulation

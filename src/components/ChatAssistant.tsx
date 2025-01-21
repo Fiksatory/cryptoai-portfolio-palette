@@ -38,6 +38,7 @@ export const ChatAssistant = () => {
       
       const response = `Analysis for ${userMessage}:\n\n${analysis.message}\n\nKey Metrics:\n` +
         `• Price Change (24h): ${analysis.metrics.priceChange24h.toFixed(2)}%\n` +
+        `• Market Cap: $${analysis.metrics.marketCap.toLocaleString()}\n` +
         `• Volume (24h): $${analysis.metrics.volume24h.toLocaleString()}\n` +
         `• Liquidity: $${analysis.metrics.liquidity.toLocaleString()}\n` +
         `• Buy/Sell Ratio: ${analysis.metrics.buySellRatio.toFixed(2)}\n` +
