@@ -1,17 +1,8 @@
-import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const Landing = () => {
-  const { connected } = useWallet();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (connected) {
-      navigate('/dashboard');
-    }
-  }, [connected, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-solana-dark to-black flex flex-col items-center justify-center p-4">
@@ -21,14 +12,19 @@ const Landing = () => {
         </h1>
         
         <p className="text-xl text-solana-light/80">
-          Track your favorite Solana memecoins in real-time. Connect your wallet to get started.
+          Track your favorite Solana memecoins in real-time.
         </p>
 
         <div className="flex flex-col items-center space-y-4">
-          <WalletMultiButton className="!bg-solana-primary hover:!bg-solana-secondary transition-colors duration-200" />
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-6 py-3 bg-solana-primary hover:bg-solana-secondary transition-colors duration-200 rounded-lg text-white font-semibold"
+          >
+            Enter Dashboard
+          </button>
           
           <p className="text-sm text-solana-light/60">
-            Supported wallets: Phantom, Solflare
+            No wallet connection required for demo
           </p>
         </div>
 
@@ -42,8 +38,8 @@ const Landing = () => {
             description="Visualize your investments with detailed charts and asset allocation insights"
           />
           <FeatureCard
-            title="Secure Connection"
-            description="Connect safely with popular Solana wallets like Phantom and Solflare"
+            title="AI Assistant"
+            description="Get real-time insights and analysis for any Solana token"
           />
         </div>
       </div>
