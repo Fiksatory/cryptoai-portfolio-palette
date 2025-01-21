@@ -51,9 +51,16 @@ export const ChatAssistant = () => {
     return false;
   };
 
+  const isContractAddress = (text: string): boolean => {
+    // Check if the text matches Solana address format (base58 string, typically 32-44 characters)
+    return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(text.trim());
+  };
+
   const isTokenAnalysisRequest = (text: string): boolean => {
     const lowerText = text.toLowerCase();
-    // Check if the message contains token-related keywords
+    // First check if it's a contract address
+    if (isContractAddress(text)) return true;
+    // Then check for token-related keywords
     const tokenKeywords = ['price', 'token', 'coin', 'market', 'analyze', 'check', 'how is', 'what about'];
     return tokenKeywords.some(keyword => lowerText.includes(keyword)) || text.toUpperCase() === text;
   };
@@ -69,40 +76,39 @@ export const ChatAssistant = () => {
     // Check for commands first
     if (handleCommand(userMessage)) return;
 
-    // Only proceed with token analysis if it seems like a relevant request
-    if (!isTokenAnalysisRequest(userMessage)) {
+    // Auto-analyze if it's a contract address, otherwise check if it's a token analysis request
+    if (isContractAddress(userMessage) || isTokenAnalysisRequest(userMessage)) {
+      setIsLoading(true);
+
+      try {
+        const data = await searchTokens(userMessage);
+        const analysis = analyzePairData(data);
+        
+        const response = `Analysis for ${isContractAddress(userMessage) ? 'Contract' : userMessage}:\n` +
+          `${analysis.summary}\n\nKey Metrics:\n` +
+          `• Market Cap: $${analysis.metrics.marketCap.toLocaleString()}\n` +
+          `• 24h Volume/MCap: ${((analysis.metrics.volume24h / analysis.metrics.marketCap) * 100).toFixed(2)}%\n` +
+          `• Buy Pressure: ${analysis.metrics.buySellRatio > 1.2 ? "High" : analysis.metrics.buySellRatio < 0.8 ? "Low" : "Neutral"}\n` +
+          `• Market Health: ${analysis.metrics.healthScore}/100\n\n` +
+          `Market Status: ${analysis.marketStatus}\n` +
+          `Risk Level: ${analysis.riskLevel}` +
+          formatSocialLinks(analysis.socialLinks);
+        
+        setMessages(prev => [...prev, { type: 'assistant', content: response }]);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch token data. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
       setMessages(prev => [...prev, {
         type: 'assistant',
-        content: "I'm specialized in analyzing Solana memecoins. Please ask me about specific tokens or type 'help' to see what I can do!"
+        content: "I'm specialized in analyzing Solana memecoins. Please ask me about specific tokens, paste a contract address, or type 'help' to see what I can do!"
       }]);
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const data = await searchTokens(userMessage);
-      const analysis = analyzePairData(data);
-      
-      const response = `Analysis for ${userMessage}:\n` +
-        `${analysis.summary}\n\nKey Metrics:\n` +
-        `• Market Cap: $${analysis.metrics.marketCap.toLocaleString()}\n` +
-        `• 24h Volume/MCap: ${((analysis.metrics.volume24h / analysis.metrics.marketCap) * 100).toFixed(2)}%\n` +
-        `• Buy Pressure: ${analysis.metrics.buySellRatio > 1.2 ? "High" : analysis.metrics.buySellRatio < 0.8 ? "Low" : "Neutral"}\n` +
-        `• Market Health: ${analysis.metrics.healthScore}/100\n\n` +
-        `Market Status: ${analysis.marketStatus}\n` +
-        `Risk Level: ${analysis.riskLevel}` +
-        formatSocialLinks(analysis.socialLinks);
-      
-      setMessages(prev => [...prev, { type: 'assistant', content: response }]);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch token data. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
 
