@@ -29,16 +29,16 @@ export const PerformanceMetrics = () => {
   return (
     <div className="grid gap-4 md:grid-cols-3">
       {metrics.map((metric) => (
-        <Card key={metric.label} className="p-6 animate-fade-in">
+        <Card key={metric.label} className="portfolio-card animate-fade-in">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
-              <h3 className="text-2xl font-bold mt-2">{metric.value}</h3>
-              <p className={`text-sm mt-1 ${metric.isPositive ? "text-green-500" : "text-red-500"}`}>
+              <h3 className="text-2xl font-bold mt-2 text-foreground">{metric.value}</h3>
+              <p className={`text-sm mt-1 font-medium ${metric.isPositive ? "text-green-500" : "text-red-500"}`}>
                 {metric.change}
               </p>
             </div>
-            <metric.icon className="h-8 w-8 text-muted-foreground" />
+            <metric.icon className="h-8 w-8 text-solana-primary" />
           </div>
         </Card>
       ))}
