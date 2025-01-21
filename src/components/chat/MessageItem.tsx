@@ -17,20 +17,20 @@ export const MessageItem = ({ message }: MessageItemProps) => {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:text-blue-700 underline block"
+              className="text-blue-500 hover:text-blue-700 underline block break-words"
             >
               {line}
             </a>
           );
         }
       }
-      return <div key={i}>{line}</div>;
+      return <div key={i} className="break-words">{line}</div>;
     });
   };
 
   return (
     <div 
-      className={`max-w-[80%] rounded-lg p-3 ${
+      className={`max-w-[80%] rounded-lg p-3 whitespace-pre-wrap break-words ${
         message.type === 'user'
           ? 'bg-primary text-primary-foreground ml-4'
           : 'bg-muted text-foreground mr-4'
