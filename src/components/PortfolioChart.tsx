@@ -1,21 +1,31 @@
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card } from "@/components/ui/card";
-
-const data = [
-  { date: "Jan", value: 150 },
-  { date: "Feb", value: 180 },
-  { date: "Mar", value: 220 },
-  { date: "Apr", value: 190 },
-  { date: "May", value: 235 },
-  { date: "Jun", value: 245 }
-];
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useEffect, useState } from "react";
 
 export const PortfolioChart = () => {
+  const { publicKey } = useWallet();
+  const [data, setData] = useState([
+    { date: "Now", value: 0 },
+  ]);
+
+  useEffect(() => {
+    // In a real application, you would fetch historical data for the wallet
+    // For now, we'll just show the current balance point
+    if (publicKey) {
+      setData([
+        { date: "Now", value: 0 }, // You would populate this with real historical data
+      ]);
+    }
+  }, [publicKey]);
+
   return (
     <Card className="p-6 h-[400px]">
       <div className="mb-4">
         <h3 className="text-lg font-semibold">Portfolio Value (SOL)</h3>
-        <p className="text-sm text-muted-foreground">Last 6 months</p>
+        <p className="text-sm text-muted-foreground">
+          {publicKey ? publicKey.toString() : "Connect wallet to view portfolio"}
+        </p>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>

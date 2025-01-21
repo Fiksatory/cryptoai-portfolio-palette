@@ -1,26 +1,42 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { Card } from "@/components/ui/card";
-
-const data = [
-  { name: "BONK", value: 35 },
-  { name: "MYRO", value: 25 },
-  { name: "POPCAT", value: 20 },
-  { name: "Other SOL Memes", value: 20 }
-];
-
-const COLORS = [
-  "hsl(var(--primary))",
-  "hsl(var(--muted))",
-  "hsl(var(--accent))",
-  "hsl(var(--secondary))"
-];
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useEffect, useState } from "react";
 
 export const AssetAllocation = () => {
+  const { publicKey } = useWallet();
+  const [data, setData] = useState([
+    { name: "SOL", value: 100 }
+  ]);
+
+  const COLORS = [
+    "hsl(var(--primary))",
+    "hsl(var(--muted))",
+    "hsl(var(--accent))",
+    "hsl(var(--secondary))"
+  ];
+
+  useEffect(() => {
+    const fetchTokens = async () => {
+      if (publicKey) {
+        // In a real application, you would fetch token balances here
+        // For now, we'll just show SOL
+        setData([
+          { name: "SOL", value: 100 }
+        ]);
+      }
+    };
+
+    fetchTokens();
+  }, [publicKey]);
+
   return (
     <Card className="p-6 h-[400px]">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold">Memecoin Allocation</h3>
-        <p className="text-sm text-muted-foreground">Current distribution on Solana</p>
+        <h3 className="text-lg font-semibold">Token Allocation</h3>
+        <p className="text-sm text-muted-foreground">
+          {publicKey ? "Current distribution" : "Connect wallet to view allocation"}
+        </p>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
