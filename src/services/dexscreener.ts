@@ -73,7 +73,11 @@ export const analyzePairData = (data: DexScreenerToken) => {
     };
   }
 
-  const solanaPairs = data.pairs.filter(pair => pair.chainId === "solana");
+  // Filter for Solana pairs and sort by volume to get the most active pair
+  const solanaPairs = data.pairs
+    .filter(pair => pair.chainId === "solana")
+    .sort((a, b) => (b.volume?.h24 || 0) - (a.volume?.h24 || 0));
+
   if (solanaPairs.length === 0) {
     return {
       summary: "No Solana trading pairs found for this token.",
@@ -91,43 +95,67 @@ export const analyzePairData = (data: DexScreenerToken) => {
   }
 
   const mainPair = solanaPairs[0];
+  
+  // Ensure we have valid numerical values
   const marketCap = mainPair.fdv || 0;
   const volume24h = mainPair.volume?.h24 || 0;
-  const buySellRatio = mainPair.txns?.h24 ? 
-    mainPair.txns.h24.buys / (mainPair.txns.h24.sells || 1) : 0;
+  const buys = mainPair.txns?.h24?.buys || 0;
+  const sells = mainPair.txns?.h24?.sells || 0;
+  const buySellRatio = sells > 0 ? buys / sells : 1;
+  const liquidity = mainPair.liquidity?.usd || 0;
 
   // Market Context Analysis
   const marketShare = (marketCap / SOLANA_MEME_MARKET.totalMarketCap) * 100;
-  const volumeMcapRatio = volume24h / marketCap;
-  const relativeLiquidity = volumeMcapRatio / SOLANA_MEME_MARKET.averageVolumeMcapRatio;
+  const volumeMcapRatio = marketCap > 0 ? (volume24h / marketCap) : 0;
+  const relativeLiquidity = SOLANA_MEME_MARKET.averageVolumeMcapRatio > 0 ? 
+    volumeMcapRatio / SOLANA_MEME_MARKET.averageVolumeMcapRatio : 0;
 
   // Market Status & Risk Assessment
   let marketStatus = "";
   let riskLevel = "";
   let summary = [];
 
-  if (marketCap > 100000000) {
+  // Market cap based categorization
+  if (marketCap > 100000000) { // >$100M
     marketStatus = "Major Memecoin";
     riskLevel = "Moderate";
     summary.push("Established memecoin with significant market presence");
-  } else if (marketCap > 10000000) {
+  } else if (marketCap > 10000000) { // >$10M
     marketStatus = "Growing Memecoin";
     riskLevel = "High";
     summary.push("Mid-sized memecoin with growth potential");
-  } else {
+  } else if (marketCap > 0) {
     marketStatus = "Emerging Memecoin";
     riskLevel = "Very High";
     summary.push("Early-stage memecoin with high volatility risk");
+  } else {
+    marketStatus = "Unknown";
+    riskLevel = "Extreme";
+    summary.push("Unable to determine market cap - exercise extreme caution");
   }
 
-  if (volumeMcapRatio > SOLANA_MEME_MARKET.averageVolumeMcapRatio * 1.5) {
-    summary.push("Above-average trading activity indicates strong market interest");
-  } else if (volumeMcapRatio < SOLANA_MEME_MARKET.averageVolumeMcapRatio * 0.5) {
-    summary.push("Below-average trading activity suggests limited market interest");
+  // Volume analysis
+  if (volumeMcapRatio > 0.2) {
+    summary.push("High trading activity relative to market cap indicates strong market interest");
+  } else if (volumeMcapRatio < 0.05) {
+    summary.push("Low trading volume relative to market cap suggests limited market activity");
+  }
+
+  // Buy/Sell pressure analysis
+  if (buySellRatio > 1.2) {
+    summary.push("Strong buying pressure in the last 24 hours");
+  } else if (buySellRatio < 0.8) {
+    summary.push("Significant selling pressure in the last 24 hours");
   }
 
   // Market Health Score (0-100)
-  const healthScore = calculateHealthScore(volumeMcapRatio, relativeLiquidity, buySellRatio, marketShare);
+  const healthScore = calculateHealthScore({
+    volumeMcapRatio,
+    relativeLiquidity,
+    buySellRatio,
+    marketShare,
+    liquidityToMcap: liquidity / marketCap
+  });
 
   // Market Context Message
   const marketContext = `Solana Meme Market Overview:\n` +
@@ -149,27 +177,44 @@ export const analyzePairData = (data: DexScreenerToken) => {
   };
 };
 
-const calculateHealthScore = (
-  volumeMcapRatio: number,
-  relativeLiquidity: number,
-  buySellRatio: number,
-  marketShare: number
-): number => {
-  let score = 50;
+interface HealthScoreParams {
+  volumeMcapRatio: number;
+  relativeLiquidity: number;
+  buySellRatio: number;
+  marketShare: number;
+  liquidityToMcap: number;
+}
 
-  // Volume/MCap ratio score (max 25 points)
-  if (relativeLiquidity > 1.5) score += 25;
-  else if (relativeLiquidity > 1) score += 15;
-  else if (relativeLiquidity > 0.5) score += 5;
+const calculateHealthScore = ({
+  volumeMcapRatio,
+  relativeLiquidity,
+  buySellRatio,
+  marketShare,
+  liquidityToMcap
+}: HealthScoreParams): number => {
+  let score = 50; // Base score
 
-  // Market share score (max 25 points)
-  if (marketShare > 10) score += 25;
+  // Volume/MCap ratio score (max 20 points)
+  if (volumeMcapRatio > 0.2) score += 20;
+  else if (volumeMcapRatio > 0.1) score += 15;
+  else if (volumeMcapRatio > 0.05) score += 10;
+  else score -= 10;
+
+  // Market share score (max 20 points)
+  if (marketShare > 5) score += 20;
   else if (marketShare > 1) score += 15;
-  else if (marketShare > 0.1) score += 5;
+  else if (marketShare > 0.1) score += 10;
+  else score -= 5;
 
-  // Buy/Sell ratio score (max 25 points)
-  if (buySellRatio >= 0.8 && buySellRatio <= 1.2) score += 25;
+  // Buy/Sell ratio score (max 20 points)
+  if (buySellRatio >= 0.8 && buySellRatio <= 1.2) score += 20;
   else if (buySellRatio > 1.5 || buySellRatio < 0.67) score -= 10;
+
+  // Liquidity to Market Cap ratio score (max 20 points)
+  if (liquidityToMcap > 0.1) score += 20;
+  else if (liquidityToMcap > 0.05) score += 15;
+  else if (liquidityToMcap > 0.01) score += 10;
+  else score -= 10;
 
   return Math.min(Math.max(score, 0), 100);
 };
