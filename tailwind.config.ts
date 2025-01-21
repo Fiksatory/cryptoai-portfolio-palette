@@ -52,12 +52,10 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         },
-        solana: {
-          primary: '#9b87f5',
-          secondary: '#7E69AB',
-          tertiary: '#6E59A5',
-          dark: '#1A1F2C',
-          light: '#D6BCFA'
+        neon: {
+          pink: '#ff00ff',
+          violet: '#9b87f5',
+          purple: '#7E69AB'
         }
       },
       borderRadius: {
