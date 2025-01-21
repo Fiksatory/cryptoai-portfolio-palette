@@ -8,12 +8,11 @@ import { Button } from "./ui/button";
 import { analyzePairData, searchTokens } from "@/services/dexscreener";
 import { useToast } from "./ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { PerformanceMetrics } from "./PerformanceMetrics";
-import { PortfolioChart } from "./PortfolioChart";
-import { AssetAllocation } from "./AssetAllocation";
+import PortfolioTracker from "./PortfolioTracker";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
+  const [activeSection, setActiveSection] = useState("ai");
   const { toast } = useToast();
 
   const { data: tokenData, isLoading } = useQuery({
@@ -47,77 +46,38 @@ const AiDashboard = () => {
     setContractAddress(contractAddress);
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-[240px_1fr] gap-6 p-4 bg-black/90 text-white rounded-xl">
-        {/* Sidebar */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 p-4">
-            <div className="w-10 h-10 bg-solana-primary rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <h2 className="text-xl font-bold">Laby</h2>
-          </div>
-
-          <nav className="space-y-2">
-            {[
-              { icon: AlertTriangle, label: "Alerts", active: false },
-              { icon: LineChart, label: "Patterns", active: false },
-              { icon: Brain, label: "AI Intel", active: true },
-              { icon: Radio, label: "Signals", active: false },
-              { icon: Settings, label: "Settings", active: false },
-              { icon: Home, label: "Home", active: false },
-            ].map((item) => (
-              <button
-                key={item.label}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
-                  item.active ? "bg-solana-primary/20 text-solana-primary" : "hover:bg-white/5"
-                )}
-              >
-                <item.icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* Main Content */}
-        <div className="space-y-6">
-          {/* Portfolio Overview Section */}
+  const renderContent = () => {
+    switch (activeSection) {
+      case "portfolio":
+        return <PortfolioTracker />;
+      case "ai":
+        return (
           <div className="space-y-6">
-            <PerformanceMetrics />
-            <div className="grid gap-8 md:grid-cols-2">
-              <PortfolioChart />
-              <AssetAllocation />
-            </div>
-          </div>
+            {/* Contract Analysis Input */}
+            <Card className="bg-black/40 border-white/10 p-4">
+              <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
+                <Sparkles className="w-4 h-4" />
+                Contract Analysis
+              </h3>
+              <div className="flex gap-4">
+                <Input
+                  placeholder="Enter contract address..."
+                  value={contractAddress}
+                  onChange={(e) => setContractAddress(e.target.value)}
+                  className="bg-black/20 border-white/10"
+                />
+                <Button 
+                  onClick={handleAnalyze}
+                  disabled={isLoading}
+                  className="bg-solana-primary hover:bg-solana-primary/90"
+                >
+                  Analyze
+                </Button>
+              </div>
+            </Card>
 
-          {/* Contract Analysis Input */}
-          <Card className="bg-black/40 border-white/10 p-4">
-            <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-              <Sparkles className="w-4 h-4" />
-              Contract Analysis
-            </h3>
-            <div className="flex gap-4">
-              <Input
-                placeholder="Enter contract address..."
-                value={contractAddress}
-                onChange={(e) => setContractAddress(e.target.value)}
-                className="bg-black/20 border-white/10"
-              />
-              <Button 
-                onClick={handleAnalyze}
-                disabled={isLoading}
-                className="bg-solana-primary hover:bg-solana-primary/90"
-              >
-                Analyze
-              </Button>
-            </div>
-          </Card>
-
-          {/* Market Pulse & Manipulation Radar */}
-        <div className="grid grid-cols-2 gap-6">
+            {/* Market Pulse & Manipulation Radar */}
+            <div className="grid grid-cols-2 gap-6">
           <Card className="bg-black/40 border-white/10 p-4">
             <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
               <Sparkles className="w-4 h-4" />
@@ -167,9 +127,10 @@ const AiDashboard = () => {
             </div>
           </Card>
         </div>
+            </div>
 
-          {/* Stealth Movement & Whale Psychology */}
-        <div className="grid grid-cols-2 gap-6">
+            {/* Stealth Movement & Whale Psychology */}
+            <div className="grid grid-cols-2 gap-6">
           <Card className="bg-black/40 border-white/10 p-4">
             <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
               <LineChart className="w-4 h-4" />
@@ -212,10 +173,10 @@ const AiDashboard = () => {
             </div>
           </Card>
         </div>
+            </div>
 
-          {/* Real-time AI Insights */}
-        <Card className="bg-black/40 border-white/10 p-4">
-          <h3 className="text-sm font-medium mb-4">Real-time AI Insights:</h3>
+            {/* Real-time AI Insights */}
+            <Card className="bg-black/40 border-white/10 p-4">
           {isLoading ? (
             <div className="text-center text-gray-400">Analyzing contract...</div>
           ) : !tokenData ? (
@@ -239,7 +200,54 @@ const AiDashboard = () => {
               ))}
             </div>
           )}
-        </Card>
+            </Card>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-[240px_1fr] gap-6 p-4 bg-black/90 text-white rounded-xl">
+        {/* Sidebar */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 p-4">
+            <div className="w-10 h-10 bg-solana-primary rounded-xl flex items-center justify-center">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <h2 className="text-xl font-bold">Laby</h2>
+          </div>
+
+          <nav className="space-y-2">
+            {[
+              { icon: AlertTriangle, label: "Alerts", active: false },
+              { icon: LineChart, label: "Patterns", active: false },
+              { icon: Brain, label: "AI Intel", active: activeSection === "ai" },
+              { icon: Radio, label: "Signals", active: false },
+              { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
+              { icon: Settings, label: "Settings", active: false },
+              { icon: Home, label: "Home", active: false },
+            ].map((item) => (
+              <button
+                key={item.label}
+                onClick={() => setActiveSection(item.label.toLowerCase())}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+                  item.active ? "bg-solana-primary/20 text-solana-primary" : "hover:bg-white/5"
+                )}
+              >
+                <item.icon className="w-5 h-5" />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="space-y-6">
+          {renderContent()}
         </div>
       </div>
     </div>
