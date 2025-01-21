@@ -10,7 +10,7 @@ export const ChatAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       type: 'assistant',
-      content: "Hi! I'm Laby AI. I analyze Solana memecoins and provide market insights. Try asking about tokens like 'BONK', 'MYRO', or 'WIF'!"
+      content: "Hi! I'm Laby AI. I analyze Solana memecoins and provide market insights. Try asking about tokens like 'BONK', 'MYRO', or 'WIF'! You can also ask me for help or type 'clear' to reset our chat."
     }
   ]);
   const [input, setInput] = useState('');
@@ -29,6 +29,35 @@ export const ChatAssistant = () => {
     return formattedLinks.length > 0 ? "\n\nSocial Links:\n" + formattedLinks.join("\n") : "";
   };
 
+  const handleCommand = (command: string): boolean => {
+    const lowerCommand = command.toLowerCase().trim();
+    
+    if (lowerCommand === 'clear') {
+      setMessages([{
+        type: 'assistant',
+        content: "Chat history cleared. How can I help you analyze Solana memecoins?"
+      }]);
+      return true;
+    }
+    
+    if (lowerCommand === 'help') {
+      setMessages(prev => [...prev, {
+        type: 'assistant',
+        content: "Here's how I can help:\n• Analyze any Solana memecoin (e.g., 'Tell me about BONK')\n• Show market metrics and social links\n• Type 'clear' to reset our chat\n• Ask for specific metrics like market cap or volume"
+      }]);
+      return true;
+    }
+    
+    return false;
+  };
+
+  const isTokenAnalysisRequest = (text: string): boolean => {
+    const lowerText = text.toLowerCase();
+    // Check if the message contains token-related keywords
+    const tokenKeywords = ['price', 'token', 'coin', 'market', 'analyze', 'check', 'how is', 'what about'];
+    return tokenKeywords.some(keyword => lowerText.includes(keyword)) || text.toUpperCase() === text;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -36,6 +65,19 @@ export const ChatAssistant = () => {
     const userMessage = input.trim();
     setMessages(prev => [...prev, { type: 'user', content: userMessage }]);
     setInput('');
+
+    // Check for commands first
+    if (handleCommand(userMessage)) return;
+
+    // Only proceed with token analysis if it seems like a relevant request
+    if (!isTokenAnalysisRequest(userMessage)) {
+      setMessages(prev => [...prev, {
+        type: 'assistant',
+        content: "I'm specialized in analyzing Solana memecoins. Please ask me about specific tokens or type 'help' to see what I can do!"
+      }]);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
