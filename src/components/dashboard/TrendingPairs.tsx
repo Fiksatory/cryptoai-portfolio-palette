@@ -5,6 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { getNewPairs, getLatestTokenProfiles } from "@/services/dexscreener";
 import type { TrendingToken, TokenProfile } from "@/services/dexscreener";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -23,19 +31,20 @@ export const TrendingPairs = () => {
         .map(pair => ({
           name: pair.baseToken.name,
           symbol: pair.baseToken.symbol,
-          priceUsd: pair.priceUsd || "0",
+          priceUsd: String(pair.priceUsd || "0"),
           priceChange: pair.priceChange,
           volume: pair.volume,
           pairCreatedAt: new Date(pair.pairCreatedAt),
           chainId: pair.chainId,
-          dexId: pair.dexId
-        } as TrendingToken))
-        .sort((a, b) => b.volume.h24 - a.volume.h24) // Sort by 24h volume
-        .slice(0, 10); // Get top 10 trending pairs
+          dexId: pair.dexId,
+          txns: pair.txns
+        }))
+        .sort((a, b) => b.volume.h24 - a.volume.h24)
+        .slice(0, 10);
       
       return tokens;
     },
-    refetchInterval: 30000 // Refresh every 30 seconds
+    refetchInterval: 30000
   });
 
   const { data: tokenProfiles, isLoading: isLoadingProfiles } = useQuery({
@@ -45,6 +54,21 @@ export const TrendingPairs = () => {
   });
 
   const isLoading = isLoadingPairs || isLoadingProfiles;
+
+  const formatVolume = (volume: number) => {
+    if (volume >= 1000000) {
+      return `$${(volume / 1000000).toFixed(1)}M`;
+    }
+    return `$${(volume / 1000).toFixed(1)}K`;
+  };
+
+  const formatPrice = (price: string) => {
+    const numPrice = parseFloat(price);
+    if (numPrice < 0.0001) {
+      return numPrice.toExponential(4);
+    }
+    return numPrice.toFixed(6);
+  };
 
   return (
     <div className="space-y-6">
@@ -57,82 +81,58 @@ export const TrendingPairs = () => {
         {isLoading ? (
           <div className="text-sm text-gray-400">Loading trending pairs...</div>
         ) : (
-          <div className="space-y-4">
-            {trendingTokens?.map((token, index) => {
-              const profile = tokenProfiles?.find(p => 
-                p.symbol.toLowerCase() === token.symbol.toLowerCase() && 
-                p.chainId === token.chainId
-              );
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>TOKEN</TableHead>
+                <TableHead>PRICE</TableHead>
+                <TableHead>AGE</TableHead>
+                <TableHead>BUYS</TableHead>
+                <TableHead>SELLS</TableHead>
+                <TableHead>VOLUME</TableHead>
+                <TableHead>24H</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {trendingTokens?.map((token, index) => {
+                const timeDiff = Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60));
+                const timeDisplay = timeDiff < 60 
+                  ? `${timeDiff}m ago`
+                  : `${Math.round(timeDiff / 60)}h ${timeDiff % 60}m`;
 
-              const timeDiff = Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60));
-              const timeDisplay = timeDiff < 60 
-                ? `${timeDiff}m ago`
-                : `${Math.round(timeDiff / 60)}h ago`;
-
-              return (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium">{token.symbol}</span>
-                      {token.priceChange.h24 > 0 ? (
-                        <ArrowUpRight className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <ArrowDownRight className="w-4 h-4 text-red-500" />
-                      )}
-                      <Clock className="w-3 h-3 text-gray-400" />
-                      <span className="text-xs text-gray-400">
-                        {timeDisplay}
-                      </span>
-                      {profile && (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <Info className="w-4 h-4 text-blue-400" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">{profile.description}</p>
-                              {profile.links && Object.entries(profile.links).map(([platform, url]) => (
-                                <a 
-                                  key={platform}
-                                  href={url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="block text-blue-400 hover:underline"
-                                >
-                                  {platform}
-                                </a>
-                              ))}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-400">${parseFloat(token.priceUsd).toFixed(6)}</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Badge 
-                      className={
-                        token.priceChange.h24 > 0
-                          ? "bg-green-500/20 text-green-300"
-                          : "bg-red-500/20 text-red-300"
-                      }
-                    >
-                      {token.priceChange.h24.toFixed(2)}%
-                    </Badge>
-                    <p className="text-xs text-gray-400 text-right">
-                      Vol: ${(token.volume.h24 / 1000000).toFixed(2)}M
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-            
-            {(!trendingTokens || trendingTokens.length === 0) && (
-              <div className="text-sm text-gray-400">
-                No trending pairs found
-              </div>
-            )}
-          </div>
+                return (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <span>{token.symbol}</span>
+                        {token.priceChange.h24 > 0 ? (
+                          <ArrowUpRight className="w-4 h-4 text-green-500" />
+                        ) : (
+                          <ArrowDownRight className="w-4 h-4 text-red-500" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>${formatPrice(token.priceUsd)}</TableCell>
+                    <TableCell>{timeDisplay}</TableCell>
+                    <TableCell>{token.txns?.h24?.buys || 0}</TableCell>
+                    <TableCell>{token.txns?.h24?.sells || 0}</TableCell>
+                    <TableCell>{formatVolume(token.volume.h24)}</TableCell>
+                    <TableCell>
+                      <Badge 
+                        className={
+                          token.priceChange.h24 > 0
+                            ? "bg-green-500/20 text-green-300"
+                            : "bg-red-500/20 text-red-300"
+                        }
+                      >
+                        {token.priceChange.h24.toFixed(2)}%
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         )}
       </Card>
     </div>
