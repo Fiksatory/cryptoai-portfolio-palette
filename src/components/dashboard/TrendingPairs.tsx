@@ -13,7 +13,7 @@ import {
 
 export const TrendingPairs = () => {
   const { data: trendingTokens, isLoading: isLoadingPairs } = useQuery({
-    queryKey: ['newPairs'],
+    queryKey: ['trendingPairs'],
     queryFn: async () => {
       const pairs = await getNewPairs();
       
@@ -30,8 +30,8 @@ export const TrendingPairs = () => {
           chainId: pair.chainId,
           dexId: pair.dexId
         }))
-        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime()) // Sort by newest first
-        .slice(0, 10); // Get top 10 newest pairs
+        .sort((a, b) => b.volume.h24 - a.volume.h24) // Sort by 24h volume
+        .slice(0, 10); // Get top 10 trending pairs
       
       return tokens;
     },
@@ -51,11 +51,11 @@ export const TrendingPairs = () => {
       <Card className="bg-black/40 border-white/10 p-4">
         <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
           <TrendingUp className="w-4 h-4" />
-          Latest Pairs
+          Trending Pairs
         </h3>
         
         {isLoading ? (
-          <div className="text-sm text-gray-400">Loading new pairs...</div>
+          <div className="text-sm text-gray-400">Loading trending pairs...</div>
         ) : (
           <div className="space-y-4">
             {trendingTokens?.map((token, index) => {
@@ -129,7 +129,7 @@ export const TrendingPairs = () => {
             
             {(!trendingTokens || trendingTokens.length === 0) && (
               <div className="text-sm text-gray-400">
-                No new pairs found
+                No trending pairs found
               </div>
             )}
           </div>
