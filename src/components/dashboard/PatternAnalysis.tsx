@@ -2,16 +2,16 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getNewPairs } from "@/services/dexscreener/api";
-import type { TrendingToken } from "@/services/dexscreener/types";
+import { getNewPairs } from "@/services/dexscreener";
+import type { TrendingToken } from "@/services/dexscreener";
 
 export const PatternAnalysis = () => {
   const { data: trendingTokens, isLoading } = useQuery({
-    queryKey: ['newPairs'],
+    queryKey: ['patternAnalysis'],
     queryFn: async () => {
       const pairs = await getNewPairs();
       
-      // Filter for Solana pairs and transform data
+      // Filter for Solana pairs with significant price movements
       const tokens = pairs
         .filter(pair => pair.chainId === "solana")
         .map(pair => ({
@@ -24,12 +24,12 @@ export const PatternAnalysis = () => {
           chainId: pair.chainId,
           dexId: pair.dexId
         }))
-        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
-        .slice(0, 10); // Take only the 10 most recent tokens
+        .sort((a, b) => Math.abs(b.priceChange.h24) - Math.abs(a.priceChange.h24)) // Sort by absolute price change
+        .slice(0, 10); // Get top 10 most volatile pairs
       
       return tokens;
     },
-    refetchInterval: 30000 // Refetch every 30 seconds
+    refetchInterval: 30000
   });
 
   return (
@@ -37,11 +37,11 @@ export const PatternAnalysis = () => {
       <Card className="bg-black/40 border-white/10 p-4">
         <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
           <TrendingUp className="w-4 h-4" />
-          New Pairs (Last Hour)
+          Most Volatile Pairs
         </h3>
         
         {isLoading ? (
-          <div className="text-sm text-gray-400">Loading new pairs...</div>
+          <div className="text-sm text-gray-400">Loading pattern analysis...</div>
         ) : (
           <div className="space-y-4">
             {trendingTokens?.map((token, index) => (
@@ -54,10 +54,12 @@ export const PatternAnalysis = () => {
                     ) : (
                       <ArrowDownRight className="w-4 h-4 text-red-500" />
                     )}
-                    <Clock className="w-3 h-3 text-gray-400" />
-                    <span className="text-xs text-gray-400">
-                      {Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60))}m ago
-                    </span>
+                    <Badge 
+                      variant="outline" 
+                      className="text-xs"
+                    >
+                      Rank #{index + 1}
+                    </Badge>
                   </div>
                   <p className="text-xs text-gray-400">${parseFloat(token.priceUsd).toFixed(6)}</p>
                 </div>
@@ -80,7 +82,7 @@ export const PatternAnalysis = () => {
             
             {(!trendingTokens || trendingTokens.length === 0) && (
               <div className="text-sm text-gray-400">
-                No new pairs found
+                No patterns detected
               </div>
             )}
           </div>

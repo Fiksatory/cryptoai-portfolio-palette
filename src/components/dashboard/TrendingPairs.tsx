@@ -11,7 +11,7 @@ export const TrendingPairs = () => {
     queryFn: async () => {
       const pairs = await getNewPairs();
       
-      // Filter for Solana pairs and transform data
+      // Filter for Solana pairs and sort by creation time
       const tokens = pairs
         .filter(pair => pair.chainId === "solana")
         .map(pair => ({
@@ -25,7 +25,7 @@ export const TrendingPairs = () => {
           dexId: pair.dexId
         }))
         .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
-        .slice(0, 10);
+        .slice(0, 10); // Get only the 10 most recent pairs
       
       return tokens;
     },
@@ -37,7 +37,7 @@ export const TrendingPairs = () => {
       <Card className="bg-black/40 border-white/10 p-4">
         <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
           <TrendingUp className="w-4 h-4" />
-          Top 10 New Pairs
+          Latest Pairs
         </h3>
         
         {isLoading ? (
