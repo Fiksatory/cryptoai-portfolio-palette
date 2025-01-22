@@ -17,6 +17,7 @@ export const TrendingPairs = () => {
     queryFn: async () => {
       const pairs = await getNewPairs();
       
+      // Filter for Solana pairs and map to TrendingToken type
       const tokens = pairs
         .filter(pair => pair.chainId === "solana")
         .map(pair => ({
@@ -29,12 +30,12 @@ export const TrendingPairs = () => {
           chainId: pair.chainId,
           dexId: pair.dexId
         }))
-        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
-        .slice(0, 10);
+        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime()) // Sort by newest first
+        .slice(0, 10); // Get top 10 newest pairs
       
       return tokens;
     },
-    refetchInterval: 30000
+    refetchInterval: 30000 // Refresh every 30 seconds
   });
 
   const { data: tokenProfiles, isLoading: isLoadingProfiles } = useQuery({
@@ -63,6 +64,11 @@ export const TrendingPairs = () => {
                 p.chainId === token.chainId
               );
 
+              const timeDiff = Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60));
+              const timeDisplay = timeDiff < 60 
+                ? `${timeDiff}m ago`
+                : `${Math.round(timeDiff / 60)}h ago`;
+
               return (
                 <div key={index} className="flex items-center justify-between">
                   <div className="space-y-1">
@@ -75,7 +81,7 @@ export const TrendingPairs = () => {
                       )}
                       <Clock className="w-3 h-3 text-gray-400" />
                       <span className="text-xs text-gray-400">
-                        {Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60))}m ago
+                        {timeDisplay}
                       </span>
                       {profile && (
                         <TooltipProvider>
