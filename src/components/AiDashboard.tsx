@@ -11,6 +11,7 @@ import { MarketMetrics } from "./dashboard/MarketMetrics";
 import { MarketContext } from "./dashboard/MarketContext";
 import { SocialLinks } from "./dashboard/SocialLinks";
 import { PatternAnalysis } from "./dashboard/PatternAnalysis";
+import { TrendingPairs } from "./dashboard/TrendingPairs";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
@@ -51,7 +52,7 @@ const AiDashboard = () => {
   const renderContent = () => {
     switch (activeSection) {
       case "trending":
-        return <PatternAnalysis />;
+        return <TrendingPairs />;
       case "portfolio":
         return <PortfolioTracker />;
       case "patterns":
