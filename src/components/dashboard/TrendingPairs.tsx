@@ -29,7 +29,7 @@ export const TrendingPairs = () => {
           pairCreatedAt: new Date(pair.pairCreatedAt),
           chainId: pair.chainId,
           dexId: pair.dexId
-        }))
+        } as TrendingToken))
         .sort((a, b) => b.volume.h24 - a.volume.h24) // Sort by 24h volume
         .slice(0, 10); // Get top 10 trending pairs
       
