@@ -60,6 +60,21 @@ export interface TokenAnalysis {
   };
 }
 
+export interface TokenProfile {
+  address: string;
+  name: string;
+  symbol: string;
+  chainId: string;
+  createdAt: string;
+  description?: string;
+  links?: {
+    website?: string;
+    twitter?: string;
+    telegram?: string;
+    discord?: string;
+  };
+}
+
 export interface TrendingToken {
   name: string;
   symbol: string;
