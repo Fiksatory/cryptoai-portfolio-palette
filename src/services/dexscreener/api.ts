@@ -1,3 +1,5 @@
+import type { DexScreenerToken, DexScreenerPair } from './types';
+
 const DEX_SCREENER_API = 'https://api.dexscreener.com/latest/dex';
 
 export const searchTokens = async (query: string): Promise<DexScreenerToken> => {

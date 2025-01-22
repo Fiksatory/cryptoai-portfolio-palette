@@ -42,6 +42,24 @@ export interface DexScreenerPair {
   };
 }
 
+export interface TokenAnalysis {
+  summary: string;
+  metrics: {
+    marketCap: number;
+    volume24h: number;
+    buySellRatio: number;
+    healthScore: number;
+  };
+  marketStatus: string;
+  riskLevel: string;
+  socialLinks: {
+    website?: string;
+    twitter?: string;
+    telegram?: string;
+    discord?: string;
+  };
+}
+
 export interface TrendingToken {
   name: string;
   symbol: string;
