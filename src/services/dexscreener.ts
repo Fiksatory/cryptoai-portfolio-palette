@@ -19,6 +19,7 @@ export interface DexScreenerToken {
     dexId: string;
     url: string;
     pairAddress: string;
+    pairCreatedAt: string;
     baseToken: {
       address: string;
       name: string;

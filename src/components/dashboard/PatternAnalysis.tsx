@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { TrendingUp, ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { searchTokens } from "@/services/dexscreener";
 
@@ -14,29 +14,45 @@ interface TrendingToken {
   volume: {
     h24: number;
   };
+  pairCreatedAt: Date;
 }
 
 export const PatternAnalysis = () => {
   const { data: trendingTokens, isLoading } = useQuery({
     queryKey: ['trendingTokens'],
     queryFn: async () => {
-      // For now, we'll fetch some known tokens as an example
-      const tokens = ['BONK', 'WIF', 'MYRO'];
+      // Fetch more tokens to filter for recent ones
+      const tokens = ['BONK', 'WIF', 'MYRO', 'POPCAT', 'SLERF', 'BOOK', 'NEKO', 'CRWNY', 'CAPS', 'BOME', 'DOGE', 'PEPE', 'WOJAK', 'SILLY'];
       const results = await Promise.all(
         tokens.map(async (token) => {
           const data = await searchTokens(token);
           const pair = data.pairs?.find(p => p.chainId === "solana");
           if (!pair) return null;
+          
+          // Add pair creation time check
+          const pairCreatedAt = new Date(pair.pairCreatedAt);
+          const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+          
+          if (pairCreatedAt < oneHourAgo) return null;
+          
           return {
             name: pair.baseToken.name,
             symbol: pair.baseToken.symbol,
             priceUsd: pair.priceUsd,
             priceChange: pair.priceChange,
-            volume: pair.volume
+            volume: pair.volume,
+            pairCreatedAt
           };
         })
       );
-      return results.filter((token): token is TrendingToken => token !== null);
+      
+      // Filter out null values and sort by creation time (newest first)
+      const validResults = results
+        .filter((token): token is TrendingToken => token !== null)
+        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
+        .slice(0, 10); // Take only the 10 most recent tokens
+      
+      return validResults;
     },
     refetchInterval: 30000 // Refetch every 30 seconds
   });
@@ -46,7 +62,7 @@ export const PatternAnalysis = () => {
       <Card className="bg-black/40 border-white/10 p-4">
         <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
           <TrendingUp className="w-4 h-4" />
-          Trending Tokens
+          New Trending Tokens (Last Hour)
         </h3>
         
         {isLoading ? (
@@ -63,6 +79,10 @@ export const PatternAnalysis = () => {
                     ) : (
                       <ArrowDownRight className="w-4 h-4 text-red-500" />
                     )}
+                    <Clock className="w-3 h-3 text-gray-400" />
+                    <span className="text-xs text-gray-400">
+                      {Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60))}m ago
+                    </span>
                   </div>
                   <p className="text-xs text-gray-400">${parseFloat(token.priceUsd).toFixed(6)}</p>
                 </div>
@@ -85,7 +105,7 @@ export const PatternAnalysis = () => {
             
             {(!trendingTokens || trendingTokens.length === 0) && (
               <div className="text-sm text-gray-400">
-                No trending tokens found
+                No new tokens found in the last hour
               </div>
             )}
           </div>
