@@ -23,7 +23,7 @@ export const TrendingPairs = () => {
         .map(pair => ({
           name: pair.baseToken.name,
           symbol: pair.baseToken.symbol,
-          priceUsd: pair.priceUsd,
+          priceUsd: pair.priceUsd || "0",
           priceChange: pair.priceChange,
           volume: pair.volume,
           pairCreatedAt: new Date(pair.pairCreatedAt),
