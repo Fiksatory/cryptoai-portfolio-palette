@@ -2,7 +2,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -10,7 +10,11 @@ const Landing = () => {
 
   const handleDashboardAccess = () => {
     if (!connected) {
-      toast.error('Please connect your wallet first');
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet first",
+        variant: "destructive",
+      });
       return;
     }
     navigate('/dashboard');
