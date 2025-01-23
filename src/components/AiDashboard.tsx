@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "./ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { analyzePairData, searchTokens } from "@/services/dexscreener";
@@ -14,10 +14,27 @@ import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 import { TrendingSection } from "./dashboard/TrendingSection";
 import GithubChecker from "./dashboard/GithubChecker";
 
+// Mock data for token alerts
+const mockAlerts = [
+  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%" },
+  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%" },
+  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%" },
+];
+
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
   const [activeSection, setActiveSection] = useState("trending");
+  const [currentAlertIndex, setCurrentAlertIndex] = useState(0);
   const { toast } = useToast();
+
+  // Effect to cycle through alerts
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentAlertIndex((prev) => (prev + 1) % mockAlerts.length);
+    }, 3000); // Change alert every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const { data: tokenData, isLoading } = useQuery({
     queryKey: ['tokenAnalysis', contractAddress],
@@ -100,6 +117,33 @@ const AiDashboard = () => {
                     <h3 className="text-lg font-semibold mb-2">Volume Alerts</h3>
                     <p className="text-gray-400">Set up volume threshold alerts</p>
                   </Card>
+                </div>
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-4">Live Token Alerts</h3>
+                  <div className="relative h-20 overflow-hidden rounded-lg bg-black/20">
+                    {mockAlerts.map((alert, index) => (
+                      <div
+                        key={alert.id}
+                        className={cn(
+                          "absolute w-full p-4 transition-all duration-500 ease-in-out",
+                          index === currentAlertIndex 
+                            ? "translate-y-0 opacity-100" 
+                            : "translate-y-20 opacity-0"
+                        )}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 text-neon-pink" />
+                            <span className="font-medium">{alert.name}</span>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className="text-gray-400">{alert.price}</span>
+                            <span className="text-green-400">{alert.change}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
