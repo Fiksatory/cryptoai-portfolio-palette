@@ -67,26 +67,35 @@ const AiDashboard = () => {
         return <PortfolioTracker />;
       case "patterns":
         return (
-          <div className="relative">
+          <Card className="bg-black/40 border-white/10 p-6 relative">
             <div className="filter blur-sm">
               <PatternAnalysis />
             </div>
             <TokenGatedContent />
-          </div>
+          </Card>
         );
       case "alerts":
         return (
-          <div className="relative">
+          <Card className="bg-black/40 border-white/10 p-6 relative min-h-[400px]">
             <div className="filter blur-sm">
-              <div className="h-96 flex flex-col items-center justify-center space-y-4">
+              <div className="space-y-4">
                 <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
                   Alerts Dashboard
                 </div>
-                <p className="text-lg text-gray-400">Configure your price and volume alerts</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="p-4 glass-card">
+                    <h3 className="text-lg font-semibold mb-2">Price Alerts</h3>
+                    <p className="text-gray-400">Configure price movement notifications</p>
+                  </Card>
+                  <Card className="p-4 glass-card">
+                    <h3 className="text-lg font-semibold mb-2">Volume Alerts</h3>
+                    <p className="text-gray-400">Set up volume threshold alerts</p>
+                  </Card>
+                </div>
               </div>
             </div>
             <TokenGatedContent />
-          </div>
+          </Card>
         );
       case "github checker":
         return <GithubChecker />;
