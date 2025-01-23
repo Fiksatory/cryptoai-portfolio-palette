@@ -1,9 +1,7 @@
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, ArrowUpRight, ArrowDownRight, Clock } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getNewPairs } from "@/services/dexscreener";
-import type { TrendingToken } from "@/services/dexscreener";
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const PatternAnalysis = () => {
   const { data: trendingTokens, isLoading } = useQuery({
@@ -11,23 +9,18 @@ export const PatternAnalysis = () => {
     queryFn: async () => {
       const pairs = await getNewPairs();
       
-      // Map the data to our TrendingToken format
       const tokens = pairs
         .map(pair => ({
           name: pair.baseToken?.name || pair.symbol,
           symbol: pair.baseToken?.symbol || pair.symbol,
-          priceUsd: pair.priceUsd || pair.price.toString(),
-          priceChange: {
-            h24: pair.priceChange?.h24 || pair.priceChange24h
-          },
-          volume: {
-            h24: pair.volume?.h24 || pair.volume24h
-          },
+          priceUsd: parseFloat(pair.priceUsd || pair.price.toString()),
+          priceChange: parseFloat((pair.priceChange?.h24 || pair.priceChange24h).toFixed(2)),
+          volume: parseFloat((pair.volume?.h24 || pair.volume24h).toFixed(2)),
           pairCreatedAt: new Date(),
           chainId: pair.chainId,
           dexId: pair.dexId
         }))
-        .sort((a, b) => Math.abs(b.priceChange.h24) - Math.abs(a.priceChange.h24))
+        .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
         .slice(0, 10);
       
       return tokens;
@@ -35,60 +28,84 @@ export const PatternAnalysis = () => {
     refetchInterval: 30000
   });
 
+  const chartHeight = 200;
+
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-2 gap-4">
+      {/* Price Trends */}
       <Card className="bg-black/40 border-white/10 p-4">
-        <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-          <TrendingUp className="w-4 h-4" />
-          Most Volatile Pairs
-        </h3>
-        
+        <h3 className="text-sm font-medium mb-4">Price Trends</h3>
         {isLoading ? (
-          <div className="text-sm text-gray-400">Loading pattern analysis...</div>
+          <div className="text-sm text-gray-400">Loading...</div>
         ) : (
-          <div className="space-y-4">
-            {trendingTokens?.map((token, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{token.symbol}</span>
-                    {token.priceChange.h24 > 0 ? (
-                      <ArrowUpRight className="w-4 h-4 text-green-500" />
-                    ) : (
-                      <ArrowDownRight className="w-4 h-4 text-red-500" />
-                    )}
-                    <Badge 
-                      variant="outline" 
-                      className="text-xs"
-                    >
-                      Rank #{index + 1}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-gray-400">${parseFloat(token.priceUsd).toFixed(6)}</p>
-                </div>
-                <div className="space-y-2">
-                  <Badge 
-                    className={
-                      token.priceChange.h24 > 0
-                        ? "bg-green-500/20 text-green-300"
-                        : "bg-red-500/20 text-red-300"
-                    }
-                  >
-                    {token.priceChange.h24.toFixed(2)}%
-                  </Badge>
-                  <p className="text-xs text-gray-400 text-right">
-                    Vol: ${(token.volume.h24 / 1000000).toFixed(2)}M
-                  </p>
-                </div>
-              </div>
-            ))}
-            
-            {(!trendingTokens || trendingTokens.length === 0) && (
-              <div className="text-sm text-gray-400">
-                No patterns detected
-              </div>
-            )}
-          </div>
+          <ResponsiveContainer width="100%" height={chartHeight}>
+            <LineChart data={trendingTokens}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="symbol" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip />
+              <Line type="monotone" dataKey="priceUsd" stroke="#ff00ff" />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+      </Card>
+
+      {/* Volume Distribution */}
+      <Card className="bg-black/40 border-white/10 p-4">
+        <h3 className="text-sm font-medium mb-4">Volume Distribution</h3>
+        {isLoading ? (
+          <div className="text-sm text-gray-400">Loading...</div>
+        ) : (
+          <ResponsiveContainer width="100%" height={chartHeight}>
+            <BarChart data={trendingTokens}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="symbol" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip />
+              <Bar dataKey="volume" fill="#9b87f5" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
+      </Card>
+
+      {/* Price Change Area */}
+      <Card className="bg-black/40 border-white/10 p-4">
+        <h3 className="text-sm font-medium mb-4">Price Change Analysis</h3>
+        {isLoading ? (
+          <div className="text-sm text-gray-400">Loading...</div>
+        ) : (
+          <ResponsiveContainer width="100%" height={chartHeight}>
+            <AreaChart data={trendingTokens}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="symbol" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip />
+              <Area type="monotone" dataKey="priceChange" fill="#7E69AB" stroke="#7E69AB" />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
+      </Card>
+
+      {/* Market Distribution */}
+      <Card className="bg-black/40 border-white/10 p-4">
+        <h3 className="text-sm font-medium mb-4">Market Distribution</h3>
+        {isLoading ? (
+          <div className="text-sm text-gray-400">Loading...</div>
+        ) : (
+          <ResponsiveContainer width="100%" height={chartHeight}>
+            <PieChart>
+              <Pie
+                data={trendingTokens}
+                dataKey="volume"
+                nameKey="symbol"
+                cx="50%"
+                cy="50%"
+                outerRadius={60}
+                fill="#ff00ff"
+              />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
         )}
       </Card>
     </div>
