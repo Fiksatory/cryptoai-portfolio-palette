@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
+import { Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useToast } from "./ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { analyzePairData, searchTokens } from "@/services/dexscreener";
@@ -12,63 +12,13 @@ import { MarketContext } from "./dashboard/MarketContext";
 import { SocialLinks } from "./dashboard/SocialLinks";
 import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 import { TrendingSection } from "./dashboard/TrendingSection";
+import { AlertsSection } from "./dashboard/AlertsSection";
 import GithubChecker from "./dashboard/GithubChecker";
-
-// Mock data for token alerts - expanded to 7 items
-const mockAlerts = [
-  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%" },
-  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%" },
-  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%" },
-  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%" },
-  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%" },
-  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%" },
-  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%" },
-];
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
   const [activeSection, setActiveSection] = useState("trending");
-  const [alerts, setAlerts] = useState(mockAlerts);
   const { toast } = useToast();
-
-  useEffect(() => {
-    const scheduleNextAlert = () => {
-      // Random time between 3 and 60 seconds
-      const randomTime = Math.floor(Math.random() * (60000 - 3000) + 3000);
-      
-      return setTimeout(() => {
-        // Rotate alerts by moving the first item to the end
-        setAlerts(prevAlerts => {
-          const newAlerts = [...prevAlerts];
-          const firstAlert = newAlerts.shift();
-          if (firstAlert) {
-            // Modify the alert slightly before adding it back
-            const modifiedAlert = {
-              ...firstAlert,
-              price: `$${(Math.random() * 0.001).toFixed(8)}`,
-              change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`
-            };
-            newAlerts.push(modifiedAlert);
-          }
-          return newAlerts;
-        });
-        
-        // Schedule the next alert
-        timeoutRef.current = scheduleNextAlert();
-      }, randomTime);
-    };
-
-    // Store timeout reference for cleanup
-    const timeoutRef = { current: null };
-    timeoutRef.current = scheduleNextAlert();
-
-    // Cleanup function
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   const { data: tokenData, isLoading } = useQuery({
     queryKey: ['tokenAnalysis', contractAddress],
@@ -138,48 +88,7 @@ const AiDashboard = () => {
         return (
           <Card className={commonCardClasses}>
             <div className="filter blur-sm">
-              <div className="space-y-4">
-                <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
-                  Alerts Dashboard
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="p-4 glass-card">
-                    <h3 className="text-lg font-semibold mb-2">Price Alerts</h3>
-                    <p className="text-gray-400">Configure price movement notifications</p>
-                  </Card>
-                  <Card className="p-4 glass-card">
-                    <h3 className="text-lg font-semibold mb-2">Volume Alerts</h3>
-                    <p className="text-gray-400">Set up volume threshold alerts</p>
-                  </Card>
-                </div>
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-4">Live Token Alerts</h3>
-                  <div className="space-y-2">
-                    {alerts.map((alert) => (
-                      <div
-                        key={alert.id}
-                        className="p-4 bg-black/20 rounded-lg transition-all duration-300 hover:bg-black/30"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 text-neon-pink" />
-                            <span className="font-medium">{alert.name}</span>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-gray-400">{alert.price}</span>
-                            <span className={cn(
-                              "font-medium",
-                              alert.change.startsWith("+") ? "text-green-400" : "text-red-400"
-                            )}>
-                              {alert.change}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <AlertsSection />
             </div>
             <TokenGatedContent />
           </Card>
@@ -231,7 +140,7 @@ const AiDashboard = () => {
                 {[
                   { icon: TrendingUp, label: "Trending", active: activeSection === "trending" },
                   { 
-                    icon: AlertTriangle, 
+                    icon: LineChart, 
                     label: "Alerts", 
                     active: activeSection === "alerts",
                     extra: (
