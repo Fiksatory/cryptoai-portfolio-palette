@@ -37,9 +37,10 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
     (repoData.description ? 15 : 0)
   ));
   
-  // Find similar repositories
+  // Find similar repositories with more specific criteria
+  const searchQuery = encodeURIComponent(`language:${repoData.language} ${repoData.description?.split(' ').slice(0, 3).join(' ') || ''}`);
   const similarReposResponse = await fetch(
-    `https://api.github.com/search/repositories?q=language:${repoData.language}+size:${repoData.size-1000}..${repoData.size+1000}&sort=stars&order=desc&per_page=4`
+    `https://api.github.com/search/repositories?q=${searchQuery}+NOT+repo:${owner}/${repo}&sort=stars&order=desc&per_page=4`
   );
   const similarRepos = await similarReposResponse.json();
   
@@ -55,12 +56,6 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
       repoData.size < 50 && !repoData.description ? "Repository seems too small and lacks description" : null,
       repoData.forks_count === 0 && repoData.stargazers_count === 0 ? "Limited community engagement" : null
     ].filter((issue): issue is string => issue !== null),
-    recommendations: [
-      repoData.description ? "Consider adding more detailed documentation" : "Add a clear project description",
-      repoData.size < 100 ? "Expand the codebase with more features or documentation" : "Keep maintaining regular updates",
-      repoData.open_issues_count > 0 ? "Address open issues to improve code quality" : "Keep monitoring for new issues",
-      "Consider implementing automated testing if not present"
-    ],
     larpScore,
     metrics: {
       commitFrequency: Math.min(100, (repoData.size / 50) + 30),
