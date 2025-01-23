@@ -17,7 +17,7 @@ const initialTokens = [
     volume: "$2.1M",
     change: 15.2,
     isPositive: true,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/24478.png"
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263/logo.png"
   },
   {
     name: "WEN",
