@@ -17,7 +17,7 @@ const initialTokens = [
     volume: "$2.1M",
     change: 15.2,
     isPositive: true,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263/logo.png"
+    image: "/lovable-uploads/19bfce04-0354-4554-b5b7-12106ecb7f86.png"
   },
   {
     name: "WEN",
