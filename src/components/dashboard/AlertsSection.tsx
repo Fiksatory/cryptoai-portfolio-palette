@@ -85,8 +85,15 @@ export const AlertsSection = () => {
 
   return (
     <div className="space-y-4">
-      <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
-        Alerts Dashboard
+      <div className="flex items-center justify-between">
+        <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
+          Alerts Dashboard
+        </div>
+        {notificationCount > 0 && (
+          <span className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse">
+            {notificationCount}
+          </span>
+        )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="p-4 glass-card">
@@ -99,14 +106,7 @@ export const AlertsSection = () => {
         </Card>
       </div>
       <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          Live Token Alerts
-          {notificationCount > 0 && (
-            <span className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse">
-              {notificationCount}
-            </span>
-          )}
-        </h3>
+        <h3 className="text-lg font-semibold mb-4">Live Token Alerts</h3>
         <div className="space-y-2">
           {alerts.map((alert) => (
             <div
