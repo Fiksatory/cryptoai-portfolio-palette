@@ -16,18 +16,19 @@ const MOCK_GMGN_DATA: GmgnResponse = {
 
 const fetchGmgnData = async (): Promise<GmgnResponse> => {
   try {
+    console.log('Fetching GMGN data...');
     const response = await fetch('https://gmgn.ai/?chain=sol&ref=SeZYWE3ct', {
+      mode: 'no-cors',
       headers: {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Origin': window.location.origin
       }
     });
     
-    if (!response.ok) {
-      console.log('GMGN API error, returning mock data');
-      return MOCK_GMGN_DATA;
-    }
-    
-    return response.json();
+    // When using no-cors, we can't access the response
+    // So we'll use mock data until the CORS issue is resolved
+    console.log('Using mock GMGN data due to CORS restrictions');
+    return MOCK_GMGN_DATA;
   } catch (error) {
     console.log('Error fetching GMGN data, returning mock data:', error);
     return MOCK_GMGN_DATA;
