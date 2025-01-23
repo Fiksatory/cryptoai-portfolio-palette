@@ -11,21 +11,24 @@ export const PatternAnalysis = () => {
     queryFn: async () => {
       const pairs = await getNewPairs();
       
-      // Filter for Solana pairs with significant price movements
+      // Map the data to our TrendingToken format
       const tokens = pairs
-        .filter(pair => pair.chainId === "solana")
         .map(pair => ({
-          name: pair.baseToken.name,
-          symbol: pair.baseToken.symbol,
-          priceUsd: pair.priceUsd,
-          priceChange: pair.priceChange,
-          volume: pair.volume,
-          pairCreatedAt: new Date(pair.pairCreatedAt),
+          name: pair.baseToken?.name || pair.symbol,
+          symbol: pair.baseToken?.symbol || pair.symbol,
+          priceUsd: pair.priceUsd || pair.price.toString(),
+          priceChange: {
+            h24: pair.priceChange?.h24 || pair.priceChange24h
+          },
+          volume: {
+            h24: pair.volume?.h24 || pair.volume24h
+          },
+          pairCreatedAt: new Date(),
           chainId: pair.chainId,
           dexId: pair.dexId
         }))
-        .sort((a, b) => Math.abs(b.priceChange.h24) - Math.abs(a.priceChange.h24)) // Sort by absolute price change
-        .slice(0, 10); // Get top 10 most volatile pairs
+        .sort((a, b) => Math.abs(b.priceChange.h24) - Math.abs(a.priceChange.h24))
+        .slice(0, 10);
       
       return tokens;
     },
