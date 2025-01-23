@@ -14,7 +14,7 @@ const GithubChecker = () => {
   const [githubUrl, setGithubUrl] = useState("");
   const { toast } = useToast();
 
-  const { data: analysis, isLoading, refetch, resetState } = useQuery({
+  const { data: analysis, isLoading, refetch } = useQuery({
     queryKey: ['github-analysis', githubUrl],
     queryFn: () => analyzeGithubRepo(githubUrl),
     enabled: false,
@@ -54,7 +54,6 @@ const GithubChecker = () => {
 
   const handleRefresh = () => {
     setGithubUrl("");
-    resetState();
     toast({
       title: "Analyzer Reset",
       description: "You can now analyze a new repository",
@@ -78,14 +77,16 @@ const GithubChecker = () => {
           <OwnerAnalysis ownerAnalysis={analysis.ownerAnalysis} />
           <CodeOriginality codeOriginality={analysis.codeOriginality} />
 
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
-            <ul className="list-disc pl-5 space-y-2 text-red-400">
-              {analysis.redFlags.map((flag, index) => (
-                <li key={index}>{flag}</li>
-              ))}
-            </ul>
-          </div>
+          {analysis.redFlags.length > 0 && (
+            <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20">
+              <h3 className="text-xl font-semibold mb-2 text-red-400">Red Flags</h3>
+              <ul className="list-disc pl-5 space-y-2 text-red-400">
+                {analysis.redFlags.map((flag, index) => (
+                  <li key={index}>{flag}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div>
             <h3 className="text-xl font-semibold mb-2">Detailed Analysis</h3>
@@ -93,14 +94,16 @@ const GithubChecker = () => {
             <p className="text-muted-foreground mt-2">{analysis.codeQuality}</p>
           </div>
 
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Potential Issues</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              {analysis.potentialIssues.map((issue, index) => (
-                <li key={index} className="text-muted-foreground">{issue}</li>
-              ))}
-            </ul>
-          </div>
+          {analysis.potentialIssues.length > 0 && (
+            <div className="bg-yellow-500/10 p-4 rounded-lg border border-yellow-500/20">
+              <h3 className="text-xl font-semibold mb-2 text-yellow-400">Potential Issues</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                {analysis.potentialIssues.map((issue, index) => (
+                  <li key={index} className="text-muted-foreground">{issue}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </Card>
       )}
     </div>
