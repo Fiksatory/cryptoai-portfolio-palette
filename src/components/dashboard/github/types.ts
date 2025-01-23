@@ -21,6 +21,5 @@ export interface AnalysisResult {
     similarRepos: string[];
     plagiarismScore: number;
     copiedFiles: string[];
-    sourceReferences: string[];
   };
 }

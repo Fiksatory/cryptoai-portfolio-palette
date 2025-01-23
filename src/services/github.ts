@@ -85,11 +85,7 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
     codeOriginality: {
       similarRepos: similarRepos.items.slice(0, 4).map((r: GithubRepo) => r.full_name),
       plagiarismScore: Math.min(100, Math.max(0, larpScore - 20)),
-      copiedFiles: [],
-      sourceReferences: similarRepos.items.slice(0, 4).map((r: GithubRepo) => {
-        const similarity = Math.floor(Math.random() * 20 + 5);
-        return `${r.full_name} (${similarity}% similarity)`;
-      })
+      copiedFiles: []
     }
   };
 };
