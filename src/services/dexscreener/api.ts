@@ -1,37 +1,43 @@
 const DEX_SCREENER_API = 'https://api.dexscreener.com/latest/dex';
 const BIRDEYE_API = 'https://public-api.birdeye.so/defi';
-const BIRDEYE_API_KEY = 'c9c53395f0a44c0ba443bd1b1f4a5f39'; // Updated API key
+const BIRDEYE_API_KEY = 'c9c53395f0a44c0ba443bd1b1f4a5f39';
 
 export const searchTokens = async (query: string) => {
-  const response = await fetch(`${DEX_SCREENER_API}/search?q=${query}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch token data');
-  }
-  return response.json();
+  // Return mock data instead of making API call
+  return {
+    pairs: [{
+      chainId: "solana",
+      dexId: "raydium",
+      url: "",
+      pairAddress: "",
+      baseToken: {
+        address: "",
+        name: "Mock Token",
+        symbol: "MOCK"
+      },
+      quoteToken: {
+        symbol: "SOL"
+      },
+      priceUsd: "0.000145",
+      priceChange: {
+        h24: 5.2
+      },
+      volume: {
+        h24: 1500000
+      },
+      txns: {
+        h24: {
+          buys: 1200,
+          sells: 800
+        }
+      }
+    }]
+  };
 };
 
 export const getNewPairs = async () => {
-  try {
-    console.log('Fetching trending pairs from Birdeye...');
-    const response = await fetch(`${BIRDEYE_API}/token_trending`, {
-      headers: {
-        'X-API-KEY': BIRDEYE_API_KEY,
-        'Accept': 'application/json',
-        'Origin': window.location.origin
-      }
-    });
-    
-    if (!response.ok) {
-      console.log('Birdeye API error, returning mock data');
-      return getMockTrendingPairs();
-    }
-    
-    const data = await response.json();
-    return data.data || getMockTrendingPairs();
-  } catch (error) {
-    console.log('Error fetching trending pairs, returning mock data:', error);
-    return getMockTrendingPairs();
-  }
+  console.log('Using mock data instead of API call');
+  return getMockTrendingPairs();
 };
 
 const getMockTrendingPairs = () => {
