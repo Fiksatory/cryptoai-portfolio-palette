@@ -83,7 +83,7 @@ const AiDashboard = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-neon-pink/5 via-neon-violet/5 to-neon-purple/5 rounded-3xl blur-3xl -z-10" />
-        <div className="relative border-gradient p-[1px] rounded-xl overflow-hidden">
+        <div className="relative border-animation rounded-xl overflow-hidden">
           <div className="grid grid-cols-[240px_1fr] gap-6 p-4 glass-card rounded-xl relative overflow-hidden">
             <div className="space-y-4">
               <div className="flex items-center gap-3 p-4">

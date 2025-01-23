@@ -51,6 +51,15 @@
   }
 }
 
+@keyframes rotate-gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
 @layer utilities {
   .glass-card {
     @apply bg-black/40 backdrop-blur-md border border-neon-violet/20 shadow-lg shadow-neon-pink/5;
@@ -64,16 +73,27 @@
     @apply border border-transparent hover:border-neon-pink/50 transition-colors duration-300;
   }
 
-  .border-gradient {
+  .border-animation {
     position: relative;
-    background: linear-gradient(90deg, 
-      theme('colors.neon.pink'), 
-      theme('colors.neon.violet'), 
+    padding: 1px;
+    background: linear-gradient(
+      90deg,
+      theme('colors.neon.pink'),
+      theme('colors.neon.violet'),
       theme('colors.neon.purple'),
       theme('colors.neon.pink')
     );
-    background-size: 300% 100%;
-    animation: border-animation 3s linear infinite;
+    background-size: 300% 300%;
+    animation: rotate-gradient 3s linear infinite;
+  }
+
+  .border-animation::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: hsl(var(--background));
+    border-radius: inherit;
+    z-index: 0;
   }
 }
 
