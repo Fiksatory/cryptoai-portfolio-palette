@@ -60,6 +60,12 @@ const AiDashboard = () => {
         return <div className="filter blur-[2px] opacity-50 pointer-events-none">
           <PatternAnalysis />
         </div>;
+      case "alerts":
+        return <div className="filter blur-[2px] opacity-50 pointer-events-none">
+          <div className="h-64 flex items-center justify-center">
+            <p className="text-lg text-gray-400">Alerts feature coming soon</p>
+          </div>
+        </div>;
       case "github checker":
         return <GithubChecker />;
       case "ai intel":
@@ -106,7 +112,17 @@ const AiDashboard = () => {
               <nav className="space-y-2">
                 {[
                   { icon: TrendingUp, label: "Trending", active: activeSection === "trending" },
-                  { icon: AlertTriangle, label: "Alerts", active: false },
+                  { 
+                    icon: AlertTriangle, 
+                    label: "Alerts", 
+                    active: activeSection === "alerts",
+                    disabled: true,
+                    extra: (
+                      <div className="absolute right-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
+                        Soon
+                      </div>
+                    )
+                  },
                   { 
                     icon: LineChart, 
                     label: "Patterns", 
