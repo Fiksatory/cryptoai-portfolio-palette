@@ -1,5 +1,4 @@
 import AiDashboard from "@/components/AiDashboard";
-import { ChatAssistant } from "@/components/ChatAssistant";
 
 const Index = () => {
   return (
@@ -14,11 +13,8 @@ const Index = () => {
       </div>
 
       <div className="space-y-8">
-        <div className="flex gap-8">
-          <div className="flex-1">
-            <AiDashboard />
-          </div>
-          <ChatAssistant />
+        <div className="flex-1">
+          <AiDashboard />
         </div>
       </div>
     </div>
