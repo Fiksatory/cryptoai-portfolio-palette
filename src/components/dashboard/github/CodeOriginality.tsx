@@ -18,7 +18,16 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
           <h4 className="font-semibold mb-2">Similar Repositories:</h4>
           <ul className="list-disc pl-5 space-y-1">
             {codeOriginality.similarRepos.map((repo, index) => (
-              <li key={index}>{repo}</li>
+              <li key={index}>
+                <a 
+                  href={`https://github.com/${repo}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:underline"
+                >
+                  {repo}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
@@ -33,9 +42,30 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
         <div>
           <h4 className="font-semibold mb-2">Source References:</h4>
           <ul className="list-disc pl-5 space-y-1">
-            {codeOriginality.sourceReferences.map((ref, index) => (
-              <li key={index}>{ref}</li>
-            ))}
+            {codeOriginality.sourceReferences.map((ref, index) => {
+              // Extract repository name from the reference text
+              const repoMatch = ref.match(/repository ([A-Z]) \((\d+)% similarity\)/);
+              if (repoMatch) {
+                const repoLetter = repoMatch[1];
+                const similarity = repoMatch[2];
+                const repoName = `example-org/repo-${repoLetter.toLowerCase()}`;
+                return (
+                  <li key={index}>
+                    Found matching code in{" "}
+                    <a 
+                      href={`https://github.com/${repoName}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400 hover:underline"
+                    >
+                      repository {repoLetter}
+                    </a>{" "}
+                    ({similarity}% similarity)
+                  </li>
+                );
+              }
+              return <li key={index}>{ref}</li>;
+            })}
           </ul>
         </div>
       </div>

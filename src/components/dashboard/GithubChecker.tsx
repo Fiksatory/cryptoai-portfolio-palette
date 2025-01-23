@@ -65,8 +65,9 @@ const GithubChecker = () => {
         },
         codeOriginality: {
           similarRepos: [
-            "original-repo/source-1",
-            "another-source/project-2"
+            "openai/gpt-3",
+            "facebook/react",
+            "vercel/next.js"
           ],
           plagiarismScore: 75,
           copiedFiles: [
@@ -76,8 +77,10 @@ const GithubChecker = () => {
           ],
           sourceReferences: [
             "Found matching code in repository A (85% similarity)",
-            "Multiple functions copied from repository B",
-            "Documentation copied from project C"
+            "Found matching code in repository B (72% similarity)",
+            "Found matching code in repository C (68% similarity)",
+            "Multiple functions copied from microsoft/typescript",
+            "Documentation copied from angular/angular"
           ]
         }
       };
