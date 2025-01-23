@@ -91,15 +91,6 @@ const GithubChecker = () => {
               ))}
             </ul>
           </div>
-
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Recommendations</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              {analysis.recommendations.map((rec, index) => (
-                <li key={index} className="text-muted-foreground">{rec}</li>
-              ))}
-            </ul>
-          </div>
         </Card>
       )}
     </div>

@@ -2,7 +2,6 @@ export interface AnalysisResult {
   summary: string;
   codeQuality: string;
   potentialIssues: string[];
-  recommendations: string[];
   larpScore: number;
   metrics: {
     commitFrequency: number;
