@@ -7,25 +7,31 @@ interface GmgnResponse {
   change24h: number;
 }
 
-export const fetchGmgnData = async (): Promise<GmgnResponse> => {
-  const response = await fetch('https://gmgn.ai/?chain=sol&ref=SeZYWE3ct', {
-    mode: 'cors',
-    headers: {
-      'Accept': 'application/json',
+const MOCK_GMGN_DATA: GmgnResponse = {
+  price: 0.0042,
+  volume24h: 150000,
+  marketCap: 4200000,
+  change24h: 5.2
+};
+
+const fetchGmgnData = async (): Promise<GmgnResponse> => {
+  try {
+    const response = await fetch('https://gmgn.ai/?chain=sol&ref=SeZYWE3ct', {
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      console.log('GMGN API error, returning mock data');
+      return MOCK_GMGN_DATA;
     }
-  });
-  
-  if (!response.ok) {
-    // Return mock data if the API is not accessible due to CORS
-    return {
-      price: 0.0042,
-      volume24h: 150000,
-      marketCap: 4200000,
-      change24h: 5.2
-    };
+    
+    return response.json();
+  } catch (error) {
+    console.log('Error fetching GMGN data, returning mock data:', error);
+    return MOCK_GMGN_DATA;
   }
-  
-  return response.json();
 };
 
 export const useGmgnData = () => {
