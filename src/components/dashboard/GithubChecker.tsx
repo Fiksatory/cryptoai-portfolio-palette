@@ -14,7 +14,7 @@ const GithubChecker = () => {
   const [githubUrl, setGithubUrl] = useState("");
   const { toast } = useToast();
 
-  const { data: analysis, isLoading, refetch, remove } = useQuery({
+  const { data: analysis, isLoading, refetch, resetState } = useQuery({
     queryKey: ['github-analysis', githubUrl],
     queryFn: () => analyzeGithubRepo(githubUrl),
     enabled: false,
@@ -54,7 +54,7 @@ const GithubChecker = () => {
 
   const handleRefresh = () => {
     setGithubUrl("");
-    remove();
+    resetState();
     toast({
       title: "Analyzer Reset",
       description: "You can now analyze a new repository",
