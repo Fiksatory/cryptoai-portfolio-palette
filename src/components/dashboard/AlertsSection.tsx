@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
 
 interface Alert {
   id: number;
@@ -26,7 +25,6 @@ const mockAlerts = [
 export const AlertsSection = () => {
   const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
   const [notificationCount, setNotificationCount] = useState(0);
-  const { toast } = useToast();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -49,13 +47,6 @@ export const AlertsSection = () => {
               timestamp: Date.now()
             };
             newAlerts.push(modifiedAlert);
-
-            // Show toast notification for new alert
-            toast({
-              title: "New Price Alert",
-              description: `${modifiedAlert.name}: ${modifiedAlert.price} (${modifiedAlert.change})`,
-            });
-
             return newAlerts;
           }
           return prevAlerts;
@@ -78,7 +69,7 @@ export const AlertsSection = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [toast]);
+  }, []);
 
   return (
     <div className="space-y-4">
