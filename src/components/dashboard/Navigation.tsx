@@ -18,8 +18,8 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
           <div id="nav-notification-count" className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse">
             0
           </div>
-          <div className="absolute -right-1 top-0 bg-gradient-to-r from-neon-violet to-neon-purple text-[10px] font-medium text-white py-0.5 px-1.5 transform rotate-6 origin-bottom-left shadow-lg">
-            Holders Only
+          <div className="bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
+            Soon
           </div>
         </div>
       )
@@ -29,8 +29,8 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       label: "Patterns", 
       active: activeSection === "patterns",
       extra: (
-        <div className="absolute -right-1 top-0 bg-gradient-to-r from-neon-violet to-neon-purple text-[10px] font-medium text-white py-0.5 px-1.5 transform rotate-6 origin-bottom-left shadow-lg">
-          Holders Only
+        <div className="absolute right-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
+          Soon
         </div>
       )
     },
@@ -55,7 +55,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
             key={item.label}
             onClick={() => setActiveSection(item.label.toLowerCase())}
             className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative overflow-visible",
+              "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative",
               item.active 
                 ? "bg-gradient-to-r from-neon-pink/20 to-neon-violet/20 text-white shadow-lg shadow-neon-pink/10" 
                 : "hover:bg-white/5"
