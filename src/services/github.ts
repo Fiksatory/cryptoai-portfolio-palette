@@ -40,7 +40,7 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
   
   // Fetch languages used in the repository
   const languagesResponse = await fetch(repoData.languages_url);
-  const languages = await languagesResponse.json();
+  const languages: Record<string, number> = await languagesResponse.json();
   
   // Calculate metrics
   const totalBytes = Object.values(languages).reduce((a: number, b: number) => a + b, 0);
@@ -106,9 +106,10 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
       similarRepos: similarRepos.items.slice(0, 4).map((r: GithubRepo) => r.full_name),
       plagiarismScore: Math.min(100, 100 - healthScore),
       copiedFiles: [],
-      sourceReferences: similarRepos.items.slice(0, 4).map((r: GithubRepo) => 
-        `${r.full_name} (${Math.floor(Math.random() * 30 + 10)}% similarity)`
-      )
+      sourceReferences: similarRepos.items.slice(0, 4).map((r: GithubRepo) => {
+        const similarity = Math.floor(Math.random() * 30 + 10);
+        return `${r.full_name} (${similarity}% similarity)`;
+      })
     }
   };
 };
