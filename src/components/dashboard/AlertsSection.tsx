@@ -9,23 +9,32 @@ interface Alert {
   price: string;
   change: string;
   timestamp: number;
+  action: string;
+  actor: string;
 }
 
-// Mock data for token alerts
+const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"];
+const tickers = ["SOLAPE", "BONK", "SAMO", "WIF", "MYRO", "COPE", "DUST", "MEME", "PYTH", "RAY"];
+
+// Mock data for token alerts with actions
 const mockAlerts = [
-  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%", timestamp: Date.now() },
-  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%", timestamp: Date.now() },
-  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%", timestamp: Date.now() },
-  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%", timestamp: Date.now() },
-  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%", timestamp: Date.now() },
-  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%", timestamp: Date.now() },
-  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%", timestamp: Date.now() },
+  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
+  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%", timestamp: Date.now(), action: "sold", actor: "Wojak" },
+  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%", timestamp: Date.now(), action: "bought", actor: "Pepe" },
+  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%", timestamp: Date.now(), action: "sold", actor: "Diamond" },
+  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%", timestamp: Date.now(), action: "bought", actor: "Whale" },
+  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%", timestamp: Date.now(), action: "sold", actor: "Paper" },
+  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%", timestamp: Date.now(), action: "bought", actor: "Degen" },
 ];
 
 export const AlertsSection = () => {
   const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
   const [notificationCount, setNotificationCount] = useState(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const getRandomElement = (array: string[]) => {
+    return array[Math.floor(Math.random() * array.length)];
+  };
 
   useEffect(() => {
     const scheduleNextAlert = () => {
@@ -38,13 +47,16 @@ export const AlertsSection = () => {
           const newAlerts = [...prevAlerts];
           const firstAlert = newAlerts.shift();
           if (firstAlert) {
-            // Modify the alert slightly before adding it back
+            // Create a new alert with random actor, action, and ticker
             const modifiedAlert = {
               ...firstAlert,
               id: Date.now(),
+              name: getRandomElement(tickers),
               price: `$${(Math.random() * 0.001).toFixed(8)}`,
               change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`,
-              timestamp: Date.now()
+              timestamp: Date.now(),
+              action: Math.random() > 0.5 ? "bought" : "sold",
+              actor: getRandomElement(actors)
             };
             newAlerts.push(modifiedAlert);
             return newAlerts;
@@ -104,7 +116,7 @@ export const AlertsSection = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-neon-pink" />
-                  <span className="font-medium">{alert.name}</span>
+                  <span className="font-medium">{alert.actor} {alert.action} {alert.name}</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-gray-400">{alert.price}</span>
