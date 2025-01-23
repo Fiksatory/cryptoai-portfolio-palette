@@ -23,6 +23,7 @@ const mockAlerts = [
 
 export const AlertsSection = () => {
   const [alerts, setAlerts] = useState(mockAlerts);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
     const scheduleNextAlert = () => {
@@ -45,6 +46,9 @@ export const AlertsSection = () => {
           }
           return newAlerts;
         });
+        
+        // Increment notification count
+        setNotificationCount(prev => prev + 1);
         
         // Schedule the next alert
         timeoutRef.current = scheduleNextAlert();
@@ -79,7 +83,7 @@ export const AlertsSection = () => {
         </Card>
       </div>
       <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4">Live Token Alerts</h3>
+        <h3 className="text-lg font-semibold mb-4">Live Token Alerts ({notificationCount} new)</h3>
         <div className="space-y-2">
           {alerts.map((alert) => (
             <div
