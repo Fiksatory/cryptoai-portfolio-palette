@@ -15,6 +15,14 @@ export const MarketContext = ({ tokenData }: MarketContextProps) => {
           Market Activity
         </h3>
         <div className="space-y-4">
+          {tokenData?.name && (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-400">Token:</span>
+              <Badge className="bg-neon-violet/20 text-neon-violet">
+                {tokenData.name} ({tokenData.symbol})
+              </Badge>
+            </div>
+          )}
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-400">24h Volume:</span>
             <span className="text-green-400">

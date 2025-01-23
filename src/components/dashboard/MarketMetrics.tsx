@@ -18,6 +18,14 @@ export const MarketMetrics = ({ tokenData }: MarketMetricsProps) => {
           AI Market Pulse
         </h3>
         <div className="space-y-2">
+          {tokenData?.name && (
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-400">Token:</span>
+              <Badge variant="secondary" className="bg-neon-pink/20 text-neon-pink">
+                {tokenData.name} ({tokenData.symbol})
+              </Badge>
+            </div>
+          )}
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-400">Market State:</span>
             <Badge variant="secondary">
