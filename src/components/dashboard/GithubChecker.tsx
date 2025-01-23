@@ -95,7 +95,8 @@ const GithubChecker = () => {
       return;
     }
 
-    const githubUrlRegex = /^https:\/\/github\.com\/[\w-]+\/[\w-]+$/;
+    // Updated regex to allow dots in repository names
+    const githubUrlRegex = /^https:\/\/github\.com\/[\w-]+\/[\w.-]+$/;
     if (!githubUrlRegex.test(githubUrl)) {
       toast({
         title: "Invalid GitHub URL",
