@@ -2,8 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, ArrowUpRight, ArrowDownRight, Clock, Info } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { getNewPairs, getLatestTokenProfiles } from "@/services/dexscreener";
-import type { TrendingToken, TokenProfile } from "@/services/dexscreener";
+import { getNewPairs } from "@/services/dexscreener";
 import {
   Table,
   TableBody,
@@ -28,31 +27,31 @@ export const TrendingPairs = () => {
       const pairs = await getNewPairs();
       console.log('Raw pairs data:', pairs); // Debug log
 
-      // Filter and process pairs
+      // Map Birdeye data to our format
       const tokens = pairs
-        .filter(pair => {
-          return (
-            pair.baseToken?.symbol && 
-            pair.priceUsd && 
-            pair.volume?.h24 > 1000 && // Minimum volume threshold
-            new Date(pair.pairCreatedAt).getTime() > Date.now() - 24 * 60 * 60 * 1000 // Last 24h
-          );
-        })
         .map(pair => ({
-          name: pair.baseToken.name,
-          symbol: pair.baseToken.symbol,
-          priceUsd: String(pair.priceUsd || "0"),
-          priceChange: pair.priceChange,
-          volume: pair.volume,
-          pairCreatedAt: new Date(pair.pairCreatedAt),
-          chainId: pair.chainId,
-          dexId: pair.dexId,
-          txns: pair.txns
+          name: pair.symbol,
+          symbol: pair.symbol,
+          priceUsd: pair.price.toString(),
+          priceChange: {
+            h24: pair.priceChange24h || 0
+          },
+          volume: {
+            h24: pair.volume24h || 0
+          },
+          pairCreatedAt: new Date(), // Birdeye doesn't provide creation time
+          chainId: "solana",
+          dexId: "raydium", // Default to Raydium as it's the main Solana DEX
+          txns: {
+            h24: {
+              buys: pair.txns24h || 0,
+              sells: pair.txns24h || 0
+            }
+          }
         }))
-        .sort((a, b) => b.volume.h24 - a.volume.h24) // Sort by volume
         .slice(0, 10);
       
-      console.log('Processed tokens:', tokens); // Debug log
+      console.log('Processed tokens:', tokens);
       return tokens;
     },
     refetchInterval: 30000,
