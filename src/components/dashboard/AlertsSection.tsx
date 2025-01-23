@@ -16,7 +16,6 @@ interface Alert {
 const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"];
 const tickers = ["SOLAPE", "BONK", "SAMO", "WIF", "MYRO", "COPE", "DUST", "MEME", "PYTH", "RAY"];
 
-// Mock data for token alerts with actions
 const mockAlerts = [
   { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
   { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%", timestamp: Date.now(), action: "sold", actor: "Wojak" },
@@ -38,16 +37,13 @@ export const AlertsSection = () => {
 
   useEffect(() => {
     const scheduleNextAlert = () => {
-      // Random time between 3 and 10 seconds
       const randomTime = Math.floor(Math.random() * (10000 - 3000) + 3000);
       
       timeoutRef.current = setTimeout(() => {
-        // Rotate alerts by moving the first item to the end
         setAlerts(prevAlerts => {
           const newAlerts = [...prevAlerts];
           const firstAlert = newAlerts.shift();
           if (firstAlert) {
-            // Create a new alert with random actor, action, and ticker
             const modifiedAlert = {
               ...firstAlert,
               id: Date.now(),
@@ -64,18 +60,22 @@ export const AlertsSection = () => {
           return prevAlerts;
         });
         
-        // Increment notification count by 1 for each new alert
-        setNotificationCount(prev => prev + 1);
+        setNotificationCount(prev => {
+          const newCount = prev + 1;
+          // Update the navigation counter
+          const navCounter = document.getElementById('nav-notification-count');
+          if (navCounter) {
+            navCounter.textContent = String(newCount);
+          }
+          return newCount;
+        });
         
-        // Schedule the next alert
         scheduleNextAlert();
       }, randomTime);
     };
 
-    // Start the alert cycle
     scheduleNextAlert();
 
-    // Cleanup function
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
