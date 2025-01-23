@@ -16,49 +16,56 @@ const initialTokens = [
     price: 0.00001234,
     volume: "$2.1M",
     change: 15.2,
-    isPositive: true
+    isPositive: true,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263/logo.png"
   },
   {
     name: "WEN",
     price: 0.00000789,
     volume: "$1.8M",
     change: -8.4,
-    isPositive: false
+    isPositive: false,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk/logo.png"
   },
   {
     name: "SAMO",
     price: 0.00890,
     volume: "$950K",
     change: 4.7,
-    isPositive: true
+    isPositive: true,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU/logo.png"
   },
   {
     name: "PYTH",
     price: 0.4567,
     volume: "$3.2M",
     change: 22.1,
-    isPositive: true
+    isPositive: true,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HZ1JovNiVvGrGNiiYvEozEVgZ88xyCRuYzF6L5KwRYF4/logo.svg"
   },
   {
     name: "ORCA",
     price: 1.234,
     volume: "$1.5M",
     change: -3.2,
-    isPositive: false
+    isPositive: false,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE/logo.png"
   },
   {
     name: "RAY",
     price: 0.789,
     volume: "$2.8M",
     change: 12.5,
-    isPositive: true
+    isPositive: true,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png"
   },
   {
     name: "COPE",
     price: 0.0234,
     volume: "$750K",
     change: -5.8,
-    isPositive: false
+    isPositive: false,
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8HGyAAB1yoM1ttS7pXjHMa3dukTFGQggnFFH3hJZgzQh/logo.png"
   }
 ];
 
@@ -116,9 +123,15 @@ export const TrendingSection = () => {
             >
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-neon-pink to-neon-violet flex items-center justify-center">
-                    <span className="text-xs font-bold">{token.name.substring(0, 1)}</span>
-                  </div>
+                  <img 
+                    src={token.image} 
+                    alt={token.name}
+                    className="w-8 h-8 rounded-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = `https://via.placeholder.com/32/6366f1/ffffff?text=${token.name.charAt(0)}`;
+                    }}
+                  />
                   <span className="font-semibold">{token.name}</span>
                 </div>
               </TableCell>
