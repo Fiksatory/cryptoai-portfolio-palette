@@ -144,8 +144,13 @@ const AiDashboard = () => {
                     label: "Alerts", 
                     active: activeSection === "alerts",
                     extra: (
-                      <div className="absolute right-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
-                        Soon
+                      <div className="flex gap-2 absolute right-2">
+                        <div className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse">
+                          7
+                        </div>
+                        <div className="bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
+                          Soon
+                        </div>
                       </div>
                     )
                   },
