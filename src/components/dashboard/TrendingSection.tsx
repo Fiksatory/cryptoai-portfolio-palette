@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 const initialTokens = [
@@ -127,10 +128,18 @@ export const TrendingSection = () => {
           {tokens.map((token) => (
             <TableRow 
               key={token.rank}
-              className="hover:bg-white/5 transition-colors"
+              className={cn(
+                "hover:bg-white/5 transition-colors relative overflow-hidden",
+                token.rank <= 3 && "border-animation"
+              )}
             >
               <TableCell>
-                <span className="font-semibold text-gray-400">#{token.rank}</span>
+                <span className={cn(
+                  "font-semibold",
+                  token.rank <= 3 ? "text-white" : "text-gray-400"
+                )}>
+                  #{token.rank}
+                </span>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-3">
