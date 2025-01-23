@@ -69,6 +69,14 @@ const AiDashboard = () => {
               handleAnalyze={handleAnalyze}
               isLoading={isLoading}
             />
+            {tokenData?.name && (
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent">
+                  {tokenData.name}
+                </h2>
+                <p className="text-gray-400">({tokenData.symbol})</p>
+              </div>
+            )}
             <MarketMetrics tokenData={tokenData} />
             <MarketContext tokenData={tokenData} />
             <SocialLinks tokenData={tokenData} isLoading={isLoading} />
