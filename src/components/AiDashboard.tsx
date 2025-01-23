@@ -95,7 +95,7 @@ const AiDashboard = () => {
                 { icon: AlertTriangle, label: "Alerts", active: false },
                 { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
                 { icon: Brain, label: "AI Intel", active: activeSection === "ai intel" },
-                { icon: Radio, label: "Signals", active: false },
+                { icon: Radio, label: "Github Checker", active: false },
                 { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
                 { icon: Settings, label: "Settings", active: false },
                 { icon: Home, label: "Home", active: false },
