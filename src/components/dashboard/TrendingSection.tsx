@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 
 const initialTokens = [
   {
+    rank: 1,
     name: "BONK",
     price: 0.00001234,
     volume: "$2.1M",
@@ -20,6 +21,7 @@ const initialTokens = [
     image: "/lovable-uploads/19bfce04-0354-4554-b5b7-12106ecb7f86.png"
   },
   {
+    rank: 2,
     name: "WEN",
     price: 0.00000789,
     volume: "$1.8M",
@@ -28,6 +30,7 @@ const initialTokens = [
     image: "https://s2.coinmarketcap.com/static/img/coins/64x64/2833.png"
   },
   {
+    rank: 3,
     name: "SAMO",
     price: 0.00890,
     volume: "$950K",
@@ -36,6 +39,7 @@ const initialTokens = [
     image: "https://s2.coinmarketcap.com/static/img/coins/64x64/9721.png"
   },
   {
+    rank: 4,
     name: "PYTH",
     price: 0.4567,
     volume: "$3.2M",
@@ -44,6 +48,7 @@ const initialTokens = [
     image: "https://s2.coinmarketcap.com/static/img/coins/64x64/16362.png"
   },
   {
+    rank: 5,
     name: "ORCA",
     price: 1.234,
     volume: "$1.5M",
@@ -52,6 +57,7 @@ const initialTokens = [
     image: "https://s2.coinmarketcap.com/static/img/coins/64x64/11165.png"
   },
   {
+    rank: 6,
     name: "RAY",
     price: 0.789,
     volume: "$2.8M",
@@ -60,6 +66,7 @@ const initialTokens = [
     image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8526.png"
   },
   {
+    rank: 7,
     name: "COPE",
     price: 0.0234,
     volume: "$750K",
@@ -109,6 +116,7 @@ export const TrendingSection = () => {
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
+            <TableHead className="w-16">Rank</TableHead>
             <TableHead>Token</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>Volume</TableHead>
@@ -116,11 +124,14 @@ export const TrendingSection = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tokens.map((token, index) => (
+          {tokens.map((token) => (
             <TableRow 
-              key={index}
+              key={token.rank}
               className="hover:bg-white/5 transition-colors"
             >
+              <TableCell>
+                <span className="font-semibold text-gray-400">#{token.rank}</span>
+              </TableCell>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <img 
