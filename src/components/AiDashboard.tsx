@@ -12,6 +12,7 @@ import { MarketContext } from "./dashboard/MarketContext";
 import { SocialLinks } from "./dashboard/SocialLinks";
 import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 import { TrendingPairs } from "./dashboard/TrendingPairs";
+import GithubChecker from "./dashboard/GithubChecker";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
@@ -57,6 +58,8 @@ const AiDashboard = () => {
         return <PortfolioTracker />;
       case "patterns":
         return <PatternAnalysis />;
+      case "github checker":
+        return <GithubChecker />;
       case "ai intel":
         return (
           <div className="space-y-6">
@@ -95,7 +98,7 @@ const AiDashboard = () => {
                 { icon: AlertTriangle, label: "Alerts", active: false },
                 { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
                 { icon: Brain, label: "AI Intel", active: activeSection === "ai intel" },
-                { icon: Radio, label: "Github Checker", active: false },
+                { icon: Radio, label: "Github Checker", active: activeSection === "github checker" },
                 { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
                 { icon: Settings, label: "Settings", active: false },
                 { icon: Home, label: "Home", active: false },
