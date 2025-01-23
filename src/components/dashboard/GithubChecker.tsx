@@ -58,7 +58,9 @@ const GithubChecker = () => {
         }
 
         // Calculate metrics with fallbacks
-        const totalCommits = commitsData ? commitsData.reduce((acc: number, week: any) => acc + (week?.total || 0), 0) : 0;
+        const totalCommits = Array.isArray(commitsData) 
+          ? commitsData.reduce((acc: number, week: any) => acc + (week?.total || 0), 0) 
+          : 0;
         const commitFrequency = Math.min(100, (totalCommits / 52) * 10);
         const contributorActivity = Math.min(100, (contributorsData?.length || 0) * 10);
         const codeConsistency = Math.min(100, repoData.watchers_count || 0);
