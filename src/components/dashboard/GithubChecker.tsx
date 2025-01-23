@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, GitBranch, Percent, AlertCircle, Shield, GitCommit, Users } from "lucide-react";
+import { Loader2, GitBranch, Percent, AlertCircle, Shield, GitCommit, Users, Copy, User } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Progress } from "@/components/ui/progress";
 
@@ -14,12 +14,24 @@ interface AnalysisResult {
   recommendations: string[];
   larpScore: number;
   metrics: {
-    commitFrequency: number; // 0-100
-    contributorActivity: number; // 0-100
-    codeConsistency: number; // 0-100
-    documentationQuality: number; // 0-100
+    commitFrequency: number;
+    contributorActivity: number;
+    codeConsistency: number;
+    documentationQuality: number;
   };
   redFlags: string[];
+  ownerAnalysis: {
+    accountAge: string;
+    totalRepos: number;
+    contributionHistory: string;
+    suspiciousPatterns: string[];
+  };
+  codeOriginality: {
+    similarRepos: string[];
+    plagiarismScore: number;
+    copiedFiles: string[];
+    sourceReferences: string[];
+  };
 }
 
 const GithubChecker = () => {
@@ -31,40 +43,68 @@ const GithubChecker = () => {
     queryFn: async (): Promise<AnalysisResult> => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Mock response with more detailed analysis
-      const mockScore = 45; // Lower default score for stricter analysis
+      // Mock response with stricter analysis including owner and originality checks
+      const mockScore = 35; // Even lower default score for stricter analysis
       return {
-        summary: "Repository shows mixed signals with some concerning patterns.",
-        codeQuality: "Code structure raises several red flags including inconsistent coding patterns and unusual commit history.",
+        summary: "Repository shows significant red flags and potential code copying.",
+        codeQuality: "Multiple issues detected including possible plagiarism and suspicious patterns.",
         potentialIssues: [
-          "Irregular commit patterns detected",
-          "Suspicious contributor activity patterns",
-          "Code complexity metrics are outside normal ranges",
-          "Documentation appears auto-generated or AI-generated",
-          "Dependencies versions are inconsistent",
-          "Test coverage is suspiciously low"
+          "High code similarity with existing repositories",
+          "Suspicious commit patterns and timing",
+          "Inconsistent coding styles across files",
+          "Auto-generated or AI-generated documentation",
+          "Unusual dependency patterns",
+          "Missing or superficial tests"
         ],
         recommendations: [
-          "Verify commit history authenticity",
-          "Review contributor profiles and activity patterns",
-          "Analyze code similarity with known templates",
-          "Check for plagiarized code segments",
-          "Verify documentation originality"
+          "Conduct thorough code originality check",
+          "Review owner's contribution history",
+          "Analyze commit message patterns",
+          "Verify documentation authenticity",
+          "Check for code attribution"
         ],
         larpScore: mockScore,
         metrics: {
-          commitFrequency: 35,
-          contributorActivity: 40,
-          codeConsistency: 50,
-          documentationQuality: 30
+          commitFrequency: 30,
+          contributorActivity: 25,
+          codeConsistency: 40,
+          documentationQuality: 35
         },
         redFlags: [
-          "Unusual commit timing patterns",
-          "Inconsistent coding styles across files",
-          "Generic or AI-generated comments",
-          "Suspicious contributor profiles",
-          "Code complexity doesn't match project scope"
-        ]
+          "Multiple code segments copied from other repositories",
+          "Owner account shows suspicious patterns",
+          "Inconsistent commit history",
+          "Generic documentation likely AI-generated",
+          "Unusual repository creation patterns"
+        ],
+        ownerAnalysis: {
+          accountAge: "2 months",
+          totalRepos: 3,
+          contributionHistory: "Sporadic activity with unusual patterns",
+          suspiciousPatterns: [
+            "Recently created account",
+            "Multiple repositories with similar code",
+            "No meaningful contributions to other projects",
+            "Unusual activity timing"
+          ]
+        },
+        codeOriginality: {
+          similarRepos: [
+            "original-repo/source-1",
+            "another-source/project-2"
+          ],
+          plagiarismScore: 75, // percentage of potentially copied code
+          copiedFiles: [
+            "src/main.js",
+            "lib/utils.js",
+            "components/core.js"
+          ],
+          sourceReferences: [
+            "Found matching code in repository A (85% similarity)",
+            "Multiple functions copied from repository B",
+            "Documentation copied from project C"
+          ]
+        }
       };
     },
     enabled: false,
@@ -174,6 +214,61 @@ const GithubChecker = () => {
                 <span>Contributor Activity: {analysis.metrics.contributorActivity}%</span>
               </div>
               <Progress value={analysis.metrics.contributorActivity} className="h-1" />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Repository Owner Analysis</h3>
+            <div className="space-y-4 bg-secondary/10 p-4 rounded-lg">
+              <div className="flex items-center gap-2">
+                <User className="h-5 w-5" />
+                <span>Account Age: {analysis.ownerAnalysis.accountAge}</span>
+              </div>
+              <div>
+                <span>Total Repositories: {analysis.ownerAnalysis.totalRepos}</span>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Suspicious Patterns:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  {analysis.ownerAnalysis.suspiciousPatterns.map((pattern, index) => (
+                    <li key={index} className="text-red-400">{pattern}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-4">Code Originality Analysis</h3>
+            <div className="space-y-4 bg-secondary/10 p-4 rounded-lg">
+              <div className="flex items-center gap-2">
+                <Copy className="h-5 w-5" />
+                <span className="text-red-400">Plagiarism Score: {analysis.codeOriginality.plagiarismScore}%</span>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Similar Repositories:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  {analysis.codeOriginality.similarRepos.map((repo, index) => (
+                    <li key={index}>{repo}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Copied Files:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  {analysis.codeOriginality.copiedFiles.map((file, index) => (
+                    <li key={index} className="text-red-400">{file}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Source References:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  {analysis.codeOriginality.sourceReferences.map((ref, index) => (
+                    <li key={index}>{ref}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
 
