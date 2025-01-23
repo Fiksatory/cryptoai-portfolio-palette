@@ -122,7 +122,7 @@ export const TrendingSection = () => {
                   <span className="font-semibold">{token.name}</span>
                 </div>
               </TableCell>
-              <TableCell className="font-mono">
+              <TableCell className={`font-mono ${token.isPositive ? 'text-green-400' : 'text-red-400'} transition-colors duration-300`}>
                 ${formatPrice(token.price)}
               </TableCell>
               <TableCell>{token.volume}</TableCell>
