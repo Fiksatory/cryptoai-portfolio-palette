@@ -39,7 +39,6 @@ export const AlertsSection = () => {
     const navCounter = document.getElementById('nav-notification-count');
     if (navCounter) {
       navCounter.textContent = String(count);
-      navCounter.style.display = count > 0 ? 'block' : 'none';
     }
   };
 
@@ -78,10 +77,7 @@ export const AlertsSection = () => {
   };
 
   useEffect(() => {
-    // Start generating alerts immediately
     generateNewAlert();
-    
-    // Initialize the counter immediately
     setNotificationCount(1);
     updateNavCounter(1);
 

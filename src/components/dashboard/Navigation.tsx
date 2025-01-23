@@ -15,7 +15,10 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       active: activeSection === "alerts",
       extra: (
         <div className="flex gap-2 absolute right-2">
-          <div id="nav-notification-count" className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse" style={{ display: 'block' }}>
+          <div 
+            id="nav-notification-count" 
+            className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse"
+          >
             0
           </div>
           <div className="bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
