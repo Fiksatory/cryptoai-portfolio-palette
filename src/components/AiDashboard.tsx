@@ -60,14 +60,23 @@ const AiDashboard = () => {
   );
 
   const renderContent = () => {
+    const commonCardClasses = "bg-black/40 border-white/10 p-6 relative min-h-[600px]";
+
     switch (activeSection) {
       case "trending":
-        return <TrendingSection />;
+        return (
+          <Card className={commonCardClasses}>
+            <div className="filter blur-sm">
+              <TrendingSection />
+            </div>
+            <TokenGatedContent />
+          </Card>
+        );
       case "portfolio":
         return <PortfolioTracker />;
       case "patterns":
         return (
-          <Card className="bg-black/40 border-white/10 p-6 relative">
+          <Card className={commonCardClasses}>
             <div className="filter blur-sm">
               <PatternAnalysis />
             </div>
@@ -76,7 +85,7 @@ const AiDashboard = () => {
         );
       case "alerts":
         return (
-          <Card className="bg-black/40 border-white/10 p-6 relative min-h-[400px]">
+          <Card className={commonCardClasses}>
             <div className="filter blur-sm">
               <div className="space-y-4">
                 <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
