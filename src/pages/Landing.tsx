@@ -1,9 +1,20 @@
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { toast } from 'sonner';
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { connected } = useWallet();
+
+  const handleDashboardAccess = () => {
+    if (!connected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+    navigate('/dashboard');
+  };
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -33,14 +44,14 @@ const Landing = () => {
 
           <div className="flex flex-col items-center space-y-4 animate-fade-in animation-delay-400">
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={handleDashboardAccess}
               className="px-8 py-4 bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200 rounded-lg text-white font-semibold shadow-lg hover:shadow-neon-pink/20"
             >
               Enter Dashboard
             </button>
             
             <p className="text-sm text-gray-400/60">
-              No wallet connection required for demo
+              {connected ? 'Wallet connected - Ready to enter' : 'Connect wallet to access dashboard'}
             </p>
           </div>
 
