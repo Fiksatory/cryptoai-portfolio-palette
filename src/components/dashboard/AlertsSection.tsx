@@ -52,7 +52,7 @@ export const AlertsSection = () => {
           return prevAlerts;
         });
         
-        // Increment notification count
+        // Increment notification count by 1 for each new alert
         setNotificationCount(prev => prev + 1);
         
         // Schedule the next alert
