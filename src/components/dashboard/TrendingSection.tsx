@@ -17,7 +17,7 @@ const initialTokens = [
     volume: "$2.1M",
     change: 15.2,
     isPositive: true,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263/logo.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/24478.png"
   },
   {
     name: "WEN",
@@ -25,7 +25,7 @@ const initialTokens = [
     volume: "$1.8M",
     change: -8.4,
     isPositive: false,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk/logo.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/2833.png"
   },
   {
     name: "SAMO",
@@ -33,7 +33,7 @@ const initialTokens = [
     volume: "$950K",
     change: 4.7,
     isPositive: true,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU/logo.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/9721.png"
   },
   {
     name: "PYTH",
@@ -41,7 +41,7 @@ const initialTokens = [
     volume: "$3.2M",
     change: 22.1,
     isPositive: true,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/HZ1JovNiVvGrGNiiYvEozEVgZ88xyCRuYzF6L5KwRYF4/logo.svg"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/16362.png"
   },
   {
     name: "ORCA",
@@ -49,7 +49,7 @@ const initialTokens = [
     volume: "$1.5M",
     change: -3.2,
     isPositive: false,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE/logo.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/11165.png"
   },
   {
     name: "RAY",
@@ -57,7 +57,7 @@ const initialTokens = [
     volume: "$2.8M",
     change: 12.5,
     isPositive: true,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8526.png"
   },
   {
     name: "COPE",
@@ -65,7 +65,7 @@ const initialTokens = [
     volume: "$750K",
     change: -5.8,
     isPositive: false,
-    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8HGyAAB1yoM1ttS7pXjHMa3dukTFGQggnFFH3hJZgzQh/logo.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8543.png"
   }
 ];
 
@@ -126,10 +126,10 @@ export const TrendingSection = () => {
                   <img 
                     src={token.image} 
                     alt={token.name}
-                    className="w-8 h-8 rounded-full object-cover"
+                    className="w-8 h-8 rounded-full object-cover bg-white/10"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://via.placeholder.com/32/6366f1/ffffff?text=${token.name.charAt(0)}`;
+                      target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%236366f1"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="16">${token.name.charAt(0)}</text></svg>`;
                     }}
                   />
                   <span className="font-semibold">{token.name}</span>
