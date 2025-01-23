@@ -129,11 +129,13 @@ export const TrendingSection = () => {
             <TableRow 
               key={token.rank}
               className={cn(
-                "hover:bg-white/5 transition-colors relative overflow-hidden",
-                token.rank <= 3 && "border-animation"
+                "hover:bg-white/5 transition-colors",
+                token.rank <= 3 && "p-[1px] border-animation"
               )}
             >
-              <TableCell>
+              <TableCell className={cn(
+                token.rank <= 3 && "border-animation-inner"
+              )}>
                 <span className={cn(
                   "font-semibold",
                   token.rank <= 3 ? "text-white" : "text-gray-400"
@@ -141,7 +143,9 @@ export const TrendingSection = () => {
                   #{token.rank}
                 </span>
               </TableCell>
-              <TableCell>
+              <TableCell className={cn(
+                token.rank <= 3 && "border-animation-inner"
+              )}>
                 <div className="flex items-center gap-3">
                   <img 
                     src={token.image} 
@@ -155,16 +159,25 @@ export const TrendingSection = () => {
                   <span className="font-semibold">{token.name}</span>
                 </div>
               </TableCell>
-              <TableCell className={`font-mono ${token.isPositive ? 'text-green-400' : 'text-red-400'} transition-colors duration-300`}>
+              <TableCell className={cn(
+                "font-mono",
+                token.isPositive ? 'text-green-400' : 'text-red-400',
+                token.rank <= 3 && "border-animation-inner"
+              )}>
                 ${formatPrice(token.price)}
               </TableCell>
-              <TableCell>{token.volume}</TableCell>
-              <TableCell className="text-right">
-                <span 
-                  className={`${
-                    token.isPositive ? 'text-green-400' : 'text-red-400'
-                  } transition-colors duration-300`}
-                >
+              <TableCell className={cn(
+                token.rank <= 3 && "border-animation-inner"
+              )}>
+                {token.volume}
+              </TableCell>
+              <TableCell className={cn(
+                "text-right",
+                token.rank <= 3 && "border-animation-inner"
+              )}>
+                <span className={`${
+                  token.isPositive ? 'text-green-400' : 'text-red-400'
+                } transition-colors duration-300`}>
                   {token.change.toFixed(2)}%
                 </span>
               </TableCell>
