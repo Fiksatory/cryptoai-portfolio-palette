@@ -14,27 +14,21 @@ import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 import { TrendingSection } from "./dashboard/TrendingSection";
 import GithubChecker from "./dashboard/GithubChecker";
 
-// Mock data for token alerts
+// Mock data for token alerts - expanded to 7 items
 const mockAlerts = [
   { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%" },
   { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%" },
   { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%" },
+  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%" },
+  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%" },
+  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%" },
+  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%" },
 ];
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
   const [activeSection, setActiveSection] = useState("trending");
-  const [currentAlertIndex, setCurrentAlertIndex] = useState(0);
   const { toast } = useToast();
-
-  // Effect to cycle through alerts
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentAlertIndex((prev) => (prev + 1) % mockAlerts.length);
-    }, 3000); // Change alert every 3 seconds
-
-    return () => clearInterval(interval);
-  }, []);
 
   const { data: tokenData, isLoading } = useQuery({
     queryKey: ['tokenAnalysis', contractAddress],
@@ -120,16 +114,11 @@ const AiDashboard = () => {
                 </div>
                 <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-4">Live Token Alerts</h3>
-                  <div className="relative h-20 overflow-hidden rounded-lg bg-black/20">
-                    {mockAlerts.map((alert, index) => (
+                  <div className="space-y-2">
+                    {mockAlerts.map((alert) => (
                       <div
                         key={alert.id}
-                        className={cn(
-                          "absolute w-full p-4 transition-all duration-500 ease-in-out",
-                          index === currentAlertIndex 
-                            ? "translate-y-0 opacity-100" 
-                            : "translate-y-20 opacity-0"
-                        )}
+                        className="p-4 bg-black/20 rounded-lg transition-all duration-300 hover:bg-black/30"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -138,7 +127,12 @@ const AiDashboard = () => {
                           </div>
                           <div className="flex items-center gap-4">
                             <span className="text-gray-400">{alert.price}</span>
-                            <span className="text-green-400">{alert.change}</span>
+                            <span className={cn(
+                              "font-medium",
+                              alert.change.startsWith("+") ? "text-green-400" : "text-red-400"
+                            )}>
+                              {alert.change}
+                            </span>
                           </div>
                         </div>
                       </div>
