@@ -15,7 +15,7 @@ import { TrendingPairs } from "./dashboard/TrendingPairs";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
-  const [activeSection, setActiveSection] = useState("ai");
+  const [activeSection, setActiveSection] = useState("ai intel");
   const { toast } = useToast();
 
   const { data: tokenData, isLoading } = useQuery({
@@ -57,7 +57,7 @@ const AiDashboard = () => {
         return <PortfolioTracker />;
       case "patterns":
         return <PatternAnalysis />;
-      case "ai":
+      case "ai intel":
         return (
           <div className="space-y-6">
             <ContractAnalysis 
@@ -94,7 +94,7 @@ const AiDashboard = () => {
                 { icon: TrendingUp, label: "Trending", active: activeSection === "trending" },
                 { icon: AlertTriangle, label: "Alerts", active: false },
                 { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
-                { icon: Brain, label: "AI Intel", active: activeSection === "ai" },
+                { icon: Brain, label: "AI Intel", active: activeSection === "ai intel" },
                 { icon: Radio, label: "Signals", active: false },
                 { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
                 { icon: Settings, label: "Settings", active: false },
