@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 const initialTokens = [
@@ -128,18 +127,10 @@ export const TrendingSection = () => {
           {tokens.map((token) => (
             <TableRow 
               key={token.rank}
-              className={cn(
-                "hover:bg-white/5 transition-colors",
-                token.rank <= 3 && "border-animation"
-              )}
+              className="hover:bg-white/5 transition-colors"
             >
               <TableCell>
-                <span className={cn(
-                  "font-semibold",
-                  token.rank <= 3 ? "text-white" : "text-gray-400"
-                )}>
-                  #{token.rank}
-                </span>
+                <span className="font-semibold text-gray-400">#{token.rank}</span>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-3">
@@ -155,19 +146,16 @@ export const TrendingSection = () => {
                   <span className="font-semibold">{token.name}</span>
                 </div>
               </TableCell>
-              <TableCell className={cn(
-                "font-mono",
-                token.isPositive ? 'text-green-400' : 'text-red-400'
-              )}>
+              <TableCell className={`font-mono ${token.isPositive ? 'text-green-400' : 'text-red-400'} transition-colors duration-300`}>
                 ${formatPrice(token.price)}
               </TableCell>
-              <TableCell>
-                {token.volume}
-              </TableCell>
+              <TableCell>{token.volume}</TableCell>
               <TableCell className="text-right">
-                <span className={`${
-                  token.isPositive ? 'text-green-400' : 'text-red-400'
-                } transition-colors duration-300`}>
+                <span 
+                  className={`${
+                    token.isPositive ? 'text-green-400' : 'text-red-400'
+                  } transition-colors duration-300`}
+                >
                   {token.change.toFixed(2)}%
                 </span>
               </TableCell>
