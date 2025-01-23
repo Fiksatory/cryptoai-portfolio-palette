@@ -17,34 +17,53 @@ const GithubChecker = () => {
     queryKey: ['github-analysis', githubUrl],
     queryFn: async (): Promise<AnalysisResult> => {
       try {
+        if (!githubUrl) throw new Error('No URL provided');
+
         // Extract owner and repo from GitHub URL
         const urlParts = githubUrl.replace('https://github.com/', '').split('/');
+        if (urlParts.length !== 2) throw new Error('Invalid GitHub URL format');
+
         const owner = urlParts[0];
         const repo = urlParts[1];
 
+        // GitHub API headers with rate limit handling
+        const headers = {
+          'Accept': 'application/vnd.github.v3+json',
+        };
+
         // Fetch repository data
-        const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+        const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers });
         if (!repoResponse.ok) {
-          throw new Error('Repository not found');
+          if (repoResponse.status === 404) {
+            throw new Error('Repository not found');
+          } else if (repoResponse.status === 403) {
+            throw new Error('Rate limit exceeded. Please try again later.');
+          }
+          throw new Error('Failed to fetch repository data');
         }
         const repoData = await repoResponse.json();
 
-        // Fetch contributor data
-        const contributorsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contributors`);
-        const contributorsData = await contributorsResponse.json();
+        // Fetch contributor data with error handling
+        const contributorsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contributors`, { headers });
+        let contributorsData = [];
+        if (contributorsResponse.ok) {
+          contributorsData = await contributorsResponse.json();
+        }
 
-        // Fetch commit activity
-        const commitsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/stats/commit_activity`);
-        const commitsData = await commitsResponse.json();
+        // Fetch commit activity with error handling
+        const commitsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/stats/commit_activity`, { headers });
+        let commitsData = [];
+        if (commitsResponse.ok) {
+          commitsData = await commitsResponse.json();
+        }
 
-        // Calculate metrics based on real data
-        const totalCommits = commitsData ? commitsData.reduce((acc: number, week: any) => acc + week.total, 0) : 0;
-        const commitFrequency = Math.min(100, (totalCommits / 52) * 10); // Normalize weekly commits
+        // Calculate metrics with fallbacks
+        const totalCommits = commitsData ? commitsData.reduce((acc: number, week: any) => acc + (week?.total || 0), 0) : 0;
+        const commitFrequency = Math.min(100, (totalCommits / 52) * 10);
         const contributorActivity = Math.min(100, (contributorsData?.length || 0) * 10);
-        const codeConsistency = Math.min(100, repoData.watchers_count);
+        const codeConsistency = Math.min(100, repoData.watchers_count || 0);
         const documentationQuality = repoData.has_wiki ? 80 : 40;
 
-        // Calculate LARP score based on various factors
         const larpScore = Math.floor(
           (commitFrequency + contributorActivity + codeConsistency + documentationQuality) / 4
         );
@@ -97,17 +116,18 @@ const GithubChecker = () => {
             ]
           }
         };
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching GitHub data:', error);
         toast({
           title: "Error",
-          description: "Failed to fetch repository data. Please check the URL and try again.",
+          description: error.message || "Failed to fetch repository data. Please check the URL and try again.",
           variant: "destructive",
         });
         throw error;
       }
     },
     enabled: false,
+    retry: false,
   });
 
   const handleAnalyze = async () => {
