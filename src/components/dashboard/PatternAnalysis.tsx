@@ -19,11 +19,11 @@ export const PatternAnalysis = () => {
           pairCreatedAt: new Date(),
           chainId: pair.chainId,
           dexId: pair.dexId,
-          marketSize: Math.random() * 1000, // This would ideally be calculated from real data
+          marketSize: Math.random() * 1000,
           color: parseFloat((pair.priceChange?.h24 || pair.priceChange24h).toFixed(2)) > 0 ? '#22c55e' : '#ef4444'
         }))
         .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
-        .slice(0, 30); // Increased to show more tokens
+        .slice(0, 50); // Increased number of tokens
       
       return tokens;
     },
@@ -96,40 +96,50 @@ export const PatternAnalysis = () => {
         ) : (
           <div className="relative w-full h-[300px] overflow-hidden">
             {trendingTokens?.map((token, index) => {
-              const randomX = Math.random() * 90 + 5; // 5-95% of width
-              const randomY = Math.random() * 90 + 5; // 5-95% of height
-              const size = (token.marketSize / 1000) * 60 + 40; // 40-100px based on market size
+              // Generate multiple bubbles for each token
+              const bubbles = Array.from({ length: 3 }, (_, i) => ({
+                ...token,
+                id: `${token.symbol}-${i}`,
+                randomX: Math.random() * 90 + 5,
+                randomY: Math.random() * 90 + 5,
+                size: (token.marketSize / 1000) * 40 + 20,
+                animationDelay: Math.random() * 5,
+                animationDuration: 20 + Math.random() * 20
+              }));
 
-              return (
+              return bubbles.map((bubble) => (
                 <div
-                  key={token.symbol}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 ease-in-out"
+                  key={bubble.id}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2"
                   style={{
-                    left: `${randomX}%`,
-                    top: `${randomY}%`,
-                    width: `${size}px`,
-                    height: `${size}px`,
+                    left: `${bubble.randomX}%`,
+                    top: `${bubble.randomY}%`,
+                    width: `${bubble.size}px`,
+                    height: `${bubble.size}px`,
+                    animation: `float ${bubble.animationDuration}s ease-in-out infinite`,
+                    animationDelay: `${bubble.animationDelay}s`,
                   }}
                 >
                   <div
-                    className="w-full h-full rounded-full flex items-center justify-center text-white text-xs font-medium relative group"
+                    className="w-full h-full rounded-full flex items-center justify-center text-white text-xs font-medium relative group transition-all duration-300 hover:scale-110"
                     style={{
-                      backgroundColor: token.color,
+                      backgroundColor: bubble.color,
                       opacity: 0.8,
+                      backdropFilter: 'blur(4px)',
                     }}
                   >
-                    <span className="z-10">{token.symbol}</span>
+                    <span className="z-10">{bubble.symbol}</span>
                     <div className="absolute opacity-0 group-hover:opacity-100 bg-black/90 p-2 rounded border border-white/10 text-xs whitespace-nowrap z-20 left-1/2 -translate-x-1/2 -top-12 transition-opacity">
-                      <p className="font-bold">{token.symbol}</p>
-                      <p>Price: ${token.priceUsd.toFixed(4)}</p>
-                      <p>Volume: ${token.volume.toLocaleString()}</p>
-                      <p className={token.priceChange > 0 ? 'text-green-500' : 'text-red-500'}>
-                        Change: {token.priceChange}%
+                      <p className="font-bold">{bubble.symbol}</p>
+                      <p>Price: ${bubble.priceUsd.toFixed(4)}</p>
+                      <p>Volume: ${bubble.volume.toLocaleString()}</p>
+                      <p className={bubble.priceChange > 0 ? 'text-green-500' : 'text-red-500'}>
+                        Change: {bubble.priceChange}%
                       </p>
                     </div>
                   </div>
                 </div>
-              );
+              ));
             })}
           </div>
         )}
