@@ -86,8 +86,8 @@ export const TrendingSection = () => {
   }, []);
 
   const formatPrice = (price: number) => {
-    if (price < 0.0001) return price.toExponential(4);
-    return price.toFixed(6);
+    if (price < 0.001) return price.toExponential(2);
+    return price.toFixed(3);
   };
 
   return (
