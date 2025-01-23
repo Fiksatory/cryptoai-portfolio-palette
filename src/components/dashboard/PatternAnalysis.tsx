@@ -19,17 +19,20 @@ export const PatternAnalysis = () => {
           pairCreatedAt: new Date(),
           chainId: pair.chainId,
           dexId: pair.dexId,
-          marketSize: Math.random() * 1000 // This would ideally be calculated from real data
+          marketSize: Math.random() * 1000, // This would ideally be calculated from real data
+          color: parseFloat((pair.priceChange?.h24 || pair.priceChange24h).toFixed(2)) > 0 ? '#22c55e' : '#ef4444'
         }))
         .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
-        .slice(0, 10);
+        .slice(0, 15); // Increased to show more tokens
       
       return tokens;
     },
     refetchInterval: 30000
   });
 
-  const chartHeight = 200;
+  const chartHeight = 300; // Increased height for better visualization
+
+  // ... keep existing code (Price Trends, Volume Distribution, and Price Change Analysis sections)
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -87,23 +90,85 @@ export const PatternAnalysis = () => {
         )}
       </Card>
 
-      {/* Market Distribution Bubble Chart */}
+      {/* Market Distribution Bubble Map */}
       <Card className="bg-black/40 border-white/10 p-4">
         <h3 className="text-sm font-medium mb-4">Market Distribution</h3>
         {isLoading ? (
           <div className="text-sm text-gray-400">Loading...</div>
         ) : (
           <ResponsiveContainer width="100%" height={chartHeight}>
-            <ScatterChart>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-              <XAxis dataKey="priceUsd" name="Price" stroke="#666" />
-              <YAxis dataKey="volume" name="Volume" stroke="#666" />
-              <ZAxis dataKey="marketSize" range={[100, 1000]} name="Market Size" />
-              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.3} />
+              <XAxis 
+                type="number" 
+                dataKey="priceUsd" 
+                name="Price" 
+                stroke="#666"
+                domain={['auto', 'auto']}
+              />
+              <YAxis 
+                type="number" 
+                dataKey="volume" 
+                name="Volume" 
+                stroke="#666"
+                domain={['auto', 'auto']}
+              />
+              <ZAxis 
+                type="number" 
+                dataKey="marketSize" 
+                range={[400, 2000]} 
+                name="Market Size" 
+              />
+              <Tooltip 
+                cursor={{ strokeDasharray: '3 3' }}
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-black/90 p-2 rounded border border-white/10">
+                        <p className="font-bold">{data.symbol}</p>
+                        <p className="text-sm">Price: ${data.priceUsd.toFixed(4)}</p>
+                        <p className="text-sm">Volume: ${data.volume.toLocaleString()}</p>
+                        <p className={`text-sm ${data.priceChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          Change: {data.priceChange}%
+                        </p>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
               <Scatter
                 data={trendingTokens}
                 fill="#0EA5E9"
                 fillOpacity={0.8}
+                shape={(props: any) => {
+                  const { cx, cy, fill, r } = props;
+                  const data = props.payload;
+                  return (
+                    <g>
+                      <circle
+                        cx={cx}
+                        cy={cy}
+                        r={r}
+                        fill={data.color}
+                        fillOpacity={0.8}
+                        stroke={data.color}
+                        strokeWidth={1}
+                      />
+                      <text
+                        x={cx}
+                        y={cy}
+                        textAnchor="middle"
+                        fill="#fff"
+                        fontSize={12}
+                        dy=".3em"
+                      >
+                        {data.symbol}
+                      </text>
+                    </g>
+                  );
+                }}
               />
             </ScatterChart>
           </ResponsiveContainer>
