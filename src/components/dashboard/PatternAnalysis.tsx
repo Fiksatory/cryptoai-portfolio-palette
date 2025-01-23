@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getNewPairs } from "@/services/dexscreener";
-import { LineChart, Line, BarChart, Bar, AreaChart, Area, PieChart, Pie, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis } from 'recharts';
 
 export const PatternAnalysis = () => {
   const { data: trendingTokens, isLoading } = useQuery({
@@ -18,7 +18,8 @@ export const PatternAnalysis = () => {
           volume: parseFloat((pair.volume?.h24 || pair.volume24h).toFixed(2)),
           pairCreatedAt: new Date(),
           chainId: pair.chainId,
-          dexId: pair.dexId
+          dexId: pair.dexId,
+          marketSize: Math.random() * 1000 // This would ideally be calculated from real data
         }))
         .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
         .slice(0, 10);
@@ -86,25 +87,25 @@ export const PatternAnalysis = () => {
         )}
       </Card>
 
-      {/* Market Distribution */}
+      {/* Market Distribution Bubble Chart */}
       <Card className="bg-black/40 border-white/10 p-4">
         <h3 className="text-sm font-medium mb-4">Market Distribution</h3>
         {isLoading ? (
           <div className="text-sm text-gray-400">Loading...</div>
         ) : (
           <ResponsiveContainer width="100%" height={chartHeight}>
-            <PieChart>
-              <Pie
+            <ScatterChart>
+              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+              <XAxis dataKey="priceUsd" name="Price" stroke="#666" />
+              <YAxis dataKey="volume" name="Volume" stroke="#666" />
+              <ZAxis dataKey="marketSize" range={[100, 1000]} name="Market Size" />
+              <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+              <Scatter
                 data={trendingTokens}
-                dataKey="volume"
-                nameKey="symbol"
-                cx="50%"
-                cy="50%"
-                outerRadius={60}
                 fill="#0EA5E9"
+                fillOpacity={0.8}
               />
-              <Tooltip />
-            </PieChart>
+            </ScatterChart>
           </ResponsiveContainer>
         )}
       </Card>
