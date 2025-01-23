@@ -18,69 +18,64 @@ const GithubChecker = () => {
     queryFn: async (): Promise<AnalysisResult> => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Mock response with real repository references
-      const mockScore = 35;
+      // Mock response with more reasonable plagiarism detection
+      const mockScore = 65;
       return {
-        summary: "Repository shows significant red flags and potential code copying.",
-        codeQuality: "Multiple issues detected including possible plagiarism and suspicious patterns.",
+        summary: "Repository shows some concerning patterns that warrant review.",
+        codeQuality: "Some specific implementations appear to be derived from other projects.",
         potentialIssues: [
-          "High code similarity with existing repositories",
-          "Suspicious commit patterns and timing",
-          "Inconsistent coding styles across files",
-          "Auto-generated or AI-generated documentation",
-          "Unusual dependency patterns",
-          "Missing or superficial tests"
+          "Custom implementation similarities with existing repositories",
+          "Specific business logic overlap",
+          "Unique feature implementations matching other projects",
+          "Similar non-standard patterns"
         ],
         recommendations: [
-          "Conduct thorough code originality check",
-          "Review owner's contribution history",
-          "Analyze commit message patterns",
-          "Verify documentation authenticity",
-          "Check for code attribution"
+          "Review specific custom implementations",
+          "Verify unique feature implementations",
+          "Check business logic originality",
+          "Document code attribution where appropriate"
         ],
         larpScore: mockScore,
         metrics: {
-          commitFrequency: 30,
-          contributorActivity: 25,
-          codeConsistency: 40,
-          documentationQuality: 35
+          commitFrequency: 60,
+          contributorActivity: 55,
+          codeConsistency: 70,
+          documentationQuality: 65
         },
         redFlags: [
-          "Multiple code segments copied from other repositories",
-          "Owner account shows suspicious patterns",
-          "Inconsistent commit history",
-          "Generic documentation likely AI-generated",
-          "Unusual repository creation patterns"
+          "Specific implementation details matching other projects",
+          "Unique utility functions copied without attribution",
+          "Custom hooks with identical implementation",
+          "Project-specific configurations copied directly"
         ],
         ownerAnalysis: {
-          accountAge: "2 months",
-          totalRepos: 3,
-          contributionHistory: "Sporadic activity with unusual patterns",
+          accountAge: "8 months",
+          totalRepos: 12,
+          contributionHistory: "Regular activity with some gaps",
           suspiciousPatterns: [
-            "Recently created account",
-            "Multiple repositories with similar code",
-            "No meaningful contributions to other projects",
-            "Unusual activity timing"
+            "Similar custom implementations across repositories",
+            "Identical project-specific configurations",
+            "Copied unique feature implementations"
           ]
         },
         codeOriginality: {
           similarRepos: [
-            "facebook/react",
-            "vercel/next.js",
-            "tailwindlabs/tailwindcss",
-            "shadcn/ui"
+            "trpc/trpc",
+            "prisma/prisma",
+            "remix-run/remix",
+            "supabase/supabase"
           ],
-          plagiarismScore: 75,
+          plagiarismScore: 35,
           copiedFiles: [
-            "src/main.js",
-            "lib/utils.js",
-            "components/core.js"
+            "src/features/auth/customHooks.ts",
+            "lib/database/queries.ts",
+            "components/custom/DataGrid.tsx"
           ],
           sourceReferences: [
-            "Significant code overlap with facebook/react (85% similarity)",
-            "Component structure similar to shadcn/ui (72% similarity)",
-            "Utility functions matching vercel/next.js (68% similarity)",
-            "CSS patterns from tailwindlabs/tailwindcss (65% similarity)"
+            "Custom authentication flow similar to trpc/trpc (45% similarity)",
+            "Database query patterns matching prisma/prisma (38% similarity)",
+            "Unique routing implementation from remix-run/remix (32% similarity)",
+            "Custom data fetching logic from supabase/supabase (28% similarity)"
           ]
         }
       };
