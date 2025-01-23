@@ -118,7 +118,6 @@ const AiDashboard = () => {
                   { icon: Brain, label: "AI Intel", active: activeSection === "ai intel" },
                   { icon: Radio, label: "Github Checker", active: activeSection === "github checker" },
                   { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
-                  { icon: Settings, label: "Settings", active: false },
                   { icon: Home, label: "Home", active: false },
                 ].map((item) => (
                   <button
