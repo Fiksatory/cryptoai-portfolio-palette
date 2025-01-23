@@ -18,7 +18,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
           <div id="nav-notification-count" className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse">
             0
           </div>
-          <div className="absolute -right-2 -top-2 bg-gradient-to-r from-neon-violet to-neon-purple text-xs font-medium text-white py-0.5 px-2 transform rotate-12 origin-bottom-left shadow-lg">
+          <div className="absolute -right-1 top-0 bg-gradient-to-r from-neon-violet to-neon-purple text-[10px] font-medium text-white py-0.5 px-1.5 transform rotate-6 origin-bottom-left shadow-lg">
             Holders Only
           </div>
         </div>
@@ -29,7 +29,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
       label: "Patterns", 
       active: activeSection === "patterns",
       extra: (
-        <div className="absolute -right-2 -top-2 bg-gradient-to-r from-neon-violet to-neon-purple text-xs font-medium text-white py-0.5 px-2 transform rotate-12 origin-bottom-left shadow-lg">
+        <div className="absolute -right-1 top-0 bg-gradient-to-r from-neon-violet to-neon-purple text-[10px] font-medium text-white py-0.5 px-1.5 transform rotate-6 origin-bottom-left shadow-lg">
           Holders Only
         </div>
       )
