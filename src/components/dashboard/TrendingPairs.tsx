@@ -39,18 +39,19 @@ export const TrendingPairs = () => {
           dexId: pair.dexId,
           txns: pair.txns
         }))
-        .sort((a, b) => b.volume.h24 - a.volume.h24)
+        // Sort by creation time, newest first
+        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
         .slice(0, 10);
       
       return tokens;
     },
-    refetchInterval: 30000
+    refetchInterval: 10000 // Refetch every 10 seconds
   });
 
   const { data: tokenProfiles, isLoading: isLoadingProfiles } = useQuery({
     queryKey: ['tokenProfiles'],
     queryFn: getLatestTokenProfiles,
-    refetchInterval: 30000
+    refetchInterval: 10000
   });
 
   const isLoading = isLoadingPairs || isLoadingProfiles;
@@ -73,13 +74,25 @@ export const TrendingPairs = () => {
   return (
     <div className="space-y-6">
       <Card className="bg-black/40 border-white/10 p-4">
-        <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-          <TrendingUp className="w-4 h-4" />
-          Trending Pairs
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="flex items-center gap-2 text-sm font-medium">
+            <TrendingUp className="w-4 h-4" />
+            Trending Pairs
+          </h3>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Info className="w-4 h-4 text-gray-400" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Auto-refreshes every 10 seconds</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
         
         {isLoading ? (
-          <div className="text-sm text-gray-400">Loading trending pairs...</div>
+          <div className="text-sm text-gray-400 animate-pulse">Fetching latest pairs...</div>
         ) : (
           <Table>
             <TableHeader>
@@ -113,7 +126,10 @@ export const TrendingPairs = () => {
                       </div>
                     </TableCell>
                     <TableCell>${formatPrice(token.priceUsd)}</TableCell>
-                    <TableCell>{timeDisplay}</TableCell>
+                    <TableCell className="flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-gray-400" />
+                      {timeDisplay}
+                    </TableCell>
                     <TableCell>{token.txns?.h24?.buys || 0}</TableCell>
                     <TableCell>{token.txns?.h24?.sells || 0}</TableCell>
                     <TableCell>{formatVolume(token.volume.h24)}</TableCell>
