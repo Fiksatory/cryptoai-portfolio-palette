@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, GitBranch, Percent, AlertCircle } from "lucide-react";
+import { Loader2, GitBranch, Percent, AlertCircle, Shield, GitCommit, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Progress } from "@/components/ui/progress";
 
@@ -12,7 +12,14 @@ interface AnalysisResult {
   codeQuality: string;
   potentialIssues: string[];
   recommendations: string[];
-  larpScore: number; // Score from 0-100
+  larpScore: number;
+  metrics: {
+    commitFrequency: number; // 0-100
+    contributorActivity: number; // 0-100
+    codeConsistency: number; // 0-100
+    documentationQuality: number; // 0-100
+  };
+  redFlags: string[];
 }
 
 const GithubChecker = () => {
@@ -22,22 +29,42 @@ const GithubChecker = () => {
   const { data: analysis, isLoading, refetch } = useQuery({
     queryKey: ['github-analysis', githubUrl],
     queryFn: async (): Promise<AnalysisResult> => {
-      // This is a mock response for now
       await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Mock response with more detailed analysis
+      const mockScore = 45; // Lower default score for stricter analysis
       return {
-        summary: "This appears to be a well-structured React application with good component organization.",
-        codeQuality: "The code follows modern React practices and uses TypeScript effectively.",
+        summary: "Repository shows mixed signals with some concerning patterns.",
+        codeQuality: "Code structure raises several red flags including inconsistent coding patterns and unusual commit history.",
         potentialIssues: [
-          "Some components might benefit from further decomposition",
-          "Consider adding more comprehensive error handling",
-          "Test coverage could be improved"
+          "Irregular commit patterns detected",
+          "Suspicious contributor activity patterns",
+          "Code complexity metrics are outside normal ranges",
+          "Documentation appears auto-generated or AI-generated",
+          "Dependencies versions are inconsistent",
+          "Test coverage is suspiciously low"
         ],
         recommendations: [
-          "Add unit tests for critical components",
-          "Implement proper error boundaries",
-          "Consider adding documentation for complex functions"
+          "Verify commit history authenticity",
+          "Review contributor profiles and activity patterns",
+          "Analyze code similarity with known templates",
+          "Check for plagiarized code segments",
+          "Verify documentation originality"
         ],
-        larpScore: 85 // Mock score - in real implementation this would be calculated based on various factors
+        larpScore: mockScore,
+        metrics: {
+          commitFrequency: 35,
+          contributorActivity: 40,
+          codeConsistency: 50,
+          documentationQuality: 30
+        },
+        redFlags: [
+          "Unusual commit timing patterns",
+          "Inconsistent coding styles across files",
+          "Generic or AI-generated comments",
+          "Suspicious contributor profiles",
+          "Code complexity doesn't match project scope"
+        ]
       };
     },
     enabled: false,
@@ -53,10 +80,11 @@ const GithubChecker = () => {
       return;
     }
 
-    if (!githubUrl.includes('github.com')) {
+    const githubUrlRegex = /^https:\/\/github\.com\/[\w-]+\/[\w-]+$/;
+    if (!githubUrlRegex.test(githubUrl)) {
       toast({
-        title: "Error",
-        description: "Please enter a valid GitHub repository URL",
+        title: "Invalid GitHub URL",
+        description: "Please enter a valid GitHub repository URL (e.g., https://github.com/username/repository)",
         variant: "destructive",
       });
       return;
@@ -66,8 +94,16 @@ const GithubChecker = () => {
   };
 
   const getLarpColor = (score: number) => {
-    if (score >= 80) return "text-green-500";
-    if (score >= 50) return "text-yellow-500";
+    if (score >= 85) return "text-green-500";
+    if (score >= 70) return "text-yellow-500";
+    if (score >= 50) return "text-orange-500";
+    return "text-red-500";
+  };
+
+  const getMetricColor = (value: number) => {
+    if (value >= 80) return "text-green-500";
+    if (value >= 60) return "text-yellow-500";
+    if (value >= 40) return "text-orange-500";
     return "text-red-500";
   };
 
@@ -77,7 +113,7 @@ const GithubChecker = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">GitHub Repository Analyzer</h2>
           <p className="text-muted-foreground">
-            Enter a GitHub repository URL to analyze its code quality and structure
+            Enter a GitHub repository URL for deep analysis of authenticity and code quality
           </p>
           
           <div className="flex gap-4">
@@ -106,9 +142,9 @@ const GithubChecker = () => {
         <Card className="p-6 space-y-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-semibold">LARP Meter</h3>
+              <h3 className="text-xl font-semibold">LARP Detection Score</h3>
               <div className="flex items-center gap-2">
-                <AlertCircle className={getLarpColor(analysis.larpScore)} />
+                <Shield className={getLarpColor(analysis.larpScore)} />
                 <span className={`text-2xl font-bold ${getLarpColor(analysis.larpScore)}`}>
                   {analysis.larpScore}%
                 </span>
@@ -117,20 +153,43 @@ const GithubChecker = () => {
             </div>
             <Progress value={analysis.larpScore} className="h-2" />
             <p className="text-sm text-muted-foreground">
-              {analysis.larpScore >= 80 ? "This repository appears to be genuine." :
-               analysis.larpScore >= 50 ? "This repository requires further investigation." :
-               "This repository shows signs of being potentially fake."}
+              {analysis.larpScore >= 85 ? "This repository appears to be genuine and well-maintained." :
+               analysis.larpScore >= 70 ? "This repository shows some concerning patterns but may be legitimate." :
+               analysis.larpScore >= 50 ? "This repository requires thorough investigation before use." :
+               "This repository shows strong indicators of being potentially fake or low quality."}
             </p>
           </div>
 
-          <div>
-            <h3 className="text-xl font-semibold mb-2">Summary</h3>
-            <p className="text-muted-foreground">{analysis.summary}</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <GitCommit className={getMetricColor(analysis.metrics.commitFrequency)} />
+                <span>Commit Patterns: {analysis.metrics.commitFrequency}%</span>
+              </div>
+              <Progress value={analysis.metrics.commitFrequency} className="h-1" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Users className={getMetricColor(analysis.metrics.contributorActivity)} />
+                <span>Contributor Activity: {analysis.metrics.contributorActivity}%</span>
+              </div>
+              <Progress value={analysis.metrics.contributorActivity} className="h-1" />
+            </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-2">Code Quality</h3>
-            <p className="text-muted-foreground">{analysis.codeQuality}</p>
+            <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
+            <ul className="list-disc pl-5 space-y-2 text-red-400">
+              {analysis.redFlags.map((flag, index) => (
+                <li key={index}>{flag}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-semibold mb-2">Detailed Analysis</h3>
+            <p className="text-muted-foreground">{analysis.summary}</p>
+            <p className="text-muted-foreground mt-2">{analysis.codeQuality}</p>
           </div>
 
           <div>
