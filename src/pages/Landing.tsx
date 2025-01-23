@@ -16,6 +16,11 @@ const Landing = () => {
         </div>
       </div>
 
+      {/* Wallet Button */}
+      <div className="absolute top-4 right-4 z-10">
+        <WalletMultiButton className="!bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200" />
+      </div>
+
       <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
         <div className="text-center space-y-8 max-w-4xl">
           <h1 className="text-7xl font-black font-orbitron tracking-wider neon-glow animate-fade-in bg-clip-text text-transparent bg-gradient-to-r from-neon-pink via-neon-violet to-neon-purple">
