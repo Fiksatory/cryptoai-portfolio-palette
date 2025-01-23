@@ -1,36 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface Alert {
   id: number;
   name: string;
   price: string;
   change: string;
+  timestamp: number;
 }
 
 // Mock data for token alerts
 const mockAlerts = [
-  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%" },
-  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%" },
-  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%" },
-  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%" },
-  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%" },
-  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%" },
-  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%" },
+  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%", timestamp: Date.now() },
+  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%", timestamp: Date.now() },
+  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%", timestamp: Date.now() },
+  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%", timestamp: Date.now() },
+  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%", timestamp: Date.now() },
+  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%", timestamp: Date.now() },
+  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%", timestamp: Date.now() },
 ];
 
 export const AlertsSection = () => {
-  const [alerts, setAlerts] = useState(mockAlerts);
+  const [alerts, setAlerts] = useState<Alert[]>(mockAlerts);
   const [notificationCount, setNotificationCount] = useState(0);
+  const { toast } = useToast();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const scheduleNextAlert = () => {
-      // Random time between 3 and 60 seconds
-      const randomTime = Math.floor(Math.random() * (60000 - 3000) + 3000);
+      // Random time between 3 and 10 seconds
+      const randomTime = Math.floor(Math.random() * (10000 - 3000) + 3000);
       
-      return setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         // Rotate alerts by moving the first item to the end
         setAlerts(prevAlerts => {
           const newAlerts = [...prevAlerts];
@@ -39,25 +43,34 @@ export const AlertsSection = () => {
             // Modify the alert slightly before adding it back
             const modifiedAlert = {
               ...firstAlert,
+              id: Date.now(),
               price: `$${(Math.random() * 0.001).toFixed(8)}`,
-              change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`
+              change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`,
+              timestamp: Date.now()
             };
             newAlerts.push(modifiedAlert);
+
+            // Show toast notification for new alert
+            toast({
+              title: "New Price Alert",
+              description: `${modifiedAlert.name}: ${modifiedAlert.price} (${modifiedAlert.change})`,
+            });
+
+            return newAlerts;
           }
-          return newAlerts;
+          return prevAlerts;
         });
         
         // Increment notification count
         setNotificationCount(prev => prev + 1);
         
         // Schedule the next alert
-        timeoutRef.current = scheduleNextAlert();
+        scheduleNextAlert();
       }, randomTime);
     };
 
-    // Store timeout reference for cleanup
-    const timeoutRef = { current: null };
-    timeoutRef.current = scheduleNextAlert();
+    // Start the alert cycle
+    scheduleNextAlert();
 
     // Cleanup function
     return () => {
@@ -65,7 +78,7 @@ export const AlertsSection = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [toast]);
 
   return (
     <div className="space-y-4">
@@ -83,7 +96,14 @@ export const AlertsSection = () => {
         </Card>
       </div>
       <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4">Live Token Alerts ({notificationCount} new)</h3>
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          Live Token Alerts
+          {notificationCount > 0 && (
+            <span className="bg-neon-pink px-2 py-0.5 rounded-full text-xs font-medium text-white animate-pulse">
+              {notificationCount}
+            </span>
+          )}
+        </h3>
         <div className="space-y-2">
           {alerts.map((alert) => (
             <div
