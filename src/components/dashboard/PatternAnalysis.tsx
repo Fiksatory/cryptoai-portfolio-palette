@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getNewPairs } from "@/services/dexscreener";
-import { LineChart, Line, BarChart, Bar, AreaChart, Area, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis } from 'recharts';
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const PatternAnalysis = () => {
   const { data: trendingTokens, isLoading } = useQuery({
@@ -23,16 +23,14 @@ export const PatternAnalysis = () => {
           color: parseFloat((pair.priceChange?.h24 || pair.priceChange24h).toFixed(2)) > 0 ? '#22c55e' : '#ef4444'
         }))
         .sort((a, b) => Math.abs(b.priceChange) - Math.abs(a.priceChange))
-        .slice(0, 15); // Increased to show more tokens
+        .slice(0, 30); // Increased to show more tokens
       
       return tokens;
     },
     refetchInterval: 30000
   });
 
-  const chartHeight = 300; // Increased height for better visualization
-
-  // ... keep existing code (Price Trends, Volume Distribution, and Price Change Analysis sections)
+  const chartHeight = 300;
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -91,87 +89,49 @@ export const PatternAnalysis = () => {
       </Card>
 
       {/* Market Distribution Bubble Map */}
-      <Card className="bg-black/40 border-white/10 p-4">
+      <Card className="bg-black/40 border-white/10 p-4 relative">
         <h3 className="text-sm font-medium mb-4">Market Distribution</h3>
         {isLoading ? (
           <div className="text-sm text-gray-400">Loading...</div>
         ) : (
-          <ResponsiveContainer width="100%" height={chartHeight}>
-            <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#333" opacity={0.3} />
-              <XAxis 
-                type="number" 
-                dataKey="priceUsd" 
-                name="Price" 
-                stroke="#666"
-                domain={['auto', 'auto']}
-              />
-              <YAxis 
-                type="number" 
-                dataKey="volume" 
-                name="Volume" 
-                stroke="#666"
-                domain={['auto', 'auto']}
-              />
-              <ZAxis 
-                type="number" 
-                dataKey="marketSize" 
-                range={[400, 2000]} 
-                name="Market Size" 
-              />
-              <Tooltip 
-                cursor={{ strokeDasharray: '3 3' }}
-                content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0].payload;
-                    return (
-                      <div className="bg-black/90 p-2 rounded border border-white/10">
-                        <p className="font-bold">{data.symbol}</p>
-                        <p className="text-sm">Price: ${data.priceUsd.toFixed(4)}</p>
-                        <p className="text-sm">Volume: ${data.volume.toLocaleString()}</p>
-                        <p className={`text-sm ${data.priceChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          Change: {data.priceChange}%
-                        </p>
-                      </div>
-                    );
-                  }
-                  return null;
-                }}
-              />
-              <Scatter
-                data={trendingTokens}
-                fill="#0EA5E9"
-                fillOpacity={0.8}
-                shape={(props: any) => {
-                  const { cx, cy, fill, r } = props;
-                  const data = props.payload;
-                  return (
-                    <g>
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={r}
-                        fill={data.color}
-                        fillOpacity={0.8}
-                        stroke={data.color}
-                        strokeWidth={1}
-                      />
-                      <text
-                        x={cx}
-                        y={cy}
-                        textAnchor="middle"
-                        fill="#fff"
-                        fontSize={12}
-                        dy=".3em"
-                      >
-                        {data.symbol}
-                      </text>
-                    </g>
-                  );
-                }}
-              />
-            </ScatterChart>
-          </ResponsiveContainer>
+          <div className="relative w-full h-[300px] overflow-hidden">
+            {trendingTokens?.map((token, index) => {
+              const randomX = Math.random() * 90 + 5; // 5-95% of width
+              const randomY = Math.random() * 90 + 5; // 5-95% of height
+              const size = (token.marketSize / 1000) * 60 + 40; // 40-100px based on market size
+
+              return (
+                <div
+                  key={token.symbol}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 ease-in-out"
+                  style={{
+                    left: `${randomX}%`,
+                    top: `${randomY}%`,
+                    width: `${size}px`,
+                    height: `${size}px`,
+                  }}
+                >
+                  <div
+                    className="w-full h-full rounded-full flex items-center justify-center text-white text-xs font-medium relative group"
+                    style={{
+                      backgroundColor: token.color,
+                      opacity: 0.8,
+                    }}
+                  >
+                    <span className="z-10">{token.symbol}</span>
+                    <div className="absolute opacity-0 group-hover:opacity-100 bg-black/90 p-2 rounded border border-white/10 text-xs whitespace-nowrap z-20 left-1/2 -translate-x-1/2 -top-12 transition-opacity">
+                      <p className="font-bold">{token.symbol}</p>
+                      <p>Price: ${token.priceUsd.toFixed(4)}</p>
+                      <p>Volume: ${token.volume.toLocaleString()}</p>
+                      <p className={token.priceChange > 0 ? 'text-green-500' : 'text-red-500'}>
+                        Change: {token.priceChange}%
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </Card>
     </div>
