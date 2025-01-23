@@ -16,71 +16,58 @@ const GithubChecker = () => {
   const { data: analysis, isLoading, refetch } = useQuery({
     queryKey: ['github-analysis', githubUrl],
     queryFn: async (): Promise<AnalysisResult> => {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Extract owner and repo from GitHub URL
+      const urlParts = githubUrl.replace('https://github.com/', '').split('/');
+      const owner = urlParts[0];
+      const repo = urlParts[1];
+
+      // Fetch repository data from GitHub API
+      const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+      const repoData = await response.json();
+
+      // Calculate metrics based on real data
+      const mockScore = Math.floor(Math.random() * 100); // This would be replaced with real calculation
       
-      // Mock response with real repository references
-      const mockScore = 35;
       return {
-        summary: "Repository shows significant red flags and potential code copying.",
-        codeQuality: "Multiple issues detected including possible plagiarism and suspicious patterns.",
+        summary: `Analysis of ${repoData.full_name}`,
+        codeQuality: `Repository has ${repoData.stargazers_count} stars and ${repoData.forks_count} forks.`,
         potentialIssues: [
-          "High code similarity with existing repositories",
-          "Suspicious commit patterns and timing",
-          "Inconsistent coding styles across files",
-          "Auto-generated or AI-generated documentation",
-          "Unusual dependency patterns",
-          "Missing or superficial tests"
+          repoData.open_issues_count > 10 ? "High number of open issues" : "Normal issue count",
+          repoData.created_at === repoData.pushed_at ? "No updates since creation" : "Regular updates",
+          !repoData.license ? "Missing license" : "Has license",
         ],
         recommendations: [
-          "Conduct thorough code originality check",
-          "Review owner's contribution history",
-          "Analyze commit message patterns",
-          "Verify documentation authenticity",
-          "Check for code attribution"
+          "Review recent commits",
+          "Check issue discussions",
+          "Analyze code quality",
         ],
         larpScore: mockScore,
         metrics: {
-          commitFrequency: 30,
-          contributorActivity: 25,
-          codeConsistency: 40,
-          documentationQuality: 35
+          commitFrequency: Math.min(100, repoData.forks_count),
+          contributorActivity: Math.min(100, repoData.stargazers_count),
+          codeConsistency: Math.min(100, repoData.watchers_count),
+          documentationQuality: repoData.has_wiki ? 80 : 40,
         },
         redFlags: [
-          "Multiple code segments copied from other repositories",
-          "Owner account shows suspicious patterns",
-          "Inconsistent commit history",
-          "Generic documentation likely AI-generated",
-          "Unusual repository creation patterns"
-        ],
+          repoData.open_issues_count > 50 ? "Too many open issues" : null,
+          !repoData.description ? "Missing repository description" : null,
+          repoData.archived ? "Repository is archived" : null,
+        ].filter(Boolean) as string[],
         ownerAnalysis: {
-          accountAge: "2 months",
-          totalRepos: 3,
-          contributionHistory: "Sporadic activity with unusual patterns",
-          suspiciousPatterns: [
-            "Recently created account",
-            "Multiple repositories with similar code",
-            "No meaningful contributions to other projects",
-            "Unusual activity timing"
-          ]
+          accountAge: new Date(repoData.owner.created_at).toLocaleDateString(),
+          totalRepos: repoData.owner.public_repos,
+          contributionHistory: `Last updated: ${new Date(repoData.updated_at).toLocaleDateString()}`,
+          suspiciousPatterns: []
         },
         codeOriginality: {
           similarRepos: [
-            "facebook/react",
-            "vercel/next.js",
-            "tailwindlabs/tailwindcss",
-            "shadcn/ui"
-          ],
-          plagiarismScore: 75,
-          copiedFiles: [
-            "src/main.js",
-            "lib/utils.js",
-            "components/core.js"
-          ],
+            repoData.parent ? repoData.parent.full_name : "",
+            repoData.source ? repoData.source.full_name : "",
+          ].filter(Boolean),
+          plagiarismScore: repoData.fork ? 75 : 25,
+          copiedFiles: [],
           sourceReferences: [
-            "Significant code overlap with facebook/react (85% similarity)",
-            "Component structure similar to shadcn/ui (72% similarity)",
-            "Utility functions matching vercel/next.js (68% similarity)",
-            "CSS patterns from tailwindlabs/tailwindcss (65% similarity)"
+            repoData.fork ? `Forked from ${repoData.parent?.full_name}` : "Original repository",
           ]
         }
       };
