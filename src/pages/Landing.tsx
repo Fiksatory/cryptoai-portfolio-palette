@@ -2,21 +2,12 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { toast } from '@/hooks/use-toast';
 
 const Landing = () => {
   const navigate = useNavigate();
   const { connected } = useWallet();
 
   const handleDashboardAccess = () => {
-    if (!connected) {
-      toast({
-        title: "Wallet Required",
-        description: "Please connect your wallet first",
-        variant: "destructive",
-      });
-      return;
-    }
     navigate('/dashboard');
   };
 
@@ -55,7 +46,7 @@ const Landing = () => {
             </button>
             
             <p className="text-sm text-gray-400/60">
-              {connected ? 'Wallet connected - Ready to enter' : 'Connect wallet to access dashboard'}
+              {connected ? 'Wallet connected - Ready to enter' : 'Connect wallet to unlock all features'}
             </p>
           </div>
 
