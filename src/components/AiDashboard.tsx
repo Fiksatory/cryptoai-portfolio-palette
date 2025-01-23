@@ -110,7 +110,7 @@ const AiDashboard = () => {
                     label: "Patterns", 
                     active: activeSection === "patterns",
                     extra: (
-                      <div className="absolute -right-2 -top-2 bg-gradient-to-r from-neon-pink to-neon-violet px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                      <div className="absolute -right-2 -top-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium flex items-center gap-1 text-white">
                         <Sticker className="w-3 h-3" />
                         <span>Soon</span>
                       </div>
