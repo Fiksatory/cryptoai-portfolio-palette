@@ -130,12 +130,10 @@ export const TrendingSection = () => {
               key={token.rank}
               className={cn(
                 "hover:bg-white/5 transition-colors",
-                token.rank <= 3 && "p-[1px] border-animation"
+                token.rank <= 3 && "border-animation"
               )}
             >
-              <TableCell className={cn(
-                token.rank <= 3 && "border-animation-inner"
-              )}>
+              <TableCell>
                 <span className={cn(
                   "font-semibold",
                   token.rank <= 3 ? "text-white" : "text-gray-400"
@@ -143,9 +141,7 @@ export const TrendingSection = () => {
                   #{token.rank}
                 </span>
               </TableCell>
-              <TableCell className={cn(
-                token.rank <= 3 && "border-animation-inner"
-              )}>
+              <TableCell>
                 <div className="flex items-center gap-3">
                   <img 
                     src={token.image} 
@@ -161,20 +157,14 @@ export const TrendingSection = () => {
               </TableCell>
               <TableCell className={cn(
                 "font-mono",
-                token.isPositive ? 'text-green-400' : 'text-red-400',
-                token.rank <= 3 && "border-animation-inner"
+                token.isPositive ? 'text-green-400' : 'text-red-400'
               )}>
                 ${formatPrice(token.price)}
               </TableCell>
-              <TableCell className={cn(
-                token.rank <= 3 && "border-animation-inner"
-              )}>
+              <TableCell>
                 {token.volume}
               </TableCell>
-              <TableCell className={cn(
-                "text-right",
-                token.rank <= 3 && "border-animation-inner"
-              )}>
+              <TableCell className="text-right">
                 <span className={`${
                   token.isPositive ? 'text-green-400' : 'text-red-400'
                 } transition-colors duration-300`}>

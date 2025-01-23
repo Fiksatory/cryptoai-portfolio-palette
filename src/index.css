@@ -74,6 +74,7 @@
   }
 
   .border-animation {
+    position: relative;
     background: linear-gradient(
       90deg,
       theme('colors.neon.pink'),
@@ -85,8 +86,17 @@
     animation: rotate-gradient 3s linear infinite;
   }
 
-  .border-animation-inner {
-    @apply bg-background;
+  .border-animation::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    background: hsl(var(--background));
+    z-index: 0;
+  }
+
+  .border-animation > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
