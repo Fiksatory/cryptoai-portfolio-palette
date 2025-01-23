@@ -44,7 +44,7 @@ export const PatternAnalysis = () => {
               <XAxis dataKey="symbol" stroke="#666" />
               <YAxis stroke="#666" />
               <Tooltip />
-              <Line type="monotone" dataKey="priceUsd" stroke="#ff00ff" />
+              <Line type="monotone" dataKey="priceUsd" stroke="#D946EF" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         )}
@@ -62,7 +62,7 @@ export const PatternAnalysis = () => {
               <XAxis dataKey="symbol" stroke="#666" />
               <YAxis stroke="#666" />
               <Tooltip />
-              <Bar dataKey="volume" fill="#9b87f5" />
+              <Bar dataKey="volume" fill="#8B5CF6" />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -80,7 +80,7 @@ export const PatternAnalysis = () => {
               <XAxis dataKey="symbol" stroke="#666" />
               <YAxis stroke="#666" />
               <Tooltip />
-              <Area type="monotone" dataKey="priceChange" fill="#7E69AB" stroke="#7E69AB" />
+              <Area type="monotone" dataKey="priceChange" fill="#F97316" stroke="#F97316" />
             </AreaChart>
           </ResponsiveContainer>
         )}
@@ -101,7 +101,7 @@ export const PatternAnalysis = () => {
                 cx="50%"
                 cy="50%"
                 outerRadius={60}
-                fill="#ff00ff"
+                fill="#0EA5E9"
               />
               <Tooltip />
             </PieChart>
