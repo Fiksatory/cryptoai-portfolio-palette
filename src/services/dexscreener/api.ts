@@ -10,8 +10,8 @@ export const searchTokens = async (query: string) => {
 };
 
 export const getNewPairs = async () => {
-  // Using the /pairs endpoint with a limit parameter
-  const response = await fetch(`${DEX_SCREENER_API}/pairs?limit=50`);
+  // Using the search endpoint with specific parameters as mentioned in the article
+  const response = await fetch(`${DEX_SCREENER_API}/search/pairs?q=solana`);
   if (!response.ok) {
     throw new Error('Failed to fetch trending pairs');
   }

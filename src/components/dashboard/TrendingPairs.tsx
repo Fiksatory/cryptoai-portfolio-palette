@@ -18,19 +18,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useToast } from "@/components/ui/use-toast";
 
 export const TrendingPairs = () => {
+  const { toast } = useToast();
   const { data: trendingTokens, isLoading: isLoadingPairs } = useQuery({
     queryKey: ['trendingPairs'],
     queryFn: async () => {
       const pairs = await getNewPairs();
       console.log('Raw pairs data:', pairs); // Debug log
 
-      // Filter for valid pairs with required data
+      // Filter and process pairs
       const tokens = pairs
         .filter(pair => {
-          console.log('Filtering pair:', pair); // Debug log
-          return pair.baseToken?.symbol && pair.priceUsd;
+          return (
+            pair.baseToken?.symbol && 
+            pair.priceUsd && 
+            pair.volume?.h24 > 1000 && // Minimum volume threshold
+            new Date(pair.pairCreatedAt).getTime() > Date.now() - 24 * 60 * 60 * 1000 // Last 24h
+          );
         })
         .map(pair => ({
           name: pair.baseToken.name,
@@ -43,22 +49,23 @@ export const TrendingPairs = () => {
           dexId: pair.dexId,
           txns: pair.txns
         }))
-        .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
+        .sort((a, b) => b.volume.h24 - a.volume.h24) // Sort by volume
         .slice(0, 10);
       
       console.log('Processed tokens:', tokens); // Debug log
       return tokens;
     },
-    refetchInterval: 10000
+    refetchInterval: 30000,
+    meta: {
+      onError: () => {
+        toast({
+          title: "Error fetching pairs",
+          description: "Failed to fetch trending pairs. Please try again later.",
+          variant: "destructive",
+        });
+      }
+    }
   });
-
-  const { data: tokenProfiles, isLoading: isLoadingProfiles } = useQuery({
-    queryKey: ['tokenProfiles'],
-    queryFn: getLatestTokenProfiles,
-    refetchInterval: 10000
-  });
-
-  const isLoading = isLoadingPairs || isLoadingProfiles;
 
   const formatVolume = (volume: number) => {
     if (volume >= 1000000) {
@@ -89,14 +96,16 @@ export const TrendingPairs = () => {
                 <Info className="w-4 h-4 text-gray-400" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Auto-refreshes every 10 seconds</p>
+                <p>Auto-refreshes every 30 seconds</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
         
-        {isLoading ? (
+        {isLoadingPairs ? (
           <div className="text-sm text-gray-400 animate-pulse">Fetching latest pairs...</div>
+        ) : !trendingTokens || trendingTokens.length === 0 ? (
+          <div className="text-sm text-gray-400">No trending pairs found</div>
         ) : (
           <Table>
             <TableHeader>
@@ -111,7 +120,7 @@ export const TrendingPairs = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {trendingTokens?.map((token, index) => {
+              {trendingTokens.map((token, index) => {
                 const timeDiff = Math.round((Date.now() - token.pairCreatedAt.getTime()) / (1000 * 60));
                 const timeDisplay = timeDiff < 60 
                   ? `${timeDiff}m ago`
