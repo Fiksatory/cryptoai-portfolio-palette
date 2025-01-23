@@ -58,14 +58,20 @@ const AiDashboard = () => {
         return <PortfolioTracker />;
       case "patterns":
         return <div className="filter blur-[2px] opacity-50 pointer-events-none">
-          <div className="h-64 flex items-center justify-center">
-            <p className="text-lg text-gray-400">Token gated feature</p>
+          <div className="h-96 flex flex-col items-center justify-center space-y-4">
+            <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
+              Token Gated Feature
+            </div>
+            <p className="text-lg text-gray-400">Connect your wallet to unlock this feature</p>
           </div>
         </div>;
       case "alerts":
         return <div className="filter blur-[2px] opacity-50 pointer-events-none">
-          <div className="h-64 flex items-center justify-center">
-            <p className="text-lg text-gray-400">Token gated feature</p>
+          <div className="h-96 flex flex-col items-center justify-center space-y-4">
+            <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
+              Token Gated Feature
+            </div>
+            <p className="text-lg text-gray-400">Connect your wallet to unlock this feature</p>
           </div>
         </div>;
       case "github checker":
