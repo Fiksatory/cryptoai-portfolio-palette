@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
+import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
@@ -11,12 +11,12 @@ import { MarketMetrics } from "./dashboard/MarketMetrics";
 import { MarketContext } from "./dashboard/MarketContext";
 import { SocialLinks } from "./dashboard/SocialLinks";
 import { PatternAnalysis } from "./dashboard/PatternAnalysis";
-import { TrendingPairs } from "./dashboard/TrendingPairs";
+import { TrendingSection } from "./dashboard/TrendingSection";
 import GithubChecker from "./dashboard/GithubChecker";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
-  const [activeSection, setActiveSection] = useState("ai intel");
+  const [activeSection, setActiveSection] = useState("trending");
   const { toast } = useToast();
 
   const { data: tokenData, isLoading } = useQuery({
@@ -53,7 +53,7 @@ const AiDashboard = () => {
   const renderContent = () => {
     switch (activeSection) {
       case "trending":
-        return <TrendingPairs />;
+        return <TrendingSection />;
       case "portfolio":
         return <PortfolioTracker />;
       case "patterns":
