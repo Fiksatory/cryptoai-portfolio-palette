@@ -75,7 +75,7 @@
 
   .border-animation {
     position: relative;
-    padding: 1px;
+    padding: 3px;
     background: linear-gradient(
       90deg,
       theme('colors.neon.pink'),
@@ -90,7 +90,7 @@
   .border-animation::before {
     content: '';
     position: absolute;
-    inset: 1px;
+    inset: 3px;
     background: hsl(var(--background));
     border-radius: inherit;
     z-index: 0;
