@@ -116,7 +116,6 @@ const AiDashboard = () => {
                     icon: AlertTriangle, 
                     label: "Alerts", 
                     active: activeSection === "alerts",
-                    disabled: true,
                     extra: (
                       <div className="absolute right-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
                         Soon
@@ -127,7 +126,6 @@ const AiDashboard = () => {
                     icon: LineChart, 
                     label: "Patterns", 
                     active: activeSection === "patterns",
-                    disabled: true,
                     extra: (
                       <div className="absolute right-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
                         Soon
@@ -142,7 +140,6 @@ const AiDashboard = () => {
                   <button
                     key={item.label}
                     onClick={() => setActiveSection(item.label.toLowerCase())}
-                    disabled={item.disabled}
                     className={cn(
                       "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative",
                       item.active 
