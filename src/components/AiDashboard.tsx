@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Brain, Home, LineChart, Radio, Settings, Sparkles, TrendingUp } from "lucide-react";
+import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
@@ -109,6 +109,7 @@ const AiDashboard = () => {
                     icon: LineChart, 
                     label: "Patterns", 
                     active: activeSection === "patterns",
+                    disabled: true,
                     extra: (
                       <div className="absolute right-2 bg-[#9333EA] px-2 py-0.5 rounded-full text-xs font-medium text-white">
                         Soon
@@ -123,11 +124,13 @@ const AiDashboard = () => {
                   <button
                     key={item.label}
                     onClick={() => setActiveSection(item.label.toLowerCase())}
+                    disabled={item.disabled}
                     className={cn(
                       "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative",
                       item.active 
                         ? "bg-gradient-to-r from-neon-pink/20 to-neon-violet/20 text-white shadow-lg shadow-neon-pink/10" 
-                        : "hover:bg-white/5"
+                        : "hover:bg-white/5",
+                      item.disabled && "opacity-50 cursor-not-allowed filter blur-[1px]"
                     )}
                   >
                     <item.icon className={cn(
