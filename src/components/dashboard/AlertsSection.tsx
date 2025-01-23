@@ -35,46 +35,55 @@ export const AlertsSection = () => {
     return array[Math.floor(Math.random() * array.length)];
   };
 
-  useEffect(() => {
-    const scheduleNextAlert = () => {
-      const randomTime = Math.floor(Math.random() * (10000 - 3000) + 3000);
-      
-      timeoutRef.current = setTimeout(() => {
-        setAlerts(prevAlerts => {
-          const newAlerts = [...prevAlerts];
-          const firstAlert = newAlerts.shift();
-          if (firstAlert) {
-            const modifiedAlert = {
-              ...firstAlert,
-              id: Date.now(),
-              name: getRandomElement(tickers),
-              price: `$${(Math.random() * 0.001).toFixed(8)}`,
-              change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`,
-              timestamp: Date.now(),
-              action: Math.random() > 0.5 ? "bought" : "sold",
-              actor: getRandomElement(actors)
-            };
-            newAlerts.push(modifiedAlert);
-            return newAlerts;
-          }
-          return prevAlerts;
-        });
-        
-        setNotificationCount(prev => {
-          const newCount = prev + 1;
-          // Update the navigation counter
-          const navCounter = document.getElementById('nav-notification-count');
-          if (navCounter) {
-            navCounter.textContent = String(newCount);
-          }
-          return newCount;
-        });
-        
-        scheduleNextAlert();
-      }, randomTime);
-    };
+  const updateNavCounter = (count: number) => {
+    const navCounter = document.getElementById('nav-notification-count');
+    if (navCounter) {
+      navCounter.textContent = String(count);
+      navCounter.style.display = count > 0 ? 'block' : 'none';
+    }
+  };
 
-    scheduleNextAlert();
+  const generateNewAlert = () => {
+    const randomTime = Math.floor(Math.random() * (10000 - 3000) + 3000);
+    
+    timeoutRef.current = setTimeout(() => {
+      setAlerts(prevAlerts => {
+        const newAlerts = [...prevAlerts];
+        const firstAlert = newAlerts.shift();
+        if (firstAlert) {
+          const modifiedAlert = {
+            ...firstAlert,
+            id: Date.now(),
+            name: getRandomElement(tickers),
+            price: `$${(Math.random() * 0.001).toFixed(8)}`,
+            change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`,
+            timestamp: Date.now(),
+            action: Math.random() > 0.5 ? "bought" : "sold",
+            actor: getRandomElement(actors)
+          };
+          newAlerts.push(modifiedAlert);
+          return newAlerts;
+        }
+        return prevAlerts;
+      });
+      
+      setNotificationCount(prev => {
+        const newCount = prev + 1;
+        updateNavCounter(newCount);
+        return newCount;
+      });
+      
+      generateNewAlert();
+    }, randomTime);
+  };
+
+  useEffect(() => {
+    // Start generating alerts immediately
+    generateNewAlert();
+    
+    // Initialize the counter immediately
+    setNotificationCount(1);
+    updateNavCounter(1);
 
     return () => {
       if (timeoutRef.current) {
