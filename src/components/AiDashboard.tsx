@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Brain, Home, LineChart, Radio, Settings, Sparkles, TrendingUp } from "lucide-react";
+import { AlertTriangle, Brain, Home, LineChart, Radio, Settings, Sparkles, TrendingUp, Sticker } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
@@ -105,7 +105,17 @@ const AiDashboard = () => {
                 {[
                   { icon: TrendingUp, label: "Trending", active: activeSection === "trending" },
                   { icon: AlertTriangle, label: "Alerts", active: false },
-                  { icon: LineChart, label: "Patterns", active: activeSection === "patterns" },
+                  { 
+                    icon: LineChart, 
+                    label: "Patterns", 
+                    active: activeSection === "patterns",
+                    extra: (
+                      <div className="absolute -right-2 -top-2 bg-gradient-to-r from-neon-pink to-neon-violet px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <Sticker className="w-3 h-3" />
+                        <span>Soon</span>
+                      </div>
+                    )
+                  },
                   { icon: Brain, label: "AI Intel", active: activeSection === "ai intel" },
                   { icon: Radio, label: "Github Checker", active: activeSection === "github checker" },
                   { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
@@ -116,7 +126,7 @@ const AiDashboard = () => {
                     key={item.label}
                     onClick={() => setActiveSection(item.label.toLowerCase())}
                     className={cn(
-                      "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border",
+                      "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative",
                       item.active 
                         ? "bg-gradient-to-r from-neon-pink/20 to-neon-violet/20 text-white shadow-lg shadow-neon-pink/10" 
                         : "hover:bg-white/5"
@@ -127,6 +137,7 @@ const AiDashboard = () => {
                       item.active ? "text-neon-pink" : "text-gray-400"
                     )} />
                     <span>{item.label}</span>
+                    {item.extra}
                   </button>
                 ))}
               </nav>
