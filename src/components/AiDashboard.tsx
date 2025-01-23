@@ -57,7 +57,9 @@ const AiDashboard = () => {
       case "portfolio":
         return <PortfolioTracker />;
       case "patterns":
-        return <PatternAnalysis />;
+        return <div className="filter blur-[2px] opacity-50 pointer-events-none">
+          <PatternAnalysis />
+        </div>;
       case "github checker":
         return <GithubChecker />;
       case "ai intel":
@@ -129,8 +131,7 @@ const AiDashboard = () => {
                       "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative",
                       item.active 
                         ? "bg-gradient-to-r from-neon-pink/20 to-neon-violet/20 text-white shadow-lg shadow-neon-pink/10" 
-                        : "hover:bg-white/5",
-                      item.disabled && "opacity-50 cursor-not-allowed filter blur-[1px]"
+                        : "hover:bg-white/5"
                     )}
                   >
                     <item.icon className={cn(
