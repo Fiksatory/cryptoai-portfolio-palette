@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles } from "lucide-react";
+import { AlertTriangle, Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useToast } from "./ui/use-toast";
