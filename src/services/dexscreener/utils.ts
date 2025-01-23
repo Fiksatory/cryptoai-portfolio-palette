@@ -3,6 +3,8 @@ import type { DexScreenerPair, TokenAnalysis } from './types';
 export const analyzePairData = (data: { pairs: DexScreenerPair[] }): TokenAnalysis => {
   if (!data?.pairs?.length) {
     return {
+      name: "",
+      symbol: "",
       summary: "No data available",
       metrics: {
         marketCap: 0,
@@ -30,6 +32,8 @@ export const analyzePairData = (data: { pairs: DexScreenerPair[] }): TokenAnalys
   ));
 
   return {
+    name: pair.baseToken.name,
+    symbol: pair.baseToken.symbol,
     summary: `${pair.baseToken.symbol} shows ${healthScore > 50 ? 'positive' : 'concerning'} market metrics`,
     metrics: {
       marketCap,

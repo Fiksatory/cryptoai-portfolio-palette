@@ -43,6 +43,8 @@ export interface DexScreenerPair {
 }
 
 export interface TokenAnalysis {
+  name: string;
+  symbol: string;
   summary: string;
   metrics: {
     marketCap: number;
