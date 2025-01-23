@@ -10,77 +10,129 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
   
   // Fetch repository data
   const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+  if (!repoResponse.ok) {
+    throw new Error("Repository not found or API rate limit exceeded");
+  }
   const repoData: GithubRepo = await repoResponse.json();
   
-  // Fetch owner's repositories
-  const ownerReposResponse = await fetch(`https://api.github.com/users/${owner}/repos`);
+  // Fetch owner's repositories for pattern analysis
+  const ownerReposResponse = await fetch(`https://api.github.com/users/${owner}/repos?per_page=100`);
   const ownerRepos: GithubRepo[] = await ownerReposResponse.json();
   
   // Fetch languages used in the repository
   const languagesResponse = await fetch(repoData.languages_url);
   const languages: Record<string, number> = await languagesResponse.json();
   
-  // Calculate metrics with more lenient scoring
+  // Fetch commit history
+  const commitsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=100`);
+  const commits = await commitsResponse.json();
+  
+  // Fetch contributors
+  const contributorsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contributors?per_page=100`);
+  const contributors = await contributorsResponse.json();
+
+  // Fetch repository contents
+  const contentsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents`);
+  const contents = await contentsResponse.json();
+
+  // Calculate metrics
   const totalBytes = Object.values(languages).reduce((a: number, b: number) => a + b, 0);
   const languagePercentages = Object.entries(languages).reduce((acc, [lang, bytes]) => {
     acc[lang] = ((bytes as number) / totalBytes) * 100;
     return acc;
   }, {} as Record<string, number>);
-  
-  // More lenient health score calculation
-  const healthScore = Math.min(100, Math.round(
-    (repoData.stargazers_count) +
-    (repoData.watchers_count * 2) +
-    (repoData.forks_count * 3) +
-    (repoData.size > 0 ? 30 : 0) +
-    (Object.keys(languages).length * 10) +
-    (repoData.description ? 15 : 0)
-  ));
-  
-  // Find similar repositories with more specific criteria
-  const searchQuery = encodeURIComponent(`language:${repoData.language} ${repoData.description?.split(' ').slice(0, 3).join(' ') || ''}`);
+
+  // Find similar repositories based on language and topics
+  const searchQuery = encodeURIComponent(`language:${repoData.language} ${repoData.description?.split(' ').slice(0, 3).join(' ') || ''} NOT repo:${owner}/${repo}`);
   const similarReposResponse = await fetch(
-    `https://api.github.com/search/repositories?q=${searchQuery}+NOT+repo:${owner}/${repo}&sort=stars&order=desc&per_page=4`
+    `https://api.github.com/search/repositories?q=${searchQuery}+stars:>0&sort=stars&order=desc&per_page=5`
   );
   const similarRepos = await similarReposResponse.json();
-  
-  // More lenient LARP score (lower is better)
-  const larpScore = Math.max(0, Math.min(100, 100 - healthScore * 1.2));
-  
+
+  // Calculate comprehensive health score
+  const healthScore = Math.min(100, Math.round(
+    (repoData.stargazers_count * 2) +
+    (repoData.watchers_count * 3) +
+    (repoData.forks_count * 4) +
+    (commits.length > 50 ? 20 : commits.length / 2.5) +
+    (contributors.length * 5) +
+    (Object.keys(languages).length * 5) +
+    (repoData.description ? 10 : 0) +
+    (contents.filter((c: any) => c.name.toLowerCase().includes('readme')).length > 0 ? 15 : 0) +
+    (contents.filter((c: any) => c.name.toLowerCase().includes('test')).length > 0 ? 10 : 0)
+  ));
+
+  // Calculate LARP score (inverse of health score with additional factors)
+  const larpScore = Math.max(0, Math.min(100, 100 - (healthScore * 0.8) + 
+    (commits.length < 10 ? 30 : 0) +
+    (contributors.length === 1 ? 20 : 0) +
+    (repoData.created_at === repoData.updated_at ? 25 : 0)
+  ));
+
   return {
-    summary: `Repository analysis for ${repoData.full_name}`,
-    codeQuality: `Primary language: ${repoData.language}, with ${Object.keys(languages).length} languages used in total`,
+    summary: `Comprehensive analysis of ${repoData.full_name} reveals a ${healthScore > 70 ? 'healthy' : 'concerning'} repository with ${commits.length} commits from ${contributors.length} contributors. ${
+      repoData.description || 'No description provided.'
+    }`,
+    codeQuality: `Primary language is ${repoData.language || 'not specified'}, utilizing ${Object.keys(languages).length} different languages. The codebase shows ${
+      commits.length > 50 ? 'active' : 'limited'
+    } development with ${commits.length} commits and ${contributors.length} contributors. ${
+      contents.filter((c: any) => c.name.toLowerCase().includes('test')).length > 0 
+        ? 'Tests are present, indicating quality control.' 
+        : 'No tests found, which might indicate quality concerns.'
+    }`,
     potentialIssues: [
-      repoData.open_issues_count > 20 ? "High number of open issues" : null,
-      Object.keys(languages).length === 1 && repoData.size > 1000 ? "Limited technology stack for project size" : null,
-      repoData.size < 50 && !repoData.description ? "Repository seems too small and lacks description" : null,
-      repoData.forks_count === 0 && repoData.stargazers_count === 0 ? "Limited community engagement" : null
+      repoData.open_issues_count > 20 ? `High number of open issues (${repoData.open_issues_count})` : null,
+      commits.length < 10 ? "Very few commits indicate potential copy-paste project" : null,
+      contributors.length === 1 && repoData.size > 1000 ? "Large codebase with single contributor" : null,
+      !contents.some((c: any) => c.name.toLowerCase().includes('readme')) ? "Missing README documentation" : null,
+      !contents.some((c: any) => c.name.toLowerCase().includes('test')) ? "No test files found" : null,
+      Object.keys(languages).length === 1 && repoData.size > 1000 ? "Large monolithic codebase" : null,
+      repoData.created_at === repoData.updated_at ? "No updates since creation" : null
     ].filter((issue): issue is string => issue !== null),
     larpScore,
     metrics: {
-      commitFrequency: Math.min(100, (repoData.size / 50) + 30),
-      contributorActivity: Math.min(100, (repoData.watchers_count * 10) + 40),
-      codeConsistency: Math.min(100, (Object.keys(languages).length * 15) + 25),
-      documentationQuality: Math.min(100, healthScore + 20)
+      commitFrequency: Math.min(100, (commits.length / 100) * 100),
+      contributorActivity: Math.min(100, (contributors.length / 10) * 100),
+      codeConsistency: Math.min(100, 100 - (Object.keys(languages).length > 5 ? (Object.keys(languages).length - 5) * 10 : 0)),
+      documentationQuality: Math.min(100, (
+        (contents.some((c: any) => c.name.toLowerCase().includes('readme')) ? 50 : 0) +
+        (contents.some((c: any) => c.name.toLowerCase().includes('docs')) ? 30 : 0) +
+        (repoData.description ? 20 : 0)
+      ))
     },
     redFlags: [
-      repoData.size < 20 && repoData.stargazers_count === 0 ? "Very small codebase with no stars" : null,
-      repoData.created_at === repoData.updated_at && repoData.size > 500 ? "Large codebase with no updates since creation" : null,
-      repoData.forks_count === 0 && repoData.stargazers_count === 0 && repoData.size > 1000 ? "Large project with no community interaction" : null
+      repoData.size < 20 && repoData.stargazers_count === 0 ? "Suspiciously small codebase" : null,
+      repoData.created_at === repoData.updated_at && repoData.size > 500 ? "Large codebase with no updates" : null,
+      commits.length < 5 && repoData.size > 1000 ? "Large codebase with very few commits" : null,
+      contributors.length === 1 && commits.length < 5 && repoData.size > 500 ? "Large single-commit repository" : null
     ].filter((flag): flag is string => flag !== null),
     ownerAnalysis: {
-      accountAge: new Date(repoData.owner.created_at || "").toLocaleDateString(),
+      accountAge: new Date(repoData.owner.created_at).toLocaleDateString(),
       totalRepos: ownerRepos.length,
-      contributionHistory: `${ownerRepos.length} public repositories`,
+      contributionHistory: `Owner has ${ownerRepos.length} public repositories with an average of ${
+        Math.round(ownerRepos.reduce((acc, repo) => acc + repo.stargazers_count, 0) / ownerRepos.length)
+      } stars per repository`,
       suspiciousPatterns: [
         ownerRepos.length === 1 && repoData.size > 1000 ? "Single large repository for new account" : null,
-        ownerRepos.some(r => r.size === repoData.size && r.language === repoData.language) ? "Similar repositories detected" : null
+        ownerRepos.some(r => r.size === repoData.size && r.language === repoData.language && r.full_name !== repoData.full_name) ? 
+          "Multiple repositories with identical size and language" : null,
+        ownerRepos.filter(r => new Date(r.created_at).toDateString() === new Date(repoData.created_at).toDateString()).length > 3 ?
+          "Multiple repositories created on the same day" : null
       ].filter((pattern): pattern is string => pattern !== null)
     },
     codeOriginality: {
-      similarRepos: similarRepos.items.slice(0, 4).map((r: GithubRepo) => r.full_name),
+      similarRepos: similarRepos.items.slice(0, 5).map((r: GithubRepo) => r.full_name),
       plagiarismScore: Math.min(100, Math.max(0, larpScore - 20)),
-      copiedFiles: []
+      copiedFiles: contents
+        .filter((c: any) => c.type === 'file')
+        .filter((c: any) => {
+          const name = c.name.toLowerCase();
+          return name.endsWith('.min.js') || 
+                 name.includes('vendor') || 
+                 name.includes('bundle') ||
+                 name.includes('dist');
+        })
+        .map((c: any) => c.path)
     }
   };
 };
