@@ -105,64 +105,67 @@ export const TrendingSection = () => {
   };
 
   return (
-    <Card className="bg-black/40 border-white/10 p-6 animate-fade-in">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-gradient-to-br from-neon-pink to-neon-violet rounded-xl flex items-center justify-center shadow-lg shadow-neon-pink/20">
-          <TrendingUp className="w-6 h-6 text-white" />
+    <Card className="bg-black/40 border-white/10 p-6 animate-fade-in relative">
+      <div className="absolute inset-0 backdrop-blur-md bg-black/40 rounded-lg z-10" />
+      <div className="relative z-20">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-br from-neon-pink to-neon-violet rounded-xl flex items-center justify-center shadow-lg shadow-neon-pink/20">
+            <TrendingUp className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-xl font-bold neon-glow">Trending Pairs</h2>
         </div>
-        <h2 className="text-xl font-bold neon-glow">Trending Pairs</h2>
-      </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow className="hover:bg-transparent">
-            <TableHead className="w-16">Rank</TableHead>
-            <TableHead>Token</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Volume</TableHead>
-            <TableHead className="text-right">24h Change</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tokens.map((token) => (
-            <TableRow 
-              key={token.rank}
-              className="hover:bg-white/5 transition-colors"
-            >
-              <TableCell>
-                <span className="font-semibold text-gray-400">#{token.rank}</span>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={token.image} 
-                    alt={token.name}
-                    className="w-8 h-8 rounded-full object-cover bg-white/10"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%236366f1"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="16">${token.name.charAt(0)}</text></svg>`;
-                    }}
-                  />
-                  <span className="font-semibold">{token.name}</span>
-                </div>
-              </TableCell>
-              <TableCell className={`font-mono ${token.isPositive ? 'text-green-400' : 'text-red-400'} transition-colors duration-300`}>
-                ${formatPrice(token.price)}
-              </TableCell>
-              <TableCell>{token.volume}</TableCell>
-              <TableCell className="text-right">
-                <span 
-                  className={`${
-                    token.isPositive ? 'text-green-400' : 'text-red-400'
-                  } transition-colors duration-300`}
-                >
-                  {token.change.toFixed(2)}%
-                </span>
-              </TableCell>
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-16">Rank</TableHead>
+              <TableHead>Token</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead>Volume</TableHead>
+              <TableHead className="text-right">24h Change</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {tokens.map((token) => (
+              <TableRow 
+                key={token.rank}
+                className="hover:bg-white/5 transition-colors"
+              >
+                <TableCell>
+                  <span className="font-semibold text-gray-400">#{token.rank}</span>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={token.image} 
+                      alt={token.name}
+                      className="w-8 h-8 rounded-full object-cover bg-white/10"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%236366f1"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="16">${token.name.charAt(0)}</text></svg>`;
+                      }}
+                    />
+                    <span className="font-semibold">{token.name}</span>
+                  </div>
+                </TableCell>
+                <TableCell className={`font-mono ${token.isPositive ? 'text-green-400' : 'text-red-400'} transition-colors duration-300`}>
+                  ${formatPrice(token.price)}
+                </TableCell>
+                <TableCell>{token.volume}</TableCell>
+                <TableCell className="text-right">
+                  <span 
+                    className={`${
+                      token.isPositive ? 'text-green-400' : 'text-red-400'
+                    } transition-colors duration-300`}
+                  >
+                    {token.change.toFixed(2)}%
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </Card>
   );
 };
