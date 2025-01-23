@@ -18,7 +18,7 @@ const GithubChecker = () => {
     queryFn: async (): Promise<AnalysisResult> => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Mock response with stricter analysis including owner and originality checks
+      // Mock response with real repository references
       const mockScore = 35;
       return {
         summary: "Repository shows significant red flags and potential code copying.",
@@ -65,8 +65,10 @@ const GithubChecker = () => {
         },
         codeOriginality: {
           similarRepos: [
-            "original-repo/source-1",
-            "another-source/project-2"
+            "facebook/react",
+            "vercel/next.js",
+            "tailwindlabs/tailwindcss",
+            "shadcn/ui"
           ],
           plagiarismScore: 75,
           copiedFiles: [
@@ -75,9 +77,10 @@ const GithubChecker = () => {
             "components/core.js"
           ],
           sourceReferences: [
-            "Found matching code in repository A (85% similarity)",
-            "Multiple functions copied from repository B",
-            "Documentation copied from project C"
+            "Significant code overlap with facebook/react (85% similarity)",
+            "Component structure similar to shadcn/ui (72% similarity)",
+            "Utility functions matching vercel/next.js (68% similarity)",
+            "CSS patterns from tailwindlabs/tailwindcss (65% similarity)"
           ]
         }
       };
@@ -95,7 +98,6 @@ const GithubChecker = () => {
       return;
     }
 
-    // Updated regex to allow dots in repository names
     const githubUrlRegex = /^https:\/\/github\.com\/[\w-]+\/[\w.-]+$/;
     if (!githubUrlRegex.test(githubUrl)) {
       toast({
