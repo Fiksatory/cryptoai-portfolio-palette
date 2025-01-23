@@ -24,10 +24,14 @@ export const TrendingPairs = () => {
     queryKey: ['trendingPairs'],
     queryFn: async () => {
       const pairs = await getNewPairs();
-      
-      // Filter for Solana pairs and map to TrendingToken type
+      console.log('Raw pairs data:', pairs); // Debug log
+
+      // Filter for valid pairs with required data
       const tokens = pairs
-        .filter(pair => pair.chainId === "solana")
+        .filter(pair => {
+          console.log('Filtering pair:', pair); // Debug log
+          return pair.baseToken?.symbol && pair.priceUsd;
+        })
         .map(pair => ({
           name: pair.baseToken.name,
           symbol: pair.baseToken.symbol,
@@ -39,13 +43,13 @@ export const TrendingPairs = () => {
           dexId: pair.dexId,
           txns: pair.txns
         }))
-        // Sort by creation time, newest first
         .sort((a, b) => b.pairCreatedAt.getTime() - a.pairCreatedAt.getTime())
         .slice(0, 10);
       
+      console.log('Processed tokens:', tokens); // Debug log
       return tokens;
     },
-    refetchInterval: 10000 // Refetch every 10 seconds
+    refetchInterval: 10000
   });
 
   const { data: tokenProfiles, isLoading: isLoadingProfiles } = useQuery({
