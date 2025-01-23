@@ -42,13 +42,6 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
     return acc;
   }, {} as Record<string, number>);
 
-  // Find similar repositories based on language and topics
-  const searchQuery = encodeURIComponent(`language:${repoData.language} ${repoData.description?.split(' ').slice(0, 3).join(' ') || ''} NOT repo:${owner}/${repo}`);
-  const similarReposResponse = await fetch(
-    `https://api.github.com/search/repositories?q=${searchQuery}+stars:>0&sort=stars&order=desc&per_page=5`
-  );
-  const similarRepos = await similarReposResponse.json();
-
   // Calculate comprehensive health score
   const healthScore = Math.min(100, Math.round(
     (repoData.stargazers_count * 2) +
@@ -119,20 +112,6 @@ export const analyzeGithubRepo = async (url: string): Promise<AnalysisResult> =>
         ownerRepos.filter(r => new Date(r.created_at).toDateString() === new Date(repoData.created_at).toDateString()).length > 3 ?
           "Multiple repositories created on the same day" : null
       ].filter((pattern): pattern is string => pattern !== null)
-    },
-    codeOriginality: {
-      similarRepos: similarRepos.items.slice(0, 5).map((r: GithubRepo) => r.full_name),
-      plagiarismScore: Math.min(100, Math.max(0, larpScore - 20)),
-      copiedFiles: contents
-        .filter((c: any) => c.type === 'file')
-        .filter((c: any) => {
-          const name = c.name.toLowerCase();
-          return name.endsWith('.min.js') || 
-                 name.includes('vendor') || 
-                 name.includes('bundle') ||
-                 name.includes('dist');
-        })
-        .map((c: any) => c.path)
     }
   };
 };

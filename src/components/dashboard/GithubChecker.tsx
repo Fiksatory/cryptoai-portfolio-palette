@@ -75,7 +75,7 @@ const GithubChecker = () => {
           <LarpScore score={analysis.larpScore} />
           <MetricsDisplay metrics={analysis.metrics} />
           <OwnerAnalysis ownerAnalysis={analysis.ownerAnalysis} />
-          <CodeOriginality codeOriginality={analysis.codeOriginality} />
+          <CodeOriginality codeOriginality={analysis} />
 
           {analysis.redFlags.length > 0 && (
             <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20">

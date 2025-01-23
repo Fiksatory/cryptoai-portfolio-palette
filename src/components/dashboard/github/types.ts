@@ -16,9 +16,4 @@ export interface AnalysisResult {
     contributionHistory: string;
     suspiciousPatterns: string[];
   };
-  codeOriginality: {
-    similarRepos: string[];
-    plagiarismScore: number;
-    copiedFiles: string[];
-  };
 }
