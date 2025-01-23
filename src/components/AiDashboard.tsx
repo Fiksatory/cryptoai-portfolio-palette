@@ -58,12 +58,14 @@ const AiDashboard = () => {
         return <PortfolioTracker />;
       case "patterns":
         return <div className="filter blur-[2px] opacity-50 pointer-events-none">
-          <PatternAnalysis />
+          <div className="h-64 flex items-center justify-center">
+            <p className="text-lg text-gray-400">Token gated feature</p>
+          </div>
         </div>;
       case "alerts":
         return <div className="filter blur-[2px] opacity-50 pointer-events-none">
           <div className="h-64 flex items-center justify-center">
-            <p className="text-lg text-gray-400">Alerts feature coming soon</p>
+            <p className="text-lg text-gray-400">Token gated feature</p>
           </div>
         </div>;
       case "github checker":
