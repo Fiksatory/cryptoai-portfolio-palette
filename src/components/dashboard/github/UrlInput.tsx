@@ -1,16 +1,17 @@
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { GitBranch, Loader2 } from "lucide-react";
+import { GitBranch, Loader2, RefreshCw } from "lucide-react";
 
 interface UrlInputProps {
   githubUrl: string;
   setGithubUrl: (url: string) => void;
   handleAnalyze: () => void;
+  handleRefresh: () => void;
   isLoading: boolean;
 }
 
-const UrlInput = ({ githubUrl, setGithubUrl, handleAnalyze, isLoading }: UrlInputProps) => {
+const UrlInput = ({ githubUrl, setGithubUrl, handleAnalyze, handleRefresh, isLoading }: UrlInputProps) => {
   return (
     <Card className="p-6">
       <div className="space-y-4">
@@ -36,6 +37,13 @@ const UrlInput = ({ githubUrl, setGithubUrl, handleAnalyze, isLoading }: UrlInpu
               <GitBranch className="mr-2 h-4 w-4" />
             )}
             Analyze
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleRefresh}
+            disabled={isLoading}
+          >
+            <RefreshCw className="h-4 w-4" />
           </Button>
         </div>
       </div>
