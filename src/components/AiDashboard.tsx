@@ -28,7 +28,47 @@ const mockAlerts = [
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
   const [activeSection, setActiveSection] = useState("trending");
+  const [alerts, setAlerts] = useState(mockAlerts);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const scheduleNextAlert = () => {
+      // Random time between 3 and 60 seconds
+      const randomTime = Math.floor(Math.random() * (60000 - 3000) + 3000);
+      
+      return setTimeout(() => {
+        // Rotate alerts by moving the first item to the end
+        setAlerts(prevAlerts => {
+          const newAlerts = [...prevAlerts];
+          const firstAlert = newAlerts.shift();
+          if (firstAlert) {
+            // Modify the alert slightly before adding it back
+            const modifiedAlert = {
+              ...firstAlert,
+              price: `$${(Math.random() * 0.001).toFixed(8)}`,
+              change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`
+            };
+            newAlerts.push(modifiedAlert);
+          }
+          return newAlerts;
+        });
+        
+        // Schedule the next alert
+        timeoutRef.current = scheduleNextAlert();
+      }, randomTime);
+    };
+
+    // Store timeout reference for cleanup
+    const timeoutRef = { current: null };
+    timeoutRef.current = scheduleNextAlert();
+
+    // Cleanup function
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const { data: tokenData, isLoading } = useQuery({
     queryKey: ['tokenAnalysis', contractAddress],
@@ -115,7 +155,7 @@ const AiDashboard = () => {
                 <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-4">Live Token Alerts</h3>
                   <div className="space-y-2">
-                    {mockAlerts.map((alert) => (
+                    {alerts.map((alert) => (
                       <div
                         key={alert.id}
                         className="p-4 bg-black/20 rounded-lg transition-all duration-300 hover:bg-black/30"
