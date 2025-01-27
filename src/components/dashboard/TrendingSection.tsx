@@ -35,8 +35,8 @@ const initialTokens = [
     volume: "$429.6M",
     change: -8.4,
     isPositive: false,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/2833.png",
-    topHoldersPercentage: 62.8
+    image: "/lovable-uploads/0997be61-5dc4-4e58-95e0-1dc5e3cc8f0c.png",
+    topHoldersPercentage: 13.0
   },
   {
     rank: 3,
