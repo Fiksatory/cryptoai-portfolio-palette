@@ -12,7 +12,14 @@ interface Alert {
   amount: number;
 }
 
-const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"];
+// Generate array of Smart Wallet 1-30 and High PnL 1-10
+const generateWalletLabels = () => {
+  const smartWallets = Array.from({ length: 30 }, (_, i) => `Smart Wallet ${i + 1}`);
+  const highPnL = Array.from({ length: 10 }, (_, i) => `High PnL ${i + 1}`);
+  return [...smartWallets, ...highPnL, "Ansem burner", "Whale"];
+};
+
+const actors = generateWalletLabels();
 const tickers = ["PUNKS", "VINEX", "DEEPSEEK", "LILI", "LARRY", "SHY", "TRIM", "GRNLD", "2025", "BAMF", "DEEPSHIT", "FAFO", "STUPID"];
 
 const getRandomAmount = () => {
@@ -20,13 +27,13 @@ const getRandomAmount = () => {
 };
 
 const mockAlerts = [
-  { id: 1, name: "PUNKS", timestamp: Date.now(), action: "bought", actor: "Cupsey", amount: getRandomAmount() },
-  { id: 2, name: "VINEX", timestamp: Date.now(), action: "sold", actor: "Wojak", amount: getRandomAmount() },
-  { id: 3, name: "DEEPSEEK", timestamp: Date.now(), action: "bought", actor: "Pepe", amount: getRandomAmount() },
-  { id: 4, name: "LILI", timestamp: Date.now(), action: "sold", actor: "Diamond", amount: getRandomAmount() },
-  { id: 5, name: "LARRY", timestamp: Date.now(), action: "bought", actor: "Whale", amount: getRandomAmount() },
-  { id: 6, name: "SHY", timestamp: Date.now(), action: "sold", actor: "Paper", amount: getRandomAmount() },
-  { id: 7, name: "TRIM", timestamp: Date.now(), action: "bought", actor: "Degen", amount: getRandomAmount() },
+  { id: 1, name: "PUNKS", timestamp: Date.now(), action: "bought", actor: "Smart Wallet 1", amount: getRandomAmount() },
+  { id: 2, name: "VINEX", timestamp: Date.now(), action: "sold", actor: "Smart Wallet 2", amount: getRandomAmount() },
+  { id: 3, name: "DEEPSEEK", timestamp: Date.now(), action: "bought", actor: "High PnL 1", amount: getRandomAmount() },
+  { id: 4, name: "LILI", timestamp: Date.now(), action: "sold", actor: "High PnL 2", amount: getRandomAmount() },
+  { id: 5, name: "LARRY", timestamp: Date.now(), action: "bought", actor: "Ansem burner", amount: getRandomAmount() },
+  { id: 6, name: "SHY", timestamp: Date.now(), action: "sold", actor: "Whale", amount: getRandomAmount() },
+  { id: 7, name: "TRIM", timestamp: Date.now(), action: "bought", actor: "Smart Wallet 3", amount: getRandomAmount() },
 ];
 
 export const AlertsSection = () => {
