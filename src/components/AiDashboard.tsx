@@ -64,9 +64,9 @@ const AiDashboard = () => {
   };
 
   const renderContent = () => {
-    const commonCardClasses = "glass-card backdrop-blur-xl border-white/10 p-6 relative min-h-[600px] pointer-events-none select-none";
+    const commonCardClasses = "glass-card backdrop-blur-[20px] border-white/10 p-6 relative min-h-[600px] pointer-events-none select-none";
     const tokenGatedBadge = (
-      <div className="absolute top-4 right-4 flex items-center gap-2 text-sm font-medium text-white/70 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+      <div className="absolute top-4 right-4 flex items-center gap-2 text-sm font-medium text-white/90 bg-black/60 backdrop-blur-xl px-3 py-1.5 rounded-full border border-white/20 shadow-lg">
         <Lock className="w-4 h-4" />
         Token Gated Access
       </div>
@@ -75,9 +75,10 @@ const AiDashboard = () => {
     const gatedContent = (content: React.ReactNode) => (
       <div className="relative">
         {content}
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-xl flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-[12px] flex items-center justify-center">
+          {tokenGatedBadge}
           <Button 
-            className="pointer-events-auto bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90"
+            className="pointer-events-auto bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 mt-20"
             onClick={() => toast({
               title: "Token Required",
               description: "You need to hold tokens to access this feature",
@@ -95,35 +96,30 @@ const AiDashboard = () => {
       case "trending":
         return (
           <Card className={commonCardClasses}>
-            {tokenGatedBadge}
             {gatedContent(<TrendingSection />)}
           </Card>
         );
       case "portfolio":
         return (
           <div className={`${commonCardClasses} rounded-lg`}>
-            {tokenGatedBadge}
             {gatedContent(<PortfolioTracker />)}
           </div>
         );
       case "patterns":
         return (
           <Card className={commonCardClasses}>
-            {tokenGatedBadge}
             {gatedContent(<PatternAnalysis />)}
           </Card>
         );
       case "alerts":
         return (
           <Card className={commonCardClasses}>
-            {tokenGatedBadge}
             {gatedContent(<AlertsSection />)}
           </Card>
         );
       case "github checker":
         return (
           <div className={`${commonCardClasses} rounded-lg`}>
-            {tokenGatedBadge}
             {gatedContent(<GithubChecker />)}
           </div>
         );
@@ -131,7 +127,6 @@ const AiDashboard = () => {
         return (
           <div className="space-y-6">
             <Card className={`${commonCardClasses} rounded-lg`}>
-              {tokenGatedBadge}
               {gatedContent(
                 <>
                   <ContractAnalysis 
