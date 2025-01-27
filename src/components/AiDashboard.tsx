@@ -63,7 +63,7 @@ const AiDashboard = () => {
   };
 
   const renderContent = () => {
-    const commonCardClasses = "glass-card backdrop-blur-[320px] border-white/10 p-6 relative min-h-[600px] pointer-events-none select-none";
+    const commonCardClasses = "glass-card backdrop-blur-[320px] border-white/10 p-6 relative min-h-[600px] pointer-events-none select-none backdrop-filter backdrop-blur-lg";
     const tokenGatedBadge = (
       <div className="flex items-center gap-2 text-xl font-medium text-gray-800 bg-white/90 backdrop-blur-2xl px-6 py-3 rounded-full border-2 border-white/40 shadow-xl">
         <Lock className="w-6 h-6" />
@@ -74,7 +74,7 @@ const AiDashboard = () => {
     const gatedContent = (content: React.ReactNode) => (
       <div className="relative">
         {content}
-        <div className="absolute inset-0 bg-white/90 backdrop-blur-[240px] flex items-center justify-center">
+        <div className="absolute inset-0 bg-white/90 backdrop-blur-[240px] flex items-center justify-center backdrop-filter backdrop-blur-lg">
           {tokenGatedBadge}
         </div>
       </div>
@@ -83,38 +83,38 @@ const AiDashboard = () => {
     switch (activeSection) {
       case "trending":
         return (
-          <Card className={commonCardClasses}>
+          <Card className={`${commonCardClasses} backdrop-filter backdrop-blur-lg`}>
             {gatedContent(<TrendingSection />)}
           </Card>
         );
       case "portfolio":
         return (
-          <div className={`${commonCardClasses} rounded-lg`}>
+          <div className={`${commonCardClasses} rounded-lg backdrop-filter backdrop-blur-lg`}>
             {gatedContent(<PortfolioTracker />)}
           </div>
         );
       case "patterns":
         return (
-          <Card className={commonCardClasses}>
+          <Card className={`${commonCardClasses} backdrop-filter backdrop-blur-lg`}>
             {gatedContent(<PatternAnalysis />)}
           </Card>
         );
       case "alerts":
         return (
-          <Card className={commonCardClasses}>
+          <Card className={`${commonCardClasses} backdrop-filter backdrop-blur-lg`}>
             {gatedContent(<AlertsSection />)}
           </Card>
         );
       case "github checker":
         return (
-          <div className={`${commonCardClasses} rounded-lg`}>
+          <div className={`${commonCardClasses} rounded-lg backdrop-filter backdrop-blur-lg`}>
             {gatedContent(<GithubChecker />)}
           </div>
         );
       case "ai intel":
         return (
           <div className="space-y-6">
-            <Card className={`${commonCardClasses} rounded-lg`}>
+            <Card className={`${commonCardClasses} rounded-lg backdrop-filter backdrop-blur-lg`}>
               {gatedContent(
                 <>
                   <ContractAnalysis 
@@ -149,7 +149,7 @@ const AiDashboard = () => {
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-neon-pink/5 via-neon-violet/5 to-neon-purple/5 rounded-3xl blur-3xl -z-10" />
         <div className="relative border-animation rounded-xl overflow-hidden">
-          <div className="grid grid-cols-[240px_1fr] gap-6 p-4 glass-card rounded-xl relative overflow-hidden">
+          <div className="grid grid-cols-[240px_1fr] gap-6 p-4 glass-card rounded-xl relative overflow-hidden backdrop-filter backdrop-blur-lg">
             <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
             <div className="space-y-6">
               {renderContent()}
