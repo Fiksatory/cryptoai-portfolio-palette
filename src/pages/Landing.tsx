@@ -106,7 +106,8 @@ const Landing = () => {
               muted 
               playsInline
             >
-              <source src="/demo.mp4" type="video/mp4" />
+              {/* Replace /demo.mp4 with your uploaded video path from public/lovable-uploads/ */}
+              <source src="/lovable-uploads/YOUR_UPLOADED_VIDEO.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center transition-all duration-300 hover:bg-black/30">
