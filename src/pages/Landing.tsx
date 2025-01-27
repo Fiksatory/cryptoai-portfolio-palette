@@ -88,6 +88,13 @@ const Landing = () => {
           </div>
         </div>
       </div>
+
+      {/* Copyright Footer */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 text-center bg-background/80 backdrop-blur-sm border-t border-neon-violet/20">
+        <p className="text-sm text-gray-400/60">
+          © {new Date().getFullYear()} Laby AI. All rights reserved.
+        </p>
+      </div>
     </div>
   );
 };
