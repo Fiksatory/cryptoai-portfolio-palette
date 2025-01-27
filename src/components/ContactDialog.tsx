@@ -66,7 +66,7 @@ export function ContactDialog() {
           <span className="hidden sm:inline">Contact Us</span>
         </Button>
       </DrawerTrigger>
-      <DrawerContent side="right" className="glass-card">
+      <DrawerContent className="glass-card">
         <DrawerHeader>
           <DrawerTitle>Contact Us</DrawerTitle>
           <DrawerDescription>
