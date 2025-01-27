@@ -14,17 +14,23 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 const initialTokens = [
   {
     rank: 1,
-    name: "BONK",
+    name: "Punks",
+    symbol: "SOL",
+    displayName: "CryptoPunks",
+    supply: "30000",
     smartWallets: 156,
     volume: "$2.1M",
     change: 15.2,
     isPositive: true,
-    image: "/lovable-uploads/19bfce04-0354-4554-b5b7-12106ecb7f86.png",
+    image: "/lovable-uploads/484a9036-911a-4505-8e73-5ce2955a0676.png",
     topHoldersPercentage: 45.2
   },
   {
     rank: 2,
-    name: "WEN",
+    name: "FAFO",
+    symbol: "SOL",
+    displayName: "FAFO",
+    supply: "80",
     smartWallets: 89,
     volume: "$1.8M",
     change: -8.4,
@@ -34,7 +40,10 @@ const initialTokens = [
   },
   {
     rank: 3,
-    name: "SAMO",
+    name: "Seek",
+    symbol: "SOL",
+    displayName: "DeepSeek",
+    supply: "",
     smartWallets: 234,
     volume: "$950K",
     change: 4.7,
@@ -44,7 +53,10 @@ const initialTokens = [
   },
   {
     rank: 4,
-    name: "PYTH",
+    name: "GRNLD",
+    symbol: "SOL",
+    displayName: "Hi Greenland",
+    supply: "30000",
     smartWallets: 312,
     volume: "$3.2M",
     change: 22.1,
@@ -54,7 +66,10 @@ const initialTokens = [
   },
   {
     rank: 5,
-    name: "ORCA",
+    name: "VineX",
+    symbol: "SOL",
+    displayName: "VineX Coin",
+    supply: "26000",
     smartWallets: 178,
     volume: "$1.5M",
     change: -3.2,
@@ -64,7 +79,10 @@ const initialTokens = [
   },
   {
     rank: 6,
-    name: "RAY",
+    name: "Stupid",
+    symbol: "SOL",
+    displayName: "StupidCoin",
+    supply: "500",
     smartWallets: 145,
     volume: "$2.8M",
     change: 12.5,
@@ -74,7 +92,10 @@ const initialTokens = [
   },
   {
     rank: 7,
-    name: "COPE",
+    name: "DeepSeek",
+    symbol: "SOL",
+    displayName: "DeepSeek",
+    supply: "6000",
     smartWallets: 67,
     volume: "$750K",
     change: -5.8,
@@ -178,7 +199,12 @@ export const TrendingSection = () => {
                         target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%236366f1"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="16">${token.name.charAt(0)}</text></svg>`;
                       }}
                     />
-                    <span className="font-semibold">{token.name}</span>
+                    <div className="flex flex-col">
+                      <span className="font-semibold">{token.name}</span>
+                      <span className="text-xs text-gray-400">
+                        {token.symbol} {token.supply && `⚡${token.supply}`}
+                      </span>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell className="font-mono">
@@ -205,3 +231,5 @@ export const TrendingSection = () => {
     </Card>
   );
 };
+
+export default TrendingSection;
