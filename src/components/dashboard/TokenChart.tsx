@@ -19,7 +19,6 @@ export const TokenChart = ({ tokenData }: TokenChartProps) => {
 
   return (
     <Card className="bg-black/40 border-white/10 p-4 h-[300px]">
-      <h3 className="text-sm font-medium mb-4">Price Chart (24h)</h3>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <Line 
