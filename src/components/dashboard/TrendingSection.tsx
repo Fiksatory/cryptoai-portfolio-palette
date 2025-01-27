@@ -23,7 +23,7 @@ const initialTokens = [
     change: 15.2,
     isPositive: true,
     image: "/lovable-uploads/de338610-cb95-4a86-a3fb-37cc49c425c9.png",
-    topHoldersPercentage: 45.2
+    topHoldersPercentage: 9.0
   },
   {
     rank: 2,
