@@ -20,11 +20,18 @@ const GithubChecker = () => {
         if (!githubUrl) throw new Error('No URL provided');
 
         // Extract owner and repo from GitHub URL
-        const urlParts = githubUrl.replace('https://github.com/', '').split('/');
-        if (urlParts.length !== 2) throw new Error('Invalid GitHub URL format');
+        const url = new URL(githubUrl);
+        if (!url.hostname.includes('github.com')) {
+          throw new Error('Not a GitHub URL');
+        }
 
-        const owner = urlParts[0];
-        const repo = urlParts[1];
+        const pathParts = url.pathname.split('/').filter(Boolean);
+        if (pathParts.length < 2) {
+          throw new Error('Invalid repository path');
+        }
+
+        const owner = pathParts[0];
+        const repo = pathParts[1];
 
         // GitHub API headers with rate limit handling
         const headers = {
@@ -118,6 +125,7 @@ const GithubChecker = () => {
             ]
           }
         };
+
       } catch (error: any) {
         console.error('Error fetching GitHub data:', error);
         toast({
@@ -142,17 +150,36 @@ const GithubChecker = () => {
       return;
     }
 
-    const githubUrlRegex = /^https:\/\/github\.com\/[\w-]+\/[\w.-]+$/;
-    if (!githubUrlRegex.test(githubUrl)) {
+    try {
+      // Validate URL format
+      const url = new URL(githubUrl);
+      if (!url.hostname.includes('github.com')) {
+        toast({
+          title: "Invalid GitHub URL",
+          description: "Please enter a valid GitHub repository URL (e.g., https://github.com/username/repository)",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const pathParts = url.pathname.split('/').filter(Boolean);
+      if (pathParts.length < 2) {
+        toast({
+          title: "Invalid Repository Path",
+          description: "URL must include both username and repository name",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      refetch();
+    } catch (error) {
       toast({
-        title: "Invalid GitHub URL",
-        description: "Please enter a valid GitHub repository URL (e.g., https://github.com/username/repository)",
+        title: "Invalid URL",
+        description: "Please enter a valid URL starting with https://",
         variant: "destructive",
       });
-      return;
     }
-
-    refetch();
   };
 
   return (
