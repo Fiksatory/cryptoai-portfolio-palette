@@ -64,11 +64,30 @@ const AiDashboard = () => {
   };
 
   const renderContent = () => {
-    const commonCardClasses = "glass-card backdrop-blur-xl border-white/10 p-6 relative min-h-[600px]";
+    const commonCardClasses = "glass-card backdrop-blur-xl border-white/10 p-6 relative min-h-[600px] pointer-events-none select-none";
     const tokenGatedBadge = (
       <div className="absolute top-4 right-4 flex items-center gap-2 text-sm font-medium text-white/70 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
         <Lock className="w-4 h-4" />
         Token Gated Access
+      </div>
+    );
+
+    const gatedContent = (content: React.ReactNode) => (
+      <div className="relative">
+        {content}
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-xl flex items-center justify-center">
+          <Button 
+            className="pointer-events-auto bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90"
+            onClick={() => toast({
+              title: "Token Required",
+              description: "You need to hold tokens to access this feature",
+              variant: "destructive",
+            })}
+          >
+            <Lock className="mr-2 h-4 w-4" />
+            Unlock Access
+          </Button>
+        </div>
       </div>
     );
 
@@ -77,35 +96,35 @@ const AiDashboard = () => {
         return (
           <Card className={commonCardClasses}>
             {tokenGatedBadge}
-            <TrendingSection />
+            {gatedContent(<TrendingSection />)}
           </Card>
         );
       case "portfolio":
         return (
           <div className={`${commonCardClasses} rounded-lg`}>
             {tokenGatedBadge}
-            <PortfolioTracker />
+            {gatedContent(<PortfolioTracker />)}
           </div>
         );
       case "patterns":
         return (
           <Card className={commonCardClasses}>
             {tokenGatedBadge}
-            <PatternAnalysis />
+            {gatedContent(<PatternAnalysis />)}
           </Card>
         );
       case "alerts":
         return (
           <Card className={commonCardClasses}>
             {tokenGatedBadge}
-            <AlertsSection />
+            {gatedContent(<AlertsSection />)}
           </Card>
         );
       case "github checker":
         return (
           <div className={`${commonCardClasses} rounded-lg`}>
             {tokenGatedBadge}
-            <GithubChecker />
+            {gatedContent(<GithubChecker />)}
           </div>
         );
       case "ai intel":
@@ -113,31 +132,35 @@ const AiDashboard = () => {
           <div className="space-y-6">
             <Card className={`${commonCardClasses} rounded-lg`}>
               {tokenGatedBadge}
-              <ContractAnalysis 
-                contractAddress={contractAddress}
-                setContractAddress={setContractAddress}
-                handleAnalyze={handleAnalyze}
-                isLoading={isLoading}
-              />
-              {showAnalysis && tokenData?.name && (
+              {gatedContent(
                 <>
-                  <div className="text-center space-y-2">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent">
-                      {tokenData.name}
-                    </h2>
-                    <p className="text-gray-400">({tokenData.symbol})</p>
-                  </div>
-                  <TokenChart tokenData={tokenData} />
-                  <AdvancedMetrics tokenData={tokenData} />
-                  <div className="flex justify-center mt-6">
-                    <Button 
-                      onClick={handleDetailedIntel}
-                      className="bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90"
-                    >
-                      <FileText className="mr-2 h-4 w-4" />
-                      Detailed AI Intel
-                    </Button>
-                  </div>
+                  <ContractAnalysis 
+                    contractAddress={contractAddress}
+                    setContractAddress={setContractAddress}
+                    handleAnalyze={handleAnalyze}
+                    isLoading={isLoading}
+                  />
+                  {showAnalysis && tokenData?.name && (
+                    <>
+                      <div className="text-center space-y-2">
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent">
+                          {tokenData.name}
+                        </h2>
+                        <p className="text-gray-400">({tokenData.symbol})</p>
+                      </div>
+                      <TokenChart tokenData={tokenData} />
+                      <AdvancedMetrics tokenData={tokenData} />
+                      <div className="flex justify-center mt-6">
+                        <Button 
+                          onClick={handleDetailedIntel}
+                          className="bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90"
+                        >
+                          <FileText className="mr-2 h-4 w-4" />
+                          Detailed AI Intel
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </Card>
