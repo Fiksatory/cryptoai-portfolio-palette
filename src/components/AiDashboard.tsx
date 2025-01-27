@@ -17,6 +17,7 @@ import { Navigation } from "./dashboard/Navigation";
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
   const [activeSection, setActiveSection] = useState("trending");
+  const [showAnalysis, setShowAnalysis] = useState(false);
   const { toast } = useToast();
 
   const { data: tokenData, isLoading } = useQuery({
@@ -47,6 +48,10 @@ const AiDashboard = () => {
       });
       return;
     }
+    setShowAnalysis(false);
+    setTimeout(() => {
+      setShowAnalysis(true);
+    }, 5000);
     setContractAddress(contractAddress);
   };
 
@@ -85,17 +90,19 @@ const AiDashboard = () => {
               handleAnalyze={handleAnalyze}
               isLoading={isLoading}
             />
-            {tokenData?.name && (
-              <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent">
-                  {tokenData.name}
-                </h2>
-                <p className="text-gray-400">({tokenData.symbol})</p>
-              </div>
+            {showAnalysis && tokenData?.name && (
+              <>
+                <div className="text-center space-y-2">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent">
+                    {tokenData.name}
+                  </h2>
+                  <p className="text-gray-400">({tokenData.symbol})</p>
+                </div>
+                <MarketMetrics tokenData={tokenData} />
+                <MarketContext tokenData={tokenData} />
+                <SocialLinks tokenData={tokenData} isLoading={isLoading} />
+              </>
             )}
-            <MarketMetrics tokenData={tokenData} />
-            <MarketContext tokenData={tokenData} />
-            <SocialLinks tokenData={tokenData} isLoading={isLoading} />
           </div>
         );
       default:
