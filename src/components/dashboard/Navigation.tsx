@@ -1,5 +1,6 @@
 import { Brain, Home, LineChart, Radio, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface NavigationProps {
   activeSection: string;
@@ -7,6 +8,8 @@ interface NavigationProps {
 }
 
 export const Navigation = ({ activeSection, setActiveSection }: NavigationProps) => {
+  const navigate = useNavigate();
+
   const navItems = [
     { icon: TrendingUp, label: "Trending", active: activeSection === "trending" },
     { 
@@ -40,7 +43,12 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
     { icon: Brain, label: "AI Intel", active: activeSection === "ai intel" },
     { icon: Radio, label: "Github Checker", active: activeSection === "github checker" },
     { icon: LineChart, label: "Portfolio", active: activeSection === "portfolio" },
-    { icon: Home, label: "Home", active: false },
+    { 
+      icon: Home, 
+      label: "Home", 
+      active: false,
+      onClick: () => navigate('/landing')
+    },
   ];
 
   return (
@@ -56,7 +64,7 @@ export const Navigation = ({ activeSection, setActiveSection }: NavigationProps)
         {navItems.map((item) => (
           <button
             key={item.label}
-            onClick={() => setActiveSection(item.label.toLowerCase())}
+            onClick={() => item.onClick ? item.onClick() : setActiveSection(item.label.toLowerCase())}
             className={cn(
               "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 neon-border relative",
               item.active 
