@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatInTimeZone } from 'date-fns-tz';
 
 interface Alert {
   id: number;
   name: string;
   price: string;
-  change: string;
   timestamp: number;
   action: string;
   actor: string;
@@ -17,13 +17,13 @@ const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"]
 const tickers = ["SOLAPE", "BONK", "SAMO", "WIF", "MYRO", "COPE", "DUST", "MEME", "PYTH", "RAY"];
 
 const mockAlerts = [
-  { id: 1, name: "SOLAPE", price: "$0.00023", change: "+15.5%", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
-  { id: 2, name: "BONK", price: "$0.00012", change: "+8.2%", timestamp: Date.now(), action: "sold", actor: "Wojak" },
-  { id: 3, name: "SAMO", price: "$0.0065", change: "+12.1%", timestamp: Date.now(), action: "bought", actor: "Pepe" },
-  { id: 4, name: "WIF", price: "$0.0089", change: "-5.3%", timestamp: Date.now(), action: "sold", actor: "Diamond" },
-  { id: 5, name: "MYRO", price: "$0.00034", change: "+22.7%", timestamp: Date.now(), action: "bought", actor: "Whale" },
-  { id: 6, name: "COPE", price: "$0.0045", change: "-3.8%", timestamp: Date.now(), action: "sold", actor: "Paper" },
-  { id: 7, name: "DUST", price: "$0.00078", change: "+9.4%", timestamp: Date.now(), action: "bought", actor: "Degen" },
+  { id: 1, name: "SOLAPE", price: "$0.00023", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
+  { id: 2, name: "BONK", price: "$0.00012", timestamp: Date.now(), action: "sold", actor: "Wojak" },
+  { id: 3, name: "SAMO", price: "$0.0065", timestamp: Date.now(), action: "bought", actor: "Pepe" },
+  { id: 4, name: "WIF", price: "$0.0089", timestamp: Date.now(), action: "sold", actor: "Diamond" },
+  { id: 5, name: "MYRO", price: "$0.00034", timestamp: Date.now(), action: "bought", actor: "Whale" },
+  { id: 6, name: "COPE", price: "$0.0045", timestamp: Date.now(), action: "sold", actor: "Paper" },
+  { id: 7, name: "DUST", price: "$0.00078", timestamp: Date.now(), action: "bought", actor: "Degen" },
 ];
 
 export const AlertsSection = () => {
@@ -55,7 +55,6 @@ export const AlertsSection = () => {
             id: Date.now(),
             name: getRandomElement(tickers),
             price: `$${(Math.random() * 0.001).toFixed(8)}`,
-            change: `${Math.random() > 0.5 ? '+' : '-'}${(Math.random() * 25).toFixed(1)}%`,
             timestamp: Date.now(),
             action: Math.random() > 0.5 ? "bought" : "sold",
             actor: getRandomElement(actors)
@@ -87,6 +86,10 @@ export const AlertsSection = () => {
       }
     };
   }, []);
+
+  const formatTimestamp = (timestamp: number) => {
+    return formatInTimeZone(timestamp, 'America/New_York', 'h:mm:ss a');
+  };
 
   return (
     <div className="space-y-4">
@@ -125,11 +128,8 @@ export const AlertsSection = () => {
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="text-gray-400">{alert.price}</span>
-                  <span className={cn(
-                    "font-medium",
-                    alert.change.startsWith("+") ? "text-green-400" : "text-red-400"
-                  )}>
-                    {alert.change}
+                  <span className="text-gray-400">
+                    {formatTimestamp(alert.timestamp)}
                   </span>
                 </div>
               </div>
