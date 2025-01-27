@@ -65,16 +65,16 @@ const AiDashboard = () => {
   const renderContent = () => {
     const commonCardClasses = "glass-card border-white/10 p-6 relative min-h-[600px] pointer-events-none select-none";
     const tokenGatedBadge = (
-      <div className="flex items-center gap-2 text-sm font-medium text-white/90 bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10 shadow-lg">
-        <Lock className="w-4 h-4" />
-        Token Gated Access
+      <div className="flex items-center gap-3 text-sm font-medium text-white/90 bg-black/80 px-6 py-3 rounded-full border border-neon-violet/20 shadow-xl">
+        <Lock className="w-4 h-4 text-neon-violet" />
+        <span className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent">Token Gated Access</span>
       </div>
     );
 
     const gatedContent = (content: React.ReactNode) => (
       <div className="relative">
         {content}
-        <div className="absolute inset-0 bg-black/95 backdrop-filter backdrop-blur-sm flex items-center justify-center">
+        <div className="absolute inset-0 bg-black flex items-center justify-center">
           {tokenGatedBadge}
         </div>
       </div>
