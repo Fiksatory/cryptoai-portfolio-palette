@@ -6,6 +6,13 @@ interface CodeOriginalityProps {
 }
 
 const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
+  // Mock data for copied files
+  const mockCopiedFiles = [
+    { name: "Link 1", url: "https://github.com/example/repo1/file1" },
+    { name: "Link 2", url: "https://github.com/example/repo2/file2" },
+    { name: "Link 3", url: "https://github.com/example/repo3/file3" },
+  ];
+
   return (
     <div>
       <h3 className="text-xl font-semibold mb-4">Code Originality Analysis</h3>
@@ -18,7 +25,6 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
           <h4 className="font-semibold mb-2">Similar Repositories:</h4>
           <ul className="list-disc pl-5 space-y-1">
             {codeOriginality.similarRepos.map((repo, index) => {
-              // Extract repository name from the similarity string
               const repoMatch = repo.match(/^([^(]+)/);
               const repoName = repoMatch ? repoMatch[1].trim() : repo;
               
@@ -40,17 +46,19 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
         <div>
           <h4 className="font-semibold mb-2">Copied Files:</h4>
           <ul className="list-disc pl-5 space-y-1">
-            {codeOriginality.copiedFiles.map((file, index) => (
+            {mockCopiedFiles.map((file, index) => (
               <li key={index}>
                 <a 
-                  href="#"
+                  href={file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log(`Viewing copied file: ${file}`);
+                    console.log(`Viewing copied file: ${file.name}`);
                   }}
                   className="text-red-400 hover:underline cursor-pointer"
                 >
-                  {file}
+                  {file.name}
                 </a>
               </li>
             ))}
@@ -59,38 +67,22 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
         <div>
           <h4 className="font-semibold mb-2">Source References:</h4>
           <ul className="list-disc pl-5 space-y-1">
-            {codeOriginality.sourceReferences.map((ref, index) => {
-              // Extract repository name if it's a fork reference
-              const forkMatch = ref.match(/Forked from ([\w-]+\/[\w-]+)/);
-              const baseMatch = ref.match(/Based on ([\w-]+\/[\w-]+)/);
-              const templateMatch = ref.match(/Generated from template: ([\w-]+\/[\w-]+)/);
-              
-              let repoName = null;
-              if (forkMatch) repoName = forkMatch[1];
-              else if (baseMatch) repoName = baseMatch[1];
-              else if (templateMatch) repoName = templateMatch[1];
-
-              return (
-                <li key={index}>
-                  {repoName ? (
-                    <span>
-                      {ref.split(repoName)[0]}
-                      <a 
-                        href={`https://github.com/${repoName}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:underline"
-                      >
-                        {repoName}
-                      </a>
-                      {ref.split(repoName)[1]}
-                    </span>
-                  ) : (
-                    ref
-                  )}
-                </li>
-              );
-            })}
+            {[
+              { name: "Link 1", url: "https://github.com/example/repo1" },
+              { name: "Link 2", url: "https://github.com/example/repo2" },
+              { name: "Link 3", url: "https://github.com/example/repo3" },
+            ].map((link, index) => (
+              <li key={index}>
+                <a 
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:underline"
+                >
+                  {link.name}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
