@@ -64,9 +64,9 @@ const AiDashboard = () => {
   };
 
   const renderContent = () => {
-    const commonCardClasses = "bg-black/40 backdrop-blur-md border-white/10 p-6 relative min-h-[600px]";
+    const commonCardClasses = "glass-card backdrop-blur-xl border-white/10 p-6 relative min-h-[600px]";
     const tokenGatedBadge = (
-      <div className="absolute top-4 right-4 flex items-center gap-2 text-sm text-gray-400">
+      <div className="absolute top-4 right-4 flex items-center gap-2 text-sm font-medium text-white/70 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
         <Lock className="w-4 h-4" />
         Token Gated Access
       </div>
