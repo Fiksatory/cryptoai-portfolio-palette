@@ -7,7 +7,6 @@ import { formatInTimeZone } from 'date-fns-tz';
 interface Alert {
   id: number;
   name: string;
-  price: string;
   timestamp: number;
   action: string;
   actor: string;
@@ -17,13 +16,13 @@ const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"]
 const tickers = ["SOLAPE", "BONK", "SAMO", "WIF", "MYRO", "COPE", "DUST", "MEME", "PYTH", "RAY"];
 
 const mockAlerts = [
-  { id: 1, name: "SOLAPE", price: "$0.00023", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
-  { id: 2, name: "BONK", price: "$0.00012", timestamp: Date.now(), action: "sold", actor: "Wojak" },
-  { id: 3, name: "SAMO", price: "$0.0065", timestamp: Date.now(), action: "bought", actor: "Pepe" },
-  { id: 4, name: "WIF", price: "$0.0089", timestamp: Date.now(), action: "sold", actor: "Diamond" },
-  { id: 5, name: "MYRO", price: "$0.00034", timestamp: Date.now(), action: "bought", actor: "Whale" },
-  { id: 6, name: "COPE", price: "$0.0045", timestamp: Date.now(), action: "sold", actor: "Paper" },
-  { id: 7, name: "DUST", price: "$0.00078", timestamp: Date.now(), action: "bought", actor: "Degen" },
+  { id: 1, name: "SOLAPE", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
+  { id: 2, name: "BONK", timestamp: Date.now(), action: "sold", actor: "Wojak" },
+  { id: 3, name: "SAMO", timestamp: Date.now(), action: "bought", actor: "Pepe" },
+  { id: 4, name: "WIF", timestamp: Date.now(), action: "sold", actor: "Diamond" },
+  { id: 5, name: "MYRO", timestamp: Date.now(), action: "bought", actor: "Whale" },
+  { id: 6, name: "COPE", timestamp: Date.now(), action: "sold", actor: "Paper" },
+  { id: 7, name: "DUST", timestamp: Date.now(), action: "bought", actor: "Degen" },
 ];
 
 export const AlertsSection = () => {
@@ -54,7 +53,6 @@ export const AlertsSection = () => {
             ...firstAlert,
             id: Date.now(),
             name: getRandomElement(tickers),
-            price: `$${(Math.random() * 0.001).toFixed(8)}`,
             timestamp: Date.now(),
             action: Math.random() > 0.5 ? "bought" : "sold",
             actor: getRandomElement(actors)
@@ -126,8 +124,7 @@ export const AlertsSection = () => {
                   <AlertTriangle className="w-4 h-4 text-neon-pink" />
                   <span className="font-medium">{alert.actor} {alert.action} {alert.name}</span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-gray-400">{alert.price}</span>
+                <div>
                   <span className="text-gray-400">
                     {formatTimestamp(alert.timestamp)}
                   </span>
