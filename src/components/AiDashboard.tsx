@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { analyzePairData, searchTokens } from "@/services/dexscreener";
 import PortfolioTracker from "./PortfolioTracker";
 import { ContractAnalysis } from "./dashboard/ContractAnalysis";
-import { MarketMetrics } from "./dashboard/MarketMetrics";
-import { MarketContext } from "./dashboard/MarketContext";
+import { AdvancedMetrics } from "./dashboard/AdvancedMetrics";
+import { TokenChart } from "./dashboard/TokenChart";
 import { SocialLinks } from "./dashboard/SocialLinks";
 import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 import { TrendingSection } from "./dashboard/TrendingSection";
@@ -98,8 +98,8 @@ const AiDashboard = () => {
                   </h2>
                   <p className="text-gray-400">({tokenData.symbol})</p>
                 </div>
-                <MarketMetrics tokenData={tokenData} />
-                <MarketContext tokenData={tokenData} />
+                <TokenChart tokenData={tokenData} />
+                <AdvancedMetrics tokenData={tokenData} />
                 <SocialLinks tokenData={tokenData} isLoading={isLoading} />
               </>
             )}
