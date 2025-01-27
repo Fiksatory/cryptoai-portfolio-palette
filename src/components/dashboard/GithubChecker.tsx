@@ -50,6 +50,34 @@ const GithubChecker = () => {
         }
         const repoData = await repoResponse.json();
 
+        // Fetch contributor data with error handling
+        const contributorsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/contributors`, { headers });
+        let contributorsData = [];
+        if (contributorsResponse.ok) {
+          contributorsData = await contributorsResponse.json();
+        }
+
+        // Fetch commit activity with error handling
+        const commitsResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/stats/commit_activity`, { headers });
+        let commitsData = [];
+        if (commitsResponse.ok) {
+          commitsData = await commitsResponse.json();
+        }
+
+        // Calculate metrics with fallbacks
+        const totalCommits = Array.isArray(commitsData) 
+          ? commitsData.reduce((acc: number, week: any) => acc + (week?.total || 0), 0) 
+          : 0;
+        const commitFrequency = Math.min(100, (totalCommits / 52) * 10);
+        const contributorActivity = Math.min(100, (contributorsData?.length || 0) * 10);
+        const codeConsistency = Math.min(100, repoData.watchers_count || 0);
+        const documentationQuality = repoData.has_wiki ? 80 : 40;
+
+        // Calculate LARP score
+        const larpScore = Math.floor(
+          (commitFrequency + contributorActivity + codeConsistency + documentationQuality) / 4
+        );
+
         // Fetch owner data
         const ownerResponse = await fetch(`https://api.github.com/users/${owner}`, { headers });
         const ownerData = await ownerResponse.json();
