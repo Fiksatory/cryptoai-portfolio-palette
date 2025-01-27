@@ -17,25 +17,42 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
         <div>
           <h4 className="font-semibold mb-2">Similar Repositories:</h4>
           <ul className="list-disc pl-5 space-y-1">
-            {codeOriginality.similarRepos.map((repo, index) => (
-              <li key={index}>
-                <a 
-                  href={`https://github.com/${repo}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
-                >
-                  {repo}
-                </a>
-              </li>
-            ))}
+            {codeOriginality.similarRepos.map((repo, index) => {
+              // Extract repository name from the similarity string
+              const repoMatch = repo.match(/^([^(]+)/);
+              const repoName = repoMatch ? repoMatch[1].trim() : repo;
+              
+              return (
+                <li key={index}>
+                  <a 
+                    href={`https://github.com/${repoName}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline"
+                  >
+                    {repo}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div>
           <h4 className="font-semibold mb-2">Copied Files:</h4>
           <ul className="list-disc pl-5 space-y-1">
             {codeOriginality.copiedFiles.map((file, index) => (
-              <li key={index} className="text-red-400">{file}</li>
+              <li key={index}>
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log(`Viewing copied file: ${file}`);
+                  }}
+                  className="text-red-400 hover:underline cursor-pointer"
+                >
+                  {file}
+                </a>
+              </li>
             ))}
           </ul>
         </div>
@@ -43,26 +60,36 @@ const CodeOriginality = ({ codeOriginality }: CodeOriginalityProps) => {
           <h4 className="font-semibold mb-2">Source References:</h4>
           <ul className="list-disc pl-5 space-y-1">
             {codeOriginality.sourceReferences.map((ref, index) => {
-              // Extract repository name and similarity from the reference text
-              const match = ref.match(/(\w+\/[\w-]+) \((\d+)% similarity\)/);
-              if (match) {
-                const [, repo, similarity] = match;
-                return (
-                  <li key={index}>
-                    Code overlap with{" "}
-                    <a 
-                      href={`https://github.com/${repo}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline"
-                    >
-                      {repo}
-                    </a>{" "}
-                    ({similarity}% similarity)
-                  </li>
-                );
-              }
-              return <li key={index}>{ref}</li>;
+              // Extract repository name if it's a fork reference
+              const forkMatch = ref.match(/Forked from ([\w-]+\/[\w-]+)/);
+              const baseMatch = ref.match(/Based on ([\w-]+\/[\w-]+)/);
+              const templateMatch = ref.match(/Generated from template: ([\w-]+\/[\w-]+)/);
+              
+              let repoName = null;
+              if (forkMatch) repoName = forkMatch[1];
+              else if (baseMatch) repoName = baseMatch[1];
+              else if (templateMatch) repoName = templateMatch[1];
+
+              return (
+                <li key={index}>
+                  {repoName ? (
+                    <span>
+                      {ref.split(repoName)[0]}
+                      <a 
+                        href={`https://github.com/${repoName}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:underline"
+                      >
+                        {repoName}
+                      </a>
+                      {ref.split(repoName)[1]}
+                    </span>
+                  ) : (
+                    ref
+                  )}
+                </li>
+              );
             })}
           </ul>
         </div>
