@@ -53,15 +53,15 @@ const initialTokens = [
   },
   {
     rank: 4,
-    name: "GRNLD",
+    name: "SHY",
     symbol: "SOL",
-    displayName: "Hi Greenland",
+    displayName: "Shy",
     supply: "30000",
     smartWallets: 312,
-    volume: "$34.3M",
+    volume: "$81.2M",
     change: 22.1,
     isPositive: true,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/16362.png",
+    image: "/lovable-uploads/605b356d-a9bf-4edb-9cb6-c2ae8b9636d7.png",
     topHoldersPercentage: 51.3
   },
   {
