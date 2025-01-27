@@ -51,7 +51,7 @@ const AiDashboard = () => {
   };
 
   const TokenGatedContent = () => (
-    <div className="absolute inset-0 bg-background/50 backdrop-blur-xl z-10 flex flex-col items-center justify-center space-y-4">
+    <div className="absolute inset-0 bg-background/50 z-10 flex flex-col items-center justify-center space-y-4">
       <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
         Token Gated Feature
       </div>
@@ -66,9 +66,7 @@ const AiDashboard = () => {
       case "trending":
         return (
           <Card className={commonCardClasses}>
-            <div className="filter blur-sm">
-              <TrendingSection />
-            </div>
+            <TrendingSection />
             <TokenGatedContent />
           </Card>
         );
@@ -77,18 +75,14 @@ const AiDashboard = () => {
       case "patterns":
         return (
           <Card className={commonCardClasses}>
-            <div className="filter blur-sm">
-              <PatternAnalysis />
-            </div>
+            <PatternAnalysis />
             <TokenGatedContent />
           </Card>
         );
       case "alerts":
         return (
           <Card className={commonCardClasses}>
-            <div className="filter blur-sm">
-              <AlertsSection />
-            </div>
+            <AlertsSection />
             <TokenGatedContent />
           </Card>
         );
