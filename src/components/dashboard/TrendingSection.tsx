@@ -92,15 +92,15 @@ const initialTokens = [
   },
   {
     rank: 7,
-    name: "DeepSeek",
+    name: "Vine",
     symbol: "SOL",
-    displayName: "DeepSeek",
+    displayName: "Vine",
     supply: "6000",
     smartWallets: 67,
     volume: "$9.1M",
     change: -5.8,
     isPositive: false,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8543.png",
+    image: "/lovable-uploads/a72c20a4-b5a2-4c38-829d-38eb1de09f58.png",
     topHoldersPercentage: 71.2
   }
 ];
