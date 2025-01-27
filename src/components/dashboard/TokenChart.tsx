@@ -6,15 +6,15 @@ interface TokenChartProps {
 }
 
 export const TokenChart = ({ tokenData }: TokenChartProps) => {
-  // Simulated descending price data
+  // Simulated volatile bearish price data
   const data = [
     { time: "00:00", price: 1.8 },
-    { time: "04:00", price: 1.6 },
-    { time: "08:00", price: 1.5 },
-    { time: "12:00", price: 1.3 },
-    { time: "16:00", price: 1.2 },
-    { time: "20:00", price: 1.1 },
-    { time: "24:00", price: 1.0 },
+    { time: "04:00", price: 1.9 },  // Temporary spike up
+    { time: "08:00", price: 1.4 },  // Sharp drop
+    { time: "12:00", price: 1.6 },  // Recovery
+    { time: "16:00", price: 1.2 },  // Another drop
+    { time: "20:00", price: 1.3 },  // Small recovery
+    { time: "24:00", price: 0.9 },  // Final drop
   ];
 
   return (
