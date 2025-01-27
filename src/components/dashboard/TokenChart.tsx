@@ -6,15 +6,15 @@ interface TokenChartProps {
 }
 
 export const TokenChart = ({ tokenData }: TokenChartProps) => {
-  // Simulated price data (replace with real data when available)
+  // Simulated descending price data
   const data = [
-    { time: "00:00", price: 1.2 },
-    { time: "04:00", price: 1.4 },
-    { time: "08:00", price: 1.3 },
-    { time: "12:00", price: 1.5 },
-    { time: "16:00", price: 1.6 },
-    { time: "20:00", price: 1.8 },
-    { time: "24:00", price: 1.7 },
+    { time: "00:00", price: 1.8 },
+    { time: "04:00", price: 1.6 },
+    { time: "08:00", price: 1.5 },
+    { time: "12:00", price: 1.3 },
+    { time: "16:00", price: 1.2 },
+    { time: "20:00", price: 1.1 },
+    { time: "24:00", price: 1.0 },
   ];
 
   return (
