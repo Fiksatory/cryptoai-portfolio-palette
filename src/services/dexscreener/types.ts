@@ -26,9 +26,12 @@ export interface DexScreenerPair {
   };
   volume: {
     h24: number;
+    d7?: number;
   };
   priceChange: {
+    h1?: number;
     h24: number;
+    d7?: number;
   };
   liquidity?: {
     usd: number;
@@ -45,13 +48,25 @@ export interface DexScreenerPair {
 export interface TokenAnalysis {
   name: string;
   symbol: string;
-  summary: string;
+  price: string;
+  priceChange: {
+    h1?: number;
+    h24: number;
+    d7?: number;
+  };
+  volume: {
+    h24: number;
+    d7?: number;
+  };
+  liquidity?: number;
+  marketCap: number;
   metrics: {
     marketCap: number;
     volume24h: number;
     buySellRatio: number;
     healthScore: number;
   };
+  summary: string;
   marketStatus: string;
   riskLevel: string;
   socialLinks: {
@@ -60,6 +75,9 @@ export interface TokenAnalysis {
     telegram?: string;
     discord?: string;
   };
+  pairCreatedAt: string;
+  dexId: string;
+  network: string;
 }
 
 export interface TokenProfile {
