@@ -60,11 +60,10 @@ export function ContactDialog() {
       <DrawerTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
-          className="w-14 h-14 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background/90 border border-neon-pink/20 hover:border-neon-pink/50 transition-all duration-300"
+          className="w-auto h-14 px-6 rounded-full bg-background/95 backdrop-blur-sm hover:bg-background/90 border border-neon-pink/30 hover:border-neon-pink/60 transition-all duration-300 flex items-center gap-2"
         >
           <MessageCircle className="w-6 h-6 text-neon-pink" />
-          <span className="sr-only">Contact Us</span>
+          <span className="text-neon-pink font-medium">Contact Us</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent className="glass-card">
