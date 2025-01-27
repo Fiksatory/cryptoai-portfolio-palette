@@ -1,63 +1,41 @@
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { LineChart, Brain } from "lucide-react";
+import { Info } from "lucide-react";
 
 interface MarketContextProps {
   tokenData: any;
 }
 
 export const MarketContext = ({ tokenData }: MarketContextProps) => {
-  return (
-    <div className="grid grid-cols-2 gap-6">
-      <Card className="bg-black/40 border-white/10 p-4">
-        <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-          <LineChart className="w-4 h-4" />
-          Market Activity
-        </h3>
-        <div className="space-y-4">
-          {tokenData?.name && (
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-400">Token:</span>
-              <Badge className="bg-neon-violet/20 text-neon-violet">
-                {tokenData.name} ({tokenData.symbol})
-              </Badge>
-            </div>
-          )}
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400">24h Volume:</span>
-            <span className="text-green-400">
-              ${tokenData?.metrics?.volume24h?.toLocaleString() || "0"}
-            </span>
-          </div>
-          <div className="flex gap-2">
-            {tokenData?.metrics?.marketCap > 0 && (
-              <Badge className="bg-orange-500">
-                MCap: ${tokenData.metrics.marketCap.toLocaleString()}
-              </Badge>
-            )}
-          </div>
-        </div>
-      </Card>
+  if (!tokenData) return null;
 
-      <Card className="bg-black/40 border-white/10 p-4">
-        <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-          <Brain className="w-4 h-4" />
-          Market Context
-        </h3>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400">Context:</span>
-            <span>{tokenData?.marketContext || "Waiting for analysis..."}</span>
-          </div>
-          {tokenData && (
-            <div className="flex gap-2">
-              <Badge className="bg-indigo-500/20 text-indigo-300">
-                {tokenData.summary}
-              </Badge>
-            </div>
-          )}
+  const formatDate = (timestamp: string) => {
+    return new Date(timestamp).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
+  return (
+    <Card className="bg-black/40 border-white/10 p-4">
+      <div className="flex items-center gap-2 mb-4">
+        <Info className="w-4 h-4" />
+        <h3 className="text-sm font-medium">Market Context</h3>
+      </div>
+      <div className="space-y-4">
+        <div>
+          <p className="text-sm text-gray-400">Network</p>
+          <p className="font-medium">{tokenData.network}</p>
         </div>
-      </Card>
-    </div>
+        <div>
+          <p className="text-sm text-gray-400">DEX</p>
+          <p className="font-medium">{tokenData.dexId}</p>
+        </div>
+        <div>
+          <p className="text-sm text-gray-400">Pair Created</p>
+          <p className="font-medium">{formatDate(tokenData.pairCreatedAt)}</p>
+        </div>
+      </div>
+    </Card>
   );
 };

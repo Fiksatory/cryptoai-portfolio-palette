@@ -1,100 +1,79 @@
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Sparkles, Radio } from "lucide-react";
-import { useGmgnData } from "@/services/gmgn";
+import { ArrowUpRight, ArrowDownRight, DollarSign, LineChart, Wallet2, Activity } from "lucide-react";
 
 interface MarketMetricsProps {
   tokenData: any;
 }
 
 export const MarketMetrics = ({ tokenData }: MarketMetricsProps) => {
-  const { data: gmgnData, isLoading } = useGmgnData();
+  if (!tokenData) return null;
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(2) + 'B';
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(2) + 'M';
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(2) + 'K';
+    }
+    return num.toFixed(2);
+  };
+
+  const metrics = [
+    {
+      label: "Price",
+      value: `$${Number(tokenData.price).toFixed(8)}`,
+      change: tokenData.priceChange.h24,
+      icon: DollarSign
+    },
+    {
+      label: "24h Volume",
+      value: `$${formatNumber(tokenData.volume.h24)}`,
+      change: ((tokenData.volume.h24 - tokenData.volume.d7/7) / (tokenData.volume.d7/7) * 100).toFixed(2),
+      icon: LineChart
+    },
+    {
+      label: "Market Cap",
+      value: `$${formatNumber(tokenData.marketCap)}`,
+      change: tokenData.priceChange.h24,
+      icon: Activity
+    },
+    {
+      label: "Liquidity",
+      value: `$${formatNumber(tokenData.liquidity)}`,
+      change: "0",
+      icon: Wallet2
+    }
+  ];
 
   return (
-    <div className="grid grid-cols-2 gap-6">
-      <Card className="bg-black/40 border-white/10 p-4">
-        <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-          <Sparkles className="w-4 h-4" />
-          AI Market Pulse
-        </h3>
-        <div className="space-y-2">
-          {tokenData?.name && (
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-400">Token:</span>
-              <Badge variant="secondary" className="bg-neon-pink/20 text-neon-pink">
-                {tokenData.name} ({tokenData.symbol})
-              </Badge>
-            </div>
-          )}
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400">Market State:</span>
-            <Badge variant="secondary">
-              {tokenData?.marketStatus || "WAITING FOR ANALYSIS"}
-            </Badge>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400">AI Confidence:</span>
-            <div className="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-green-500" 
-                style={{ width: `${tokenData?.metrics?.healthScore || 0}%` }}
-              />
-            </div>
-          </div>
-          {gmgnData && (
-            <div className="flex justify-between items-center mt-4">
-              <span className="text-sm text-gray-400">GMGN Price:</span>
-              <Badge className="bg-neon-pink/20 text-neon-pink">
-                ${gmgnData.price.toFixed(4)}
-              </Badge>
-            </div>
-          )}
-        </div>
-      </Card>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {metrics.map((metric, index) => {
+        const Icon = metric.icon;
+        const isPositive = Number(metric.change) >= 0;
 
-      <Card className="bg-black/40 border-white/10 p-4">
-        <h3 className="flex items-center gap-2 text-sm font-medium mb-4">
-          <Radio className="w-4 h-4" />
-          Manipulation Radar
-        </h3>
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400">Risk Level:</span>
-            <Badge className="bg-indigo-500/20 text-indigo-300">
-              {tokenData?.riskLevel || "UNKNOWN"}
-            </Badge>
-          </div>
-          <div className="flex gap-2">
-            {tokenData?.metrics?.buySellRatio > 1.2 && (
-              <Badge className="bg-blue-500/20 text-blue-300">High Buy Pressure</Badge>
-            )}
-            {tokenData?.metrics?.buySellRatio < 0.8 && (
-              <Badge className="bg-red-500/20 text-red-300">High Sell Pressure</Badge>
-            )}
-          </div>
-          {gmgnData && (
-            <div className="mt-4 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">24h Volume:</span>
-                <Badge className="bg-violet-500/20 text-violet-300">
-                  ${gmgnData.volume24h.toLocaleString()}
-                </Badge>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-400">24h Change:</span>
-                <Badge 
-                  className={gmgnData.change24h >= 0 ? 
-                    "bg-green-500/20 text-green-300" : 
-                    "bg-red-500/20 text-red-300"
-                  }
-                >
-                  {gmgnData.change24h.toFixed(2)}%
-                </Badge>
+        return (
+          <Card key={index} className="bg-black/40 border-white/10 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <Icon className="w-4 h-4 text-gray-400" />
+              <div className={`flex items-center text-sm ${isPositive ? 'text-green-400' : 'text-red-400'}`}>
+                {isPositive ? (
+                  <ArrowUpRight className="w-4 h-4 mr-1" />
+                ) : (
+                  <ArrowDownRight className="w-4 h-4 mr-1" />
+                )}
+                {Math.abs(Number(metric.change))}%
               </div>
             </div>
-          )}
-        </div>
-      </Card>
+            <div className="space-y-1">
+              <p className="text-sm text-gray-400">{metric.label}</p>
+              <p className="text-lg font-semibold">{metric.value}</p>
+            </div>
+          </Card>
+        );
+      })}
     </div>
   );
 };
