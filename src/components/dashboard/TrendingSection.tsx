@@ -22,7 +22,7 @@ const initialTokens = [
     volume: "$25.0M",
     change: 15.2,
     isPositive: true,
-    image: "/lovable-uploads/484a9036-911a-4505-8e73-5ce2955a0676.png",
+    image: "/lovable-uploads/de338610-cb95-4a86-a3fb-37cc49c425c9.png",
     topHoldersPercentage: 45.2
   },
   {
