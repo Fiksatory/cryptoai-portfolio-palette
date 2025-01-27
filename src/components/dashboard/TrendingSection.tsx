@@ -97,11 +97,11 @@ const initialTokens = [
     displayName: "Vine",
     supply: "6000",
     smartWallets: 67,
-    volume: "$9.1M",
+    volume: "$102M",
     change: -5.8,
     isPositive: false,
     image: "/lovable-uploads/a72c20a4-b5a2-4c38-829d-38eb1de09f58.png",
-    topHoldersPercentage: 71.2
+    topHoldersPercentage: 18.0
   }
 ];
 
