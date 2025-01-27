@@ -39,13 +39,13 @@ export const ContractAnalysis = ({
         <Button 
           onClick={handleAnalyze}
           disabled={isLoading}
-          className="bg-solana-primary hover:bg-solana-primary/90 relative"
+          className="bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-opacity relative min-w-[120px]"
         >
           {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Analyzing...
-            </>
+            <div className="flex items-center justify-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Analyzing...</span>
+            </div>
           ) : (
             "Analyze"
           )}
