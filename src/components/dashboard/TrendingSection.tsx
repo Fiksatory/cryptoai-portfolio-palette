@@ -88,7 +88,7 @@ const initialTokens = [
     change: 12.5,
     isPositive: true,
     image: "/lovable-uploads/2ab2f324-a87a-48e1-86c6-c3fafd04f772.png",
-    topHoldersPercentage: 55.9
+    topHoldersPercentage: 14.0
   },
   {
     rank: 7,
@@ -231,5 +231,3 @@ export const TrendingSection = () => {
     </Card>
   );
 };
-
-export default TrendingSection;
