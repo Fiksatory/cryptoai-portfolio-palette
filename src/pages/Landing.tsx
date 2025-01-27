@@ -1,12 +1,16 @@
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
-import { Play, Twitter, FileText } from 'lucide-react';
+import { Play, Twitter, FileText, Copy, Check } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { ContactDialog } from '@/components/ContactDialog';
+import { useState } from 'react';
+import { toast } from "sonner";
 
 const Landing = () => {
   const navigate = useNavigate();
   const { connected } = useWallet();
+  const [copied, setCopied] = useState(false);
+  const textToCopy = "https://labyai.com";
 
   const handleDashboardAccess = () => {
     navigate('/dashboard');
@@ -18,6 +22,21 @@ const Landing = () => {
 
   const handleDocsClick = () => {
     window.open('https://docs.labyai.com', '_blank');
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      toast("Copied to clipboard!", {
+        duration: 2000,
+      });
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast("Failed to copy text", {
+        duration: 2000,
+      });
+    }
   };
 
   return (
@@ -97,6 +116,21 @@ const Landing = () => {
                 </div>
                 <p className="text-lg font-medium text-white">Watch Demo</p>
               </div>
+            </div>
+          </div>
+
+          {/* Copyable Text Box */}
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <div 
+              className="glass-card px-6 py-3 rounded-lg flex items-center justify-between gap-4 cursor-pointer group hover:border-neon-pink/50 transition-all duration-300"
+              onClick={handleCopy}
+            >
+              <span className="text-gray-300 select-all">{textToCopy}</span>
+              {copied ? (
+                <Check className="w-5 h-5 text-green-500" />
+              ) : (
+                <Copy className="w-5 h-5 text-neon-pink group-hover:scale-110 transition-transform duration-200" />
+              )}
             </div>
           </div>
 
