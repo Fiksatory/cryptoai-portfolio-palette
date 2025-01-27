@@ -23,15 +23,19 @@ const Landing = () => {
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Animated background */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 -left-4 w-72 h-72 bg-neon-pink rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-          <div className="absolute top-0 -right-4 w-72 h-72 bg-neon-violet rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-neon-purple rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-        </div>
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-neon-pink rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-neon-violet rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-neon-purple rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+      </div>
 
-      {/* Wallet Button, Twitter Button, Documents Button, and Contact Button */}
-      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+      {/* Contact Us Button - Fixed on right side */}
+      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
         <ContactDialog />
+      </div>
+
+      {/* Wallet Button, Twitter Button, and Documents Button */}
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
         <button
           onClick={handleDocsClick}
           className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200 rounded-md"
