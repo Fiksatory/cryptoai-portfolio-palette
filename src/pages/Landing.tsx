@@ -30,8 +30,8 @@ const Landing = () => {
       </div>
 
       {/* Contact Us Button - Fixed on bottom right corner */}
-      <div className="fixed right-8 bottom-8 z-50">
-        <div className="rounded-full overflow-hidden border-animation">
+      <div className="fixed right-8 bottom-16 z-50">
+        <div className="rounded-full overflow-hidden">
           <ContactDialog />
         </div>
       </div>

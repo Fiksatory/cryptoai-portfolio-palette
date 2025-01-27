@@ -44,7 +44,6 @@ export function ContactDialog() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Here you would typically send the data to your backend
     console.log("Form submitted:", values);
     
     toast({
@@ -60,10 +59,12 @@ export function ContactDialog() {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200 rounded-md"
+          variant="ghost"
+          size="icon"
+          className="w-14 h-14 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background/90 border border-neon-pink/20 hover:border-neon-pink/50 transition-all duration-300"
         >
-          <MessageCircle className="w-5 h-5" />
-          <span className="hidden sm:inline">Contact Us</span>
+          <MessageCircle className="w-6 h-6 text-neon-pink" />
+          <span className="sr-only">Contact Us</span>
         </Button>
       </DrawerTrigger>
       <DrawerContent className="glass-card">
