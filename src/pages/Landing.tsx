@@ -2,6 +2,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
 import { Play, Twitter, FileText } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { ContactDialog } from '@/components/ContactDialog';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -28,8 +29,9 @@ const Landing = () => {
           <div className="absolute -bottom-8 left-20 w-72 h-72 bg-neon-purple rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
         </div>
 
-      {/* Wallet Button, Twitter Button, and Documents Button */}
+      {/* Wallet Button, Twitter Button, Documents Button, and Contact Button */}
       <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <ContactDialog />
         <button
           onClick={handleDocsClick}
           className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200 rounded-md"
