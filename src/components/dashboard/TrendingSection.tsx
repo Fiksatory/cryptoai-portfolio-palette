@@ -80,6 +80,7 @@ const initialTokens = [
 export const TrendingSection = () => {
   const [tokens, setTokens] = useState(initialTokens);
   const [selectedPeriod, setSelectedPeriod] = useState("1h");
+  const [selectedMode, setSelectedMode] = useState("pump.fun");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -117,27 +118,40 @@ export const TrendingSection = () => {
             <h2 className="text-xl font-bold neon-glow">Trending Pairs</h2>
           </div>
           
-          <ToggleGroup 
-            type="single" 
-            value={selectedPeriod}
-            onValueChange={(value) => {
-              if (value) setSelectedPeriod(value);
-            }}
-            className="bg-black/20 rounded-lg p-1"
-          >
-            <ToggleGroupItem value="30m" className="text-xs px-2 py-1">30m</ToggleGroupItem>
-            <ToggleGroupItem value="1h" className="text-xs px-2 py-1">1h</ToggleGroupItem>
-            <ToggleGroupItem value="4h" className="text-xs px-2 py-1">4h</ToggleGroupItem>
-            <ToggleGroupItem value="8h" className="text-xs px-2 py-1">8h</ToggleGroupItem>
-            <ToggleGroupItem value="12h" className="text-xs px-2 py-1">12h</ToggleGroupItem>
-            <ToggleGroupItem value="24h" className="text-xs px-2 py-1">24h</ToggleGroupItem>
-          </ToggleGroup>
+          <div className="flex items-center gap-4">
+            <ToggleGroup 
+              type="single" 
+              value={selectedMode}
+              onValueChange={(value) => {
+                if (value) setSelectedMode(value);
+              }}
+              className="bg-black/20 rounded-lg p-1"
+            >
+              <ToggleGroupItem value="pump.fun" className="text-xs px-3 py-1">Pump.fun</ToggleGroupItem>
+              <ToggleGroupItem value="raydium" className="text-xs px-3 py-1">Raydium</ToggleGroupItem>
+            </ToggleGroup>
+
+            <ToggleGroup 
+              type="single" 
+              value={selectedPeriod}
+              onValueChange={(value) => {
+                if (value) setSelectedPeriod(value);
+              }}
+              className="bg-black/20 rounded-lg p-1"
+            >
+              <ToggleGroupItem value="30m" className="text-xs px-2 py-1">30m</ToggleGroupItem>
+              <ToggleGroupItem value="1h" className="text-xs px-2 py-1">1h</ToggleGroupItem>
+              <ToggleGroupItem value="4h" className="text-xs px-2 py-1">4h</ToggleGroupItem>
+              <ToggleGroupItem value="8h" className="text-xs px-2 py-1">8h</ToggleGroupItem>
+              <ToggleGroupItem value="12h" className="text-xs px-2 py-1">12h</ToggleGroupItem>
+              <ToggleGroupItem value="24h" className="text-xs px-2 py-1">24h</ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </div>
 
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="w-16">Rank</TableHead>
               <TableHead>Token</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Volume</TableHead>
@@ -150,9 +164,6 @@ export const TrendingSection = () => {
                 key={token.rank}
                 className="hover:bg-white/5 transition-colors"
               >
-                <TableCell>
-                  <span className="font-semibold text-gray-400">#{token.rank}</span>
-                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <img 
