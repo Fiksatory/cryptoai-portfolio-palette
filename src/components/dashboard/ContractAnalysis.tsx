@@ -20,6 +20,7 @@ export const ContractAnalysis = ({
   const [localLoading, setLocalLoading] = useState(false);
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault(); // Prevent default paste behavior
     const pastedText = e.clipboardData.getData('text');
     setContractAddress(pastedText);
     setLocalLoading(true);
