@@ -29,9 +29,11 @@ const Landing = () => {
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-neon-purple rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
       </div>
 
-      {/* Contact Us Button - Fixed on right side */}
-      <div className="fixed right-4 top-1/2 transform -translate-y-1/2 z-50">
-        <ContactDialog />
+      {/* Contact Us Button - Fixed on bottom right corner */}
+      <div className="fixed right-8 bottom-8 z-50">
+        <div className="rounded-full overflow-hidden border-animation">
+          <ContactDialog />
+        </div>
       </div>
 
       {/* Wallet Button, Twitter Button, and Documents Button */}
