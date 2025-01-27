@@ -15,65 +15,72 @@ const initialTokens = [
   {
     rank: 1,
     name: "BONK",
-    price: 0.00001234,
+    smartWallets: 156,
     volume: "$2.1M",
     change: 15.2,
     isPositive: true,
-    image: "/lovable-uploads/19bfce04-0354-4554-b5b7-12106ecb7f86.png"
+    image: "/lovable-uploads/19bfce04-0354-4554-b5b7-12106ecb7f86.png",
+    topHoldersPercentage: 45.2
   },
   {
     rank: 2,
     name: "WEN",
-    price: 0.00000789,
+    smartWallets: 89,
     volume: "$1.8M",
     change: -8.4,
     isPositive: false,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/2833.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/2833.png",
+    topHoldersPercentage: 62.8
   },
   {
     rank: 3,
     name: "SAMO",
-    price: 0.00890,
+    smartWallets: 234,
     volume: "$950K",
     change: 4.7,
     isPositive: true,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/9721.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/9721.png",
+    topHoldersPercentage: 38.5
   },
   {
     rank: 4,
     name: "PYTH",
-    price: 0.4567,
+    smartWallets: 312,
     volume: "$3.2M",
     change: 22.1,
     isPositive: true,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/16362.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/16362.png",
+    topHoldersPercentage: 51.3
   },
   {
     rank: 5,
     name: "ORCA",
-    price: 1.234,
+    smartWallets: 178,
     volume: "$1.5M",
     change: -3.2,
     isPositive: false,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/11165.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/11165.png",
+    topHoldersPercentage: 42.7
   },
   {
     rank: 6,
     name: "RAY",
-    price: 0.789,
+    smartWallets: 145,
     volume: "$2.8M",
     change: 12.5,
     isPositive: true,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8526.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8526.png",
+    topHoldersPercentage: 55.9
   },
   {
     rank: 7,
     name: "COPE",
-    price: 0.0234,
+    smartWallets: 67,
     volume: "$750K",
     change: -5.8,
     isPositive: false,
-    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8543.png"
+    image: "https://s2.coinmarketcap.com/static/img/coins/64x64/8543.png",
+    topHoldersPercentage: 71.2
   }
 ];
 
@@ -86,12 +93,12 @@ export const TrendingSection = () => {
     const interval = setInterval(() => {
       setTokens(currentTokens => 
         currentTokens.map(token => {
-          const priceChange = (Math.random() - 0.5) * 0.001;
-          const newPrice = token.price * (1 + priceChange);
-          const newChange = token.change + (priceChange * 100);
+          const changeValue = (Math.random() - 0.5) * 2;
+          const newChange = token.change + changeValue;
+          const newSmartWallets = Math.max(0, token.smartWallets + Math.floor(Math.random() * 3) - 1);
           return {
             ...token,
-            price: newPrice,
+            smartWallets: newSmartWallets,
             change: newChange,
             isPositive: newChange > 0
           };
@@ -101,11 +108,6 @@ export const TrendingSection = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  const formatPrice = (price: number) => {
-    if (price < 0.001) return price.toExponential(2);
-    return price.toFixed(3);
-  };
 
   return (
     <Card className="bg-black/40 border-white/10 p-6 animate-fade-in relative w-full">
@@ -153,7 +155,8 @@ export const TrendingSection = () => {
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead>Token</TableHead>
-              <TableHead>Price</TableHead>
+              <TableHead>Smart Wallets</TableHead>
+              <TableHead>Top 10 Holders %</TableHead>
               <TableHead>Volume</TableHead>
               <TableHead className="text-right">{selectedPeriod} Change</TableHead>
             </TableRow>
@@ -178,8 +181,11 @@ export const TrendingSection = () => {
                     <span className="font-semibold">{token.name}</span>
                   </div>
                 </TableCell>
-                <TableCell className={`font-mono ${token.isPositive ? 'text-green-400' : 'text-red-400'} transition-colors duration-300`}>
-                  ${formatPrice(token.price)}
+                <TableCell className="font-mono">
+                  {token.smartWallets}
+                </TableCell>
+                <TableCell className="font-mono">
+                  {token.topHoldersPercentage}%
                 </TableCell>
                 <TableCell>{token.volume}</TableCell>
                 <TableCell className="text-right">
