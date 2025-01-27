@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const initialTokens = [
   {
@@ -78,6 +79,7 @@ const initialTokens = [
 
 export const TrendingSection = () => {
   const [tokens, setTokens] = useState(initialTokens);
+  const [selectedPeriod, setSelectedPeriod] = useState("1h");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -107,11 +109,29 @@ export const TrendingSection = () => {
   return (
     <Card className="bg-black/40 border-white/10 p-6 animate-fade-in relative w-full">
       <div className="relative z-20">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-neon-pink to-neon-violet rounded-xl flex items-center justify-center shadow-lg shadow-neon-pink/20">
-            <TrendingUp className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-neon-pink to-neon-violet rounded-xl flex items-center justify-center shadow-lg shadow-neon-pink/20">
+              <TrendingUp className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-xl font-bold neon-glow">Trending Pairs</h2>
           </div>
-          <h2 className="text-xl font-bold neon-glow">Trending Pairs</h2>
+          
+          <ToggleGroup 
+            type="single" 
+            value={selectedPeriod}
+            onValueChange={(value) => {
+              if (value) setSelectedPeriod(value);
+            }}
+            className="bg-black/20 rounded-lg p-1"
+          >
+            <ToggleGroupItem value="30m" className="text-xs px-2 py-1">30m</ToggleGroupItem>
+            <ToggleGroupItem value="1h" className="text-xs px-2 py-1">1h</ToggleGroupItem>
+            <ToggleGroupItem value="4h" className="text-xs px-2 py-1">4h</ToggleGroupItem>
+            <ToggleGroupItem value="8h" className="text-xs px-2 py-1">8h</ToggleGroupItem>
+            <ToggleGroupItem value="12h" className="text-xs px-2 py-1">12h</ToggleGroupItem>
+            <ToggleGroupItem value="24h" className="text-xs px-2 py-1">24h</ToggleGroupItem>
+          </ToggleGroup>
         </div>
 
         <Table>
@@ -121,7 +141,7 @@ export const TrendingSection = () => {
               <TableHead>Token</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Volume</TableHead>
-              <TableHead className="text-right">24h Change</TableHead>
+              <TableHead className="text-right">{selectedPeriod} Change</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
