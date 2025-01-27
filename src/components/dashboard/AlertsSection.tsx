@@ -13,16 +13,16 @@ interface Alert {
 }
 
 const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"];
-const tickers = ["SOLAPE", "BONK", "SAMO", "WIF", "MYRO", "COPE", "DUST", "MEME", "PYTH", "RAY"];
+const tickers = ["PUNKS", "VINEX", "DEEPSEEK", "LILI", "LARRY", "SHY", "TRIM", "GRNLD", "2025", "BAMF", "DEEPSHIT", "FAFO", "STUPID"];
 
 const mockAlerts = [
-  { id: 1, name: "SOLAPE", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
-  { id: 2, name: "BONK", timestamp: Date.now(), action: "sold", actor: "Wojak" },
-  { id: 3, name: "SAMO", timestamp: Date.now(), action: "bought", actor: "Pepe" },
-  { id: 4, name: "WIF", timestamp: Date.now(), action: "sold", actor: "Diamond" },
-  { id: 5, name: "MYRO", timestamp: Date.now(), action: "bought", actor: "Whale" },
-  { id: 6, name: "COPE", timestamp: Date.now(), action: "sold", actor: "Paper" },
-  { id: 7, name: "DUST", timestamp: Date.now(), action: "bought", actor: "Degen" },
+  { id: 1, name: "PUNKS", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
+  { id: 2, name: "VINEX", timestamp: Date.now(), action: "sold", actor: "Wojak" },
+  { id: 3, name: "DEEPSEEK", timestamp: Date.now(), action: "bought", actor: "Pepe" },
+  { id: 4, name: "LILI", timestamp: Date.now(), action: "sold", actor: "Diamond" },
+  { id: 5, name: "LARRY", timestamp: Date.now(), action: "bought", actor: "Whale" },
+  { id: 6, name: "SHY", timestamp: Date.now(), action: "sold", actor: "Paper" },
+  { id: 7, name: "TRIM", timestamp: Date.now(), action: "bought", actor: "Degen" },
 ];
 
 export const AlertsSection = () => {
