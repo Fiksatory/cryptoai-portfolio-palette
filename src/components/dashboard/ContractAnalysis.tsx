@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 interface ContractAnalysisProps {
   contractAddress: string;
@@ -16,10 +17,16 @@ export const ContractAnalysis = ({
   handleAnalyze,
   isLoading
 }: ContractAnalysisProps) => {
+  const [localLoading, setLocalLoading] = useState(false);
+
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedText = e.clipboardData.getData('text');
     setContractAddress(pastedText);
-    handleAnalyze();
+    setLocalLoading(true);
+    setTimeout(() => {
+      setLocalLoading(false);
+      handleAnalyze();
+    }, 5000);
   };
 
   return (
@@ -38,10 +45,10 @@ export const ContractAnalysis = ({
         />
         <Button 
           onClick={handleAnalyze}
-          disabled={isLoading}
+          disabled={isLoading || localLoading}
           className="bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-opacity relative min-w-[120px]"
         >
-          {isLoading ? (
+          {(isLoading || localLoading) ? (
             <div className="flex items-center justify-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>Analyzing...</span>
