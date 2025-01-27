@@ -1,6 +1,6 @@
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useNavigate } from 'react-router-dom';
-import { Play } from 'lucide-react';
+import { Play, X } from 'lucide-react';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 const Landing = () => {
@@ -9,6 +9,10 @@ const Landing = () => {
 
   const handleDashboardAccess = () => {
     navigate('/dashboard');
+  };
+
+  const handleXClick = () => {
+    window.open('https://twitter.com/LabyAI', '_blank');
   };
 
   return (
@@ -22,8 +26,14 @@ const Landing = () => {
         </div>
       </div>
 
-      {/* Wallet Button */}
-      <div className="absolute top-4 right-4 z-10">
+      {/* Wallet Button and X Button */}
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <button
+          onClick={handleXClick}
+          className="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200 rounded-md"
+        >
+          <X className="w-5 h-5" />
+        </button>
         <WalletMultiButton className="!bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90 transition-all duration-200" />
       </div>
 
