@@ -7,7 +7,6 @@ import PortfolioTracker from "./PortfolioTracker";
 import { ContractAnalysis } from "./dashboard/ContractAnalysis";
 import { AdvancedMetrics } from "./dashboard/AdvancedMetrics";
 import { TokenChart } from "./dashboard/TokenChart";
-import { SocialLinks } from "./dashboard/SocialLinks";
 import { PatternAnalysis } from "./dashboard/PatternAnalysis";
 import { TrendingSection } from "./dashboard/TrendingSection";
 import { AlertsSection } from "./dashboard/AlertsSection";
@@ -100,7 +99,6 @@ const AiDashboard = () => {
                 </div>
                 <TokenChart tokenData={tokenData} />
                 <AdvancedMetrics tokenData={tokenData} />
-                <SocialLinks tokenData={tokenData} isLoading={isLoading} />
               </>
             )}
           </div>
