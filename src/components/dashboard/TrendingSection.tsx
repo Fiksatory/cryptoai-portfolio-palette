@@ -202,7 +202,7 @@ export const TrendingSection = () => {
                     <div className="flex flex-col">
                       <span className="font-semibold">{token.name}</span>
                       <span className="text-xs text-gray-400">
-                        {token.symbol} {token.supply && `⚡${token.supply}`}
+                        {token.displayName}
                       </span>
                     </div>
                   </div>
