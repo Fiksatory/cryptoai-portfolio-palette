@@ -20,8 +20,7 @@ const initialTokens = [
     supply: "30000",
     smartWallets: 156,
     volume: "$25.0M",
-    change: 15.2,
-    isPositive: true,
+    labyScore: 8.7,
     image: "/lovable-uploads/de338610-cb95-4a86-a3fb-37cc49c425c9.png",
     topHoldersPercentage: 9.0
   },
@@ -33,21 +32,19 @@ const initialTokens = [
     supply: "80",
     smartWallets: 89,
     volume: "$429.6M",
-    change: -8.4,
-    isPositive: false,
+    labyScore: 7.2,
     image: "/lovable-uploads/0997be61-5dc4-4e58-95e0-1dc5e3cc8f0c.png",
     topHoldersPercentage: 13.0
   },
   {
     rank: 3,
-    name: "Seek",
+    name: "Vine",
     symbol: "SOL",
-    displayName: "DeepSeek",
-    supply: "",
+    displayName: "Vine",
+    supply: "6000",
     smartWallets: 234,
     volume: "$144.1M",
-    change: 4.7,
-    isPositive: true,
+    labyScore: 9.1,
     image: "/lovable-uploads/fdb1d969-bbd7-4ce5-8abc-8935eaa2d3f5.png",
     topHoldersPercentage: 13.0
   },
@@ -59,8 +56,7 @@ const initialTokens = [
     supply: "30000",
     smartWallets: 312,
     volume: "$81.2M",
-    change: 22.1,
-    isPositive: true,
+    labyScore: 6.8,
     image: "/lovable-uploads/b7438d84-60c3-45bf-8fdb-9f931671a5cc.png",
     topHoldersPercentage: 21.0
   },
@@ -72,8 +68,7 @@ const initialTokens = [
     supply: "26000",
     smartWallets: 178,
     volume: "$24.1M",
-    change: -3.2,
-    isPositive: false,
+    labyScore: 8.4,
     image: "/lovable-uploads/ef748809-870d-465e-bb95-f6618b1a3799.png",
     topHoldersPercentage: 14.0
   },
@@ -85,8 +80,7 @@ const initialTokens = [
     supply: "500",
     smartWallets: 145,
     volume: "$120.4M",
-    change: 12.5,
-    isPositive: true,
+    labyScore: 7.9,
     image: "/lovable-uploads/2ab2f324-a87a-48e1-86c6-c3fafd04f772.png",
     topHoldersPercentage: 14.0
   },
@@ -98,8 +92,7 @@ const initialTokens = [
     supply: "6000",
     smartWallets: 67,
     volume: "$102M",
-    change: -5.8,
-    isPositive: false,
+    labyScore: 8.2,
     image: "/lovable-uploads/a72c20a4-b5a2-4c38-829d-38eb1de09f58.png",
     topHoldersPercentage: 18.0
   }
@@ -114,14 +107,10 @@ export const TrendingSection = () => {
     const interval = setInterval(() => {
       setTokens(currentTokens => 
         currentTokens.map(token => {
-          const changeValue = (Math.random() - 0.5) * 2;
-          const newChange = token.change + changeValue;
           const newSmartWallets = Math.max(0, token.smartWallets + Math.floor(Math.random() * 3) - 1);
           return {
             ...token,
             smartWallets: newSmartWallets,
-            change: newChange,
-            isPositive: newChange > 0
           };
         })
       );
@@ -179,7 +168,7 @@ export const TrendingSection = () => {
               <TableHead>Smart Wallets</TableHead>
               <TableHead>Top 10 Holders %</TableHead>
               <TableHead>Volume</TableHead>
-              <TableHead className="text-right">{selectedPeriod} Change</TableHead>
+              <TableHead className="text-right">Laby Score</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -215,12 +204,8 @@ export const TrendingSection = () => {
                 </TableCell>
                 <TableCell>{token.volume}</TableCell>
                 <TableCell className="text-right">
-                  <span 
-                    className={`${
-                      token.isPositive ? 'text-green-400' : 'text-red-400'
-                    } transition-colors duration-300`}
-                  >
-                    {token.change.toFixed(2)}%
+                  <span className="text-neon-pink font-semibold">
+                    {token.labyScore.toFixed(1)}
                   </span>
                 </TableCell>
               </TableRow>
