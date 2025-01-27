@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { formatInTimeZone } from 'date-fns-tz';
 
 interface Alert {
@@ -10,19 +9,24 @@ interface Alert {
   timestamp: number;
   action: string;
   actor: string;
+  amount: number;
 }
 
 const actors = ["Cupsey", "Wojak", "Pepe", "Diamond", "Paper", "Whale", "Degen"];
 const tickers = ["PUNKS", "VINEX", "DEEPSEEK", "LILI", "LARRY", "SHY", "TRIM", "GRNLD", "2025", "BAMF", "DEEPSHIT", "FAFO", "STUPID"];
 
+const getRandomAmount = () => {
+  return Number((Math.random() * 100).toFixed(2));
+};
+
 const mockAlerts = [
-  { id: 1, name: "PUNKS", timestamp: Date.now(), action: "bought", actor: "Cupsey" },
-  { id: 2, name: "VINEX", timestamp: Date.now(), action: "sold", actor: "Wojak" },
-  { id: 3, name: "DEEPSEEK", timestamp: Date.now(), action: "bought", actor: "Pepe" },
-  { id: 4, name: "LILI", timestamp: Date.now(), action: "sold", actor: "Diamond" },
-  { id: 5, name: "LARRY", timestamp: Date.now(), action: "bought", actor: "Whale" },
-  { id: 6, name: "SHY", timestamp: Date.now(), action: "sold", actor: "Paper" },
-  { id: 7, name: "TRIM", timestamp: Date.now(), action: "bought", actor: "Degen" },
+  { id: 1, name: "PUNKS", timestamp: Date.now(), action: "bought", actor: "Cupsey", amount: getRandomAmount() },
+  { id: 2, name: "VINEX", timestamp: Date.now(), action: "sold", actor: "Wojak", amount: getRandomAmount() },
+  { id: 3, name: "DEEPSEEK", timestamp: Date.now(), action: "bought", actor: "Pepe", amount: getRandomAmount() },
+  { id: 4, name: "LILI", timestamp: Date.now(), action: "sold", actor: "Diamond", amount: getRandomAmount() },
+  { id: 5, name: "LARRY", timestamp: Date.now(), action: "bought", actor: "Whale", amount: getRandomAmount() },
+  { id: 6, name: "SHY", timestamp: Date.now(), action: "sold", actor: "Paper", amount: getRandomAmount() },
+  { id: 7, name: "TRIM", timestamp: Date.now(), action: "bought", actor: "Degen", amount: getRandomAmount() },
 ];
 
 export const AlertsSection = () => {
@@ -55,7 +59,8 @@ export const AlertsSection = () => {
             name: getRandomElement(tickers),
             timestamp: Date.now(),
             action: Math.random() > 0.5 ? "bought" : "sold",
-            actor: getRandomElement(actors)
+            actor: getRandomElement(actors),
+            amount: getRandomAmount()
           };
           newAlerts.push(modifiedAlert);
           return newAlerts;
@@ -122,7 +127,9 @@ export const AlertsSection = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 text-neon-pink" />
-                  <span className="font-medium">{alert.actor} {alert.action} {alert.name}</span>
+                  <span className="font-medium">
+                    {alert.actor} {alert.action} {alert.amount} SOL of {alert.name}
+                  </span>
                 </div>
                 <div>
                   <span className="text-gray-400">
