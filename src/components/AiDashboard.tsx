@@ -50,15 +50,6 @@ const AiDashboard = () => {
     setContractAddress(contractAddress);
   };
 
-  const TokenGatedContent = () => (
-    <div className="absolute inset-0 bg-background/50 z-10 flex flex-col items-center justify-center space-y-4">
-      <div className="bg-gradient-to-r from-neon-pink to-neon-violet bg-clip-text text-transparent text-3xl font-bold">
-        Token Gated Feature
-      </div>
-      <p className="text-lg text-gray-400">Connect your wallet to unlock this feature</p>
-    </div>
-  );
-
   const renderContent = () => {
     const commonCardClasses = "bg-black/40 border-white/10 p-6 relative min-h-[600px]";
 
@@ -67,7 +58,6 @@ const AiDashboard = () => {
         return (
           <Card className={commonCardClasses}>
             <TrendingSection />
-            <TokenGatedContent />
           </Card>
         );
       case "portfolio":
@@ -76,14 +66,12 @@ const AiDashboard = () => {
         return (
           <Card className={commonCardClasses}>
             <PatternAnalysis />
-            <TokenGatedContent />
           </Card>
         );
       case "alerts":
         return (
           <Card className={commonCardClasses}>
             <AlertsSection />
-            <TokenGatedContent />
           </Card>
         );
       case "github checker":
