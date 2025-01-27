@@ -12,6 +12,8 @@ import { TrendingSection } from "./dashboard/TrendingSection";
 import { AlertsSection } from "./dashboard/AlertsSection";
 import GithubChecker from "./dashboard/GithubChecker";
 import { Navigation } from "./dashboard/Navigation";
+import { Button } from "./ui/button";
+import { FileText } from "lucide-react";
 
 const AiDashboard = () => {
   const [contractAddress, setContractAddress] = useState("");
@@ -52,6 +54,13 @@ const AiDashboard = () => {
       setShowAnalysis(true);
     }, 5000);
     setContractAddress(contractAddress);
+  };
+
+  const handleDetailedIntel = () => {
+    toast({
+      title: "Detailed AI Intel",
+      description: "Generating detailed analysis report...",
+    });
   };
 
   const renderContent = () => {
@@ -99,6 +108,15 @@ const AiDashboard = () => {
                 </div>
                 <TokenChart tokenData={tokenData} />
                 <AdvancedMetrics tokenData={tokenData} />
+                <div className="flex justify-center mt-6">
+                  <Button 
+                    onClick={handleDetailedIntel}
+                    className="bg-gradient-to-r from-neon-pink to-neon-violet hover:opacity-90"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Detailed AI Intel
+                  </Button>
+                </div>
               </>
             )}
           </div>
